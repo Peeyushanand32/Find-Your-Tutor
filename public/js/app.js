@@ -1,0 +1,389 @@
+// TutorNest Shared Application Controller
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Fetch current authentication state
+  checkAuth();
+});
+
+let currentUser = null;
+
+// CSS styles to support the dynamic login modal
+const styleEl = document.createElement('style');
+styleEl.textContent = `
+  .auth-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(19, 27, 46, 0.4);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .auth-modal-overlay.active {
+    opacity: 1;
+  }
+  .auth-modal-container {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .auth-modal-overlay.active .auth-modal-container {
+    transform: scale(1);
+  }
+`;
+document.head.appendChild(styleEl);
+
+async function checkAuth() {
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    if (data.loggedIn) {
+      currentUser = data.user;
+    }
+    updateNavbar();
+    setupSidebarLinks();
+  } catch (e) {
+    console.error('Auth verification failed', e);
+    updateNavbar();
+    setupSidebarLinks();
+  }
+}
+
+function setupSidebarLinks() {
+  // Select all sidebar anchor tags (usually inside nav or aside elements)
+  const anchors = document.querySelectorAll('nav a, aside a, .sidebar a');
+  
+  anchors.forEach(a => {
+    const text = a.textContent.trim().toLowerCase();
+    const isStudent = currentUser ? currentUser.role === 'student' : true;
+
+    // Direct mappings
+    if (text.includes('dashboard') || text.includes('overview')) {
+      a.href = isStudent ? '/student-dashboard.html' : '/instructor-dashboard.html';
+    } else if (text.includes('schedule') || text.includes('calendar')) {
+      a.href = isStudent ? '/student-calendar.html' : '/instructor-calendar.html';
+    } else if (text.includes('tutor history') || text.includes('my tutors') || text === 'tutors') {
+      a.href = isStudent ? '/student-tutors-history.html' : '/students-directory.html';
+    } else if (text.includes('lesson history') || text.includes('history') || text.includes('lessons')) {
+      a.href = isStudent ? '/student-lessons-history.html' : '/instructor-requests-history.html';
+    } else if (text.includes('messages') || text.includes('inbox') || text.includes('hub')) {
+      a.href = isStudent ? '/student-messages.html' : '/instructor-messages.html';
+    } else if (text.includes('settings') || text.includes('profile')) {
+      a.href = isStudent ? '/student-settings-profile.html' : '/instructor-settings.html';
+    } else if (text.includes('wallet') || text.includes('earnings') || text.includes('request history')) {
+      a.href = '/instructor-wallet.html';
+    } else if (text.includes('directory')) {
+      a.href = '/students-directory.html';
+    }
+  });
+}
+
+
+function updateNavbar() {
+  // Find standard header or nav element
+  const header = document.querySelector('header, nav.fixed, nav.sticky');
+  if (!header) return;
+
+  // Let's create a beautiful unified header that overrides/replaces the static header
+  const isLanding = window.location.pathname === '/' || window.location.pathname.endsWith('index.html');
+  
+  // Custom logo and link
+  const logoHref = '/index.html';
+  const logoText = 'TutorNest';
+
+  let navItemsHtml = '';
+  
+  if (currentUser) {
+    if (currentUser.role === 'student') {
+      navItemsHtml = `
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/find-tutors.html">Find Tutors</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/student-dashboard.html">Dashboard</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/student-calendar.html">My Schedule</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/student-messages.html">Messages</a>
+      `;
+    } else {
+      navItemsHtml = `
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/instructor-dashboard.html">Overview</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/instructor-calendar.html">Requests & Schedule</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/students-directory.html">My Students</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/instructor-wallet.html">Wallet</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/instructor-messages.html">Messages</a>
+      `;
+    }
+  } else {
+    navItemsHtml = `
+      <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/find-tutors.html">Find Tutors</a>
+      <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/pricing.html">Pricing</a>
+    `;
+  }
+
+  let rightNavHtml = '';
+  if (currentUser) {
+    const isStudent = currentUser.role === 'student';
+    const balanceText = isStudent ? `<span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-label-sm font-semibold mr-2 border border-primary/20">Balance: $${currentUser.balance.toFixed(2)}</span>` : '';
+    
+    const avatarUrl = currentUser.avatar.startsWith('http') ? currentUser.avatar : '';
+    const avatarInner = avatarUrl 
+      ? `<img src="${avatarUrl}" class="w-10 h-10 rounded-full object-cover border border-primary/20">`
+      : `<div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-bold flex items-center justify-center">${currentUser.avatar}</div>`;
+
+    rightNavHtml = `
+      <div class="flex items-center gap-3">
+        ${balanceText}
+        <!-- Notifications/Messages Quick Button -->
+        <a href="${isStudent ? '/student-messages.html' : '/instructor-messages.html'}" class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center transition-colors relative" title="Messages">
+          <span class="material-symbols-outlined text-outline">mail</span>
+        </a>
+        <!-- User Avatar Dropdown -->
+        <div class="relative user-dropdown-container">
+          <button class="flex items-center gap-2 outline-none focus:outline-none user-dropdown-btn">
+            ${avatarInner}
+            <span class="material-symbols-outlined text-[18px] text-outline">keyboard_arrow_down</span>
+          </button>
+          
+          <!-- Dropdown Menu -->
+          <div class="absolute right-0 mt-3 w-56 bg-white rounded-xl border border-outline-variant/30 shadow-xl py-2 hidden user-dropdown-menu z-50">
+            <div class="px-4 py-3 border-b border-outline-variant/20">
+              <p class="text-label-md font-bold text-on-surface leading-none">${currentUser.name}</p>
+              <p class="text-label-sm text-outline mt-1 capitalize">${currentUser.role} ${currentUser.plan === 'Premium' ? '⭐' : ''}</p>
+            </div>
+            ${isStudent ? `
+              <a href="/student-dashboard.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">dashboard</span> Dashboard
+              </a>
+              <a href="/student-calendar.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">calendar_today</span> My Schedule
+              </a>
+              <a href="/student-lessons-history.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">history</span> Lesson History
+              </a>
+              <a href="/student-settings-profile.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">settings</span> Settings
+              </a>
+            ` : `
+              <a href="/instructor-dashboard.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">dashboard</span> Overview
+              </a>
+              <a href="/instructor-calendar.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">event_note</span> Lesson Requests
+              </a>
+              <a href="/instructor-wallet.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">payments</span> Earnings & Wallet
+              </a>
+              <a href="/instructor-settings.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">manage_accounts</span> Manage Profile
+              </a>
+            `}
+            <hr class="border-outline-variant/20 my-1">
+            <button onclick="logout()" class="w-full text-left flex items-center gap-2 px-4 py-2 text-label-md text-error hover:bg-error-container/10 transition-colors">
+              <span class="material-symbols-outlined text-[20px]">logout</span> Log Out
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    rightNavHtml = `
+      <button onclick="openAuthModal('login')" class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary px-unit-md py-unit-sm transition-all duration-200 hover:scale-105">Log In</button>
+      <button onclick="openAuthModal('signup')" class="bg-gradient-to-r from-primary to-secondary text-on-primary px-unit-lg py-unit-sm rounded-full font-label-md text-label-md hover:scale-105 active:scale-95 transition-all duration-200 shadow-md">Sign Up</button>
+    `;
+  }
+
+  // Update outer structure to ensure class and styling matches TutorNest's premium design system
+  header.className = "bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 top-0 sticky z-50 shadow-sm transition-all duration-300 w-full";
+  header.innerHTML = `
+    <div class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+      <div class="flex items-center gap-unit-xl">
+        <a class="font-headline-sm text-headline-sm font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" href="${logoHref}">${logoText}</a>
+        <nav class="hidden md:flex gap-unit-lg items-center">
+          ${navItemsHtml}
+        </nav>
+      </div>
+      <div class="flex items-center gap-unit-md">
+        ${rightNavHtml}
+      </div>
+    </div>
+  `;
+
+  // Bind dropdown behavior
+  const dropdownBtn = header.querySelector('.user-dropdown-btn');
+  const dropdownMenu = header.querySelector('.user-dropdown-menu');
+  if (dropdownBtn && dropdownMenu) {
+    dropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => {
+      dropdownMenu.classList.add('hidden');
+    });
+  }
+}
+
+// ----------------- Auth Modal implementation -----------------
+
+function openAuthModal(mode = 'login') {
+  let modalOverlay = document.getElementById('auth-modal');
+  if (!modalOverlay) {
+    modalOverlay = document.createElement('div');
+    modalOverlay.id = 'auth-modal';
+    modalOverlay.className = 'auth-modal-overlay';
+    document.body.appendChild(modalOverlay);
+  }
+
+  renderModalContent(modalOverlay, mode);
+  
+  // Animate in
+  setTimeout(() => {
+    modalOverlay.classList.add('active');
+  }, 10);
+
+  // Close when clicking overlay
+  modalOverlay.onclick = (e) => {
+    if (e.target === modalOverlay) {
+      closeAuthModal();
+    }
+  };
+}
+
+function closeAuthModal() {
+  const modalOverlay = document.getElementById('auth-modal');
+  if (modalOverlay) {
+    modalOverlay.classList.remove('active');
+    setTimeout(() => {
+      modalOverlay.innerHTML = '';
+    }, 300);
+  }
+}
+
+function renderModalContent(container, mode) {
+  const isLogin = mode === 'login';
+  container.innerHTML = `
+    <div class="auth-modal-container w-[450px] max-w-[90%] rounded-2xl p-unit-lg space-y-unit-md text-left">
+      <div class="flex justify-between items-center mb-2">
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">${isLogin ? 'Welcome Back' : 'Join TutorNest'}</h3>
+        <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Tab Toggles -->
+      <div class="flex bg-surface-container-high p-1 rounded-lg border border-outline-variant/30">
+        <button onclick="renderModalContent(document.getElementById('auth-modal'), 'login')" 
+          class="flex-1 py-2 text-label-md rounded-md font-bold transition-all text-center ${isLogin ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-primary'}">
+          Log In
+        </button>
+        <button onclick="renderModalContent(document.getElementById('auth-modal'), 'signup')" 
+          class="flex-1 py-2 text-label-md rounded-md font-bold transition-all text-center ${!isLogin ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-primary'}">
+          Sign Up
+        </button>
+      </div>
+
+      <!-- Error alert -->
+      <div id="auth-error-alert" class="hidden bg-error-container text-on-error-container p-3 rounded-lg text-label-sm border border-error/20"></div>
+
+      <!-- Forms -->
+      <form id="auth-form" class="space-y-4" onsubmit="handleAuthSubmit(event, '${mode}')">
+        ${!isLogin ? `
+          <div class="space-y-1">
+            <label class="font-label-md text-label-md text-on-surface-variant">Full Name</label>
+            <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md" placeholder="e.g. John Doe">
+          </div>
+          <div class="space-y-1">
+            <label class="font-label-md text-label-md text-on-surface-variant">I want to...</label>
+            <select name="role" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md bg-white">
+              <option value="student">Learn (Student)</option>
+              <option value="tutor">Teach (Tutor)</option>
+            </select>
+          </div>
+        ` : ''}
+
+        <div class="space-y-1">
+          <label class="font-label-md text-label-md text-on-surface-variant">Email Address</label>
+          <input type="email" name="email" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md" placeholder="name@domain.com">
+        </div>
+
+        <div class="space-y-1">
+          <label class="font-label-md text-label-md text-on-surface-variant">Password</label>
+          <input type="password" name="password" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md" placeholder="••••••••">
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white font-label-md rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-200 mt-2">
+          ${isLogin ? 'Log In' : 'Create Account'}
+        </button>
+
+        ${isLogin ? `
+          <div class="text-center pt-2">
+            <p class="text-label-sm text-outline">Quick test profiles:</p>
+            <div class="flex justify-center gap-2 mt-2">
+              <button type="button" onclick="fillQuickAuth('student@tutornest.com', 'password')" class="px-2 py-1 bg-surface-container rounded border text-[10px] hover:border-primary">Student Profile</button>
+              <button type="button" onclick="fillQuickAuth('tutor1@tutornest.com', 'password')" class="px-2 py-1 bg-surface-container rounded border text-[10px] hover:border-primary">Tutor Profile</button>
+            </div>
+          </div>
+        ` : ''}
+      </form>
+    </div>
+  `;
+}
+
+function fillQuickAuth(email, pass) {
+  const form = document.getElementById('auth-form');
+  if (form) {
+    form.email.value = email;
+    form.password.value = pass;
+  }
+}
+
+async function handleAuthSubmit(e, mode) {
+  e.preventDefault();
+  const form = e.target;
+  const errorAlert = document.getElementById('auth-error-alert');
+  errorAlert.classList.add('hidden');
+
+  const payload = {};
+  if (form.name) payload.name = form.name.value;
+  if (form.role) payload.role = form.role.value;
+  payload.email = form.email.value;
+  payload.password = form.password.value;
+
+  const url = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Request failed');
+    }
+    
+    closeAuthModal();
+    // Redirect role-based
+    if (data.user.role === 'student') {
+      window.location.href = '/student-dashboard.html';
+    } else {
+      window.location.href = '/instructor-dashboard.html';
+    }
+  } catch (err) {
+    errorAlert.textContent = err.message;
+    errorAlert.classList.remove('hidden');
+  }
+}
+
+async function logout() {
+  try {
+    const res = await fetch('/api/auth/logout', { method: 'POST' });
+    if (res.ok) {
+      currentUser = null;
+      window.location.href = '/index.html';
+    }
+  } catch (e) {
+    console.error('Logout failed', e);
+  }
+}

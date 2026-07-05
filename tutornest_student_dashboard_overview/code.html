@@ -1,0 +1,405 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>TutorNest - Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "background": "#faf8ff",
+                        "tertiary": "#525657",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "tertiary-container": "#6b6e70",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "secondary": "#712ae2",
+                        "primary": "#004ac6",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "primary-container": "#2563eb",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-container": "#fffbff",
+                        "surface-container-highest": "#dae2fd",
+                        "on-background": "#131b2e",
+                        "on-surface": "#131b2e",
+                        "surface-container-high": "#e2e7ff",
+                        "inverse-on-surface": "#eef0ff",
+                        "surface-container-low": "#f2f3ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "outline": "#737686",
+                        "on-secondary-fixed": "#25005a",
+                        "on-surface-variant": "#434655",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#eaedff",
+                        "secondary-container": "#8a4cfc",
+                        "surface-bright": "#faf8ff",
+                        "on-primary": "#ffffff",
+                        "surface": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#eff1f3",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "secondary-fixed": "#eaddff",
+                        "inverse-surface": "#283044",
+                        "surface-variant": "#dae2fd",
+                        "surface-tint": "#0053db",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#00174b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "unit-xs": "4px",
+                        "unit-xl": "64px",
+                        "unit-sm": "8px",
+                        "unit-lg": "32px",
+                        "container-max": "1280px",
+                        "deep-padding": "80px",
+                        "margin-desktop": "64px",
+                        "unit-md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Space Grotesk"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Space Grotesk"],
+                        "display-lg": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .gradient-button {
+            background: linear-gradient(135deg, #004ac6 0%, #712ae2 100%);
+            transition: all 0.3s ease;
+        }
+        .gradient-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(0, 74, 198, 0.4);
+        }
+        .sidebar-item-active {
+            @apply text-primary font-bold border-r-4 border-primary;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Side Navigation Shell -->
+<nav class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant/30 bg-surface/80 backdrop-blur-xl flex flex-col py-unit-lg px-unit-md z-50 hidden md:flex">
+<div class="mb-unit-xl px-unit-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">TutorNest</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Student Portal</p>
+</div>
+<div class="flex-1 space-y-unit-sm">
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md">My Lessons</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md">Tutors</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-md">Messages</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto">
+<button class="w-full gradient-button text-white font-label-md py-unit-md rounded-xl">
+                Upgrade to Pro
+            </button>
+</div>
+</nav>
+<!-- Top Bar Shell -->
+<header class="fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] h-16 bg-surface/70 backdrop-blur-lg border-b border-outline-variant/20 flex justify-between items-center px-gutter z-40">
+<div class="flex items-center gap-unit-md flex-1">
+<div class="relative w-full max-w-md hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full pl-10 pr-4 py-2 text-label-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Search lessons, tutors..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-unit-md">
+<button class="p-unit-sm hover:bg-surface-container-high/50 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary-container/20 border border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a young male student named Alex, wearing a modern navy polo shirt against a soft, blurred library background. The lighting is bright and even, reflecting a premium edtech dashboard aesthetic with clean highlights and professional composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7z7LkXYnCiVKYdJ_OCRrK_t9X1LhX5x_dXSyY0JlOwnoWynySkBBkDp5pRyYKrBfiYmRaMy_ZSqva9AKAqhlKeCaWqUP6zF9UUukWG020xplmMxhncTwEvr-rb64CksE5Q6UvG9H0FCrQoZJRP4j2JClajSHHSOX_bFUIK1Fytzy3qt_U0SJi5Q5h-Esoaic8BeTzqch7ouy5EC2Iusq90eo-gtfljsC6A-66tWAStYHEUP5nmwtiTOXOomiYEkqTY4fO-Ad42MTn">
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-24 pb-unit-xl px-gutter md:ml-64 min-h-screen">
+<div class="max-w-container-max mx-auto space-y-unit-xl">
+<!-- Welcome Header -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-unit-md">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface">Hello, Alex!</h2>
+<p class="text-body-lg text-on-surface-variant max-w-2xl">You're making great progress. You have 2 lessons scheduled for the next 24 hours.</p>
+</div>
+<div class="flex gap-unit-sm">
+<button class="px-unit-lg py-unit-md rounded-xl font-label-md border border-outline-variant hover:bg-surface-container-high transition-all">Download Schedule</button>
+<button class="px-unit-lg py-unit-md rounded-xl font-label-md gradient-button text-on-primary">Book New Session</button>
+</div>
+</section>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Upcoming & Tutors -->
+<div class="lg:col-span-8 space-y-gutter">
+<!-- Upcoming Lessons -->
+<div class="glass p-unit-lg rounded-2xl">
+<div class="flex justify-between items-center mb-unit-lg">
+<h3 class="font-headline-sm text-headline-sm">Upcoming Lessons</h3>
+<a class="text-primary font-label-md hover:underline" href="#">View All</a>
+</div>
+<div class="space-y-unit-md">
+<!-- Lesson 1 -->
+<div class="flex items-center gap-unit-lg p-unit-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group">
+<div class="w-16 h-16 rounded-xl bg-primary-container/10 flex flex-col items-center justify-center text-primary border border-primary/10">
+<span class="font-headline-sm">24</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Oct</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-unit-sm mb-1">
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded uppercase">Advanced Calculus</span>
+<span class="text-on-surface-variant text-label-sm">14:00 - 15:30 (90 min)</span>
+</div>
+<h4 class="font-headline-sm text-[18px]">Integration Methods &amp; Partial Fractions</h4>
+<p class="text-on-surface-variant text-label-md">Tutor: Dr. Sarah Chen</p>
+</div>
+<button class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward_ios</button>
+</div>
+<!-- Lesson 2 -->
+<div class="flex items-center gap-unit-lg p-unit-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group">
+<div class="w-16 h-16 rounded-xl bg-secondary-container/10 flex flex-col items-center justify-center text-secondary border border-secondary/10">
+<span class="font-headline-sm">25</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Oct</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-unit-sm mb-1">
+<span class="bg-secondary/10 text-secondary text-[10px] font-bold px-2 py-0.5 rounded uppercase">Creative Writing</span>
+<span class="text-on-surface-variant text-label-sm">10:00 - 11:00 (60 min)</span>
+</div>
+<h4 class="font-headline-sm text-[18px]">Narrative Structures &amp; Pacing</h4>
+<p class="text-on-surface-variant text-label-md">Tutor: Marcus Aurelius</p>
+</div>
+<button class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward_ios</button>
+</div>
+</div>
+</div>
+<!-- Learning Progress Bento -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+<div class="glass p-unit-lg rounded-2xl flex flex-col">
+<h3 class="font-headline-sm text-headline-sm mb-unit-lg">Mastery Levels</h3>
+<div class="space-y-unit-lg flex-1">
+<div class="space-y-unit-xs">
+<div class="flex justify-between text-label-md">
+<span>Mathematics</span>
+<span class="text-primary">88%</span>
+</div>
+<div class="h-2 w-full bg-outline-variant/30 rounded-full overflow-hidden">
+<div class="h-full gradient-button w-[88%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-unit-xs">
+<div class="flex justify-between text-label-md">
+<span>English Literature</span>
+<span class="text-primary">72%</span>
+</div>
+<div class="h-2 w-full bg-outline-variant/30 rounded-full overflow-hidden">
+<div class="h-full gradient-button w-[72%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-unit-xs">
+<div class="flex justify-between text-label-md">
+<span>Physics</span>
+<span class="text-primary">64%</span>
+</div>
+<div class="h-2 w-full bg-outline-variant/30 rounded-full overflow-hidden">
+<div class="h-full gradient-button w-[64%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass p-unit-lg rounded-2xl flex flex-col justify-center items-center text-center relative overflow-hidden">
+
+<div class="relative z-10">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-unit-md mx-auto">
+<span class="material-symbols-outlined text-[40px] text-primary" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<h4 class="font-headline-sm">Learning Streak</h4>
+<p class="text-display-lg text-primary">12 Days</p>
+<p class="text-label-md text-on-surface-variant">Keep it up! You're in the top 5% of active students this month.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Stats & Recent Tutors -->
+<div class="lg:col-span-4 space-y-gutter">
+<!-- Session Stats Widget -->
+<div class="glass p-unit-lg rounded-2xl bg-primary text-on-primary border-none shadow-xl shadow-primary/20">
+<h3 class="font-headline-sm mb-unit-lg">Summary Stats</h3>
+<div class="grid grid-cols-2 gap-unit-md">
+<div class="bg-white/10 p-unit-md rounded-xl backdrop-blur-md">
+<p class="text-on-primary/70 text-label-sm uppercase tracking-wider">Total Hours</p>
+<p class="text-headline-md">124.5</p>
+</div>
+<div class="bg-white/10 p-unit-md rounded-xl backdrop-blur-md">
+<p class="text-on-primary/70 text-label-sm uppercase tracking-wider">Completed</p>
+<p class="text-headline-md">42</p>
+</div>
+</div>
+<div class="mt-unit-lg pt-unit-lg border-t border-white/10">
+<div class="flex items-center gap-unit-md">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-primary bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female mathematics tutor with glasses, looking professional and friendly. Bright studio lighting, minimalist edtech style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_7LqRmliw0wQq33Zvu1mVNZB1p_iAHYn4jdTEtDSCNhu13_BrRtzsCN1FTk6KKFg2k381u2AhbqABDhklx7e3rdg4UWASHXjNCljytR73L8oAUeFUvn6TSB2ANr3eM7M2vp0FzHOKiRogdbxHyiRXXb-rqgFRhyVGftEvmgRaJH7fpc7BvEhAdmDHhkLNPHCZCdbDj5-I0UBE21YOGXbmCS_u0g3TlsCvjsUyVezMsoUfVgW8PxMjsff32ygSLF4_B4jmTmTqWwJZ">
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-primary bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a male literature tutor, warm expression, casual professional attire. Clean background, soft lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrdOrqF6dtu8SCuJz2HmcZry9-eSYabE1LwZzDvJfk1xO2TREL5NSrVXfk0MkH5kHAnwswtQTZbio4WDReZY27QcL8Hna57Xb9LBqqZAJxHgmzAkph9Nt6yBA7f_8_DIMzatjgFxrPCwMq5rIelEd7Tm4P_yfABeMbxkrBhRdU2GPT2lYy09LTD7Vvf4qU8vpuCioRHXvjWywGbo_5SBskYOzO2Rwc3KHDhVDZ0rMMMdWX5dJsEFtmUGquiBbHn5vuxlpv5S6rn-G">
+</div>
+</div>
+<span class="text-label-sm text-on-primary/80">+3 Tutors this week</span>
+</div>
+</div>
+</div>
+<!-- Recent Tutors -->
+<div class="glass p-unit-lg rounded-2xl">
+<div class="flex justify-between items-center mb-unit-lg">
+<h3 class="font-headline-sm text-[20px]">Recent Tutors</h3>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">more_horiz</span>
+</div>
+<div class="space-y-unit-lg">
+<!-- Tutor 1 -->
+<div class="flex items-center gap-unit-md">
+<img class="w-12 h-12 rounded-full object-cover border border-outline-variant" data-alt="A portrait of Dr. Sarah Chen, an Asian female professor of mathematics. Professional, welcoming smile, high-quality studio lighting, neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAD2Dne6HiNsa7srvT95VTzXmzVYtvLaYLlqI-2fTRvqttutkd64zlo6eTBoCEQbU-C5k9jSHEahLsl-fzWQtJ3o3I2XVYmxupLWMoMYhW6H8W2D1DKXsgaVpALyINRsUjvk-kMEHCxr6b57TUpfQA9ULzKBAEOw4vHljzfizJguxPcl7Zu8HlLyQaDhzmlD_Ux582DAs7FLaI5tPsnWgRYnv_oooo0Dh5M5e21Ig5eJZFeakPZCXxJWRY6uDilJjsmYcWUf-RLzXzv">
+<div class="flex-1">
+<h5 class="font-label-md">Dr. Sarah Chen</h5>
+<p class="text-label-sm text-on-surface-variant">Mathematics</p>
+</div>
+<button class="text-primary font-bold text-label-sm hover:underline">Re-book</button>
+</div>
+<!-- Tutor 2 -->
+<div class="flex items-center gap-unit-md">
+<img class="w-12 h-12 rounded-full object-cover border border-outline-variant" data-alt="A portrait of Marcus Aurelius, a middle-aged male tutor for creative writing. Insightful expression, wearing a linen shirt, softly lit office environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPhvp-PrS96TO3l77sxbxLSLspsEiONPJc7JLw_UgyiMuoi_xFw5qLI3VnfVGG2syLIFnSoRNDwSgvL_XRitA1jWC8oUylEfMW8tmuJelygE1UTpHLOu01QT75Bu7UDsl22recgiR_ScRS6M0jF3Mf_QSORGmFx04y86HM6tJ-RR_Z204o-OErT9ueLkanebQu01c0a1gyT2lWO69O1n41PirofLSH7m-6Havp_XEBtNYj4krQETwJyI46BsTObVtq2U1fV30ghj8Y">
+<div class="flex-1">
+<h5 class="font-label-md">Marcus Aurelius</h5>
+<p class="text-label-sm text-on-surface-variant">Creative Writing</p>
+</div>
+<button class="text-primary font-bold text-label-sm hover:underline">Re-book</button>
+</div>
+<!-- Tutor 3 -->
+<div class="flex items-center gap-unit-md">
+<img class="w-12 h-12 rounded-full object-cover border border-outline-variant" data-alt="A portrait of Elena Rodriguez, a young female physics researcher. Enthusiastic look, bright eyes, modern clean professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8O6hL0VUi2eWeygtPhD72hVpr4YvdXX7CpwkkymVZAKmVB1Z-hW5NF6FPe9dQYd0vooXG1KHJ_r-tzWjbVoYJ9TpVMGo6LYltk_eoO9AfJ0gYSY95b8knPSA61gb-qAim7vf4i_NYRijD6i1vpLZBpQ3TaX4NG0hm5xwpnlmCmbN0HYE2EVUarQF0vDebWPEDVOBjXLpsWe92iUfd0RyoamqeNno12YRJOi_jbRUCEOkJZRcXCBiWdTrj93b8XxMaCUmPJ06ZCVbt">
+<div class="flex-1">
+<h5 class="font-label-md">Elena Rodriguez</h5>
+<p class="text-label-sm text-on-surface-variant">Applied Physics</p>
+</div>
+<button class="text-primary font-bold text-label-sm hover:underline">Re-book</button>
+</div>
+</div>
+<button class="w-full mt-unit-lg py-unit-sm text-label-md text-primary font-bold border border-primary/20 rounded-xl hover:bg-primary/5 transition-all">
+                            View All Tutors
+                        </button>
+</div>
+<!-- Help Card -->
+<div class="p-unit-lg rounded-2xl bg-surface-container-high border border-outline-variant/30 flex items-start gap-unit-md">
+<span class="material-symbols-outlined text-primary">contact_support</span>
+<div>
+<h4 class="font-label-md">Need help?</h4>
+<p class="text-label-sm text-on-surface-variant mb-unit-sm">Our support team is available 24/7 for any questions.</p>
+<a class="text-primary text-label-sm font-bold" href="#">Contact Support</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation (Bottom Bar) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 h-16 flex items-center justify-around px-unit-md z-50">
+<a class="flex flex-col items-center text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-[10px] font-medium">Lessons</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium">Tutors</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="text-[10px] font-medium">Inbox</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">More</span>
+</a>
+</nav>
+<script>
+        // Simple interaction for re-booking buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.innerText === 'Re-book' || this.innerText === 'Book New Session') {
+                    this.classList.add('opacity-50');
+                    const originalText = this.innerText;
+                    this.innerText = 'Processing...';
+                    setTimeout(() => {
+                        this.innerText = originalText;
+                        this.classList.remove('opacity-50');
+                        alert('Booking requested! A confirmation email will be sent shortly.');
+                    }, 800);
+                }
+            });
+        });
+    </script>
+</body></html>

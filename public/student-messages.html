@@ -1,0 +1,429 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Messages | TutorNest Student Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .message-bubble-student {
+            background: linear-gradient(135deg, #004ac6, #712ae2);
+            color: white;
+            border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+        }
+        .message-bubble-tutor {
+            background: #f2f3ff;
+            color: #131b2e;
+            border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "background": "#faf8ff",
+                        "tertiary": "#525657",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "tertiary-container": "#6b6e70",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "secondary": "#712ae2",
+                        "primary": "#004ac6",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "primary-container": "#2563eb",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-container": "#fffbff",
+                        "surface-container-highest": "#dae2fd",
+                        "on-background": "#131b2e",
+                        "on-surface": "#131b2e",
+                        "surface-container-high": "#e2e7ff",
+                        "inverse-on-surface": "#eef0ff",
+                        "surface-container-low": "#f2f3ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "outline": "#737686",
+                        "on-secondary-fixed": "#25005a",
+                        "on-surface-variant": "#434655",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#eaedff",
+                        "secondary-container": "#8a4cfc",
+                        "surface-bright": "#faf8ff",
+                        "on-primary": "#ffffff",
+                        "surface": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#eff1f3",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "secondary-fixed": "#eaddff",
+                        "inverse-surface": "#283044",
+                        "surface-variant": "#dae2fd",
+                        "surface-tint": "#0053db",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#00174b"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "unit-xs": "4px",
+                        "unit-xl": "64px",
+                        "unit-sm": "8px",
+                        "unit-lg": "32px",
+                        "container-max": "1280px",
+                        "deep-padding": "80px",
+                        "margin-desktop": "64px",
+                        "unit-md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Space Grotesk"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Space Grotesk"],
+                        "display-lg": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden">
+<!-- Side Navigation Bar (Anchor Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-r border-outline-variant/30 shadow-md shadow-primary/5 flex flex-col py-unit-lg px-unit-md z-50">
+<div class="mb-unit-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">TutorNest</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Student Portal</p>
+</div>
+<nav class="flex-1 space-y-unit-sm">
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200 scale-102 hover:translate-x-1" href="javascript:void(0)">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200 scale-102 hover:translate-x-1" href="javascript:void(0)">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md text-label-md">My Lessons</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200 scale-102 hover:translate-x-1" href="javascript:void(0)">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Tutors</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary bg-primary-container/5 transition-all duration-200" href="javascript:void(0)">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-label-md text-label-md">Messages</span>
+</a>
+<a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200 scale-102 hover:translate-x-1" href="javascript:void(0)">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full bg-primary-container text-on-primary-container py-unit-sm rounded-xl font-label-md hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
+                Upgrade to Pro
+            </button>
+</div>
+</aside>
+<!-- Top Navigation Bar (Anchor Component) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-surface/70 dark:bg-inverse-surface/70 backdrop-blur-lg border-b border-outline-variant/20 shadow-sm flex justify-between items-center h-16 px-gutter">
+<div class="flex items-center flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full focus:ring-2 focus:ring-primary/20 text-body-md transition-all" placeholder="Search conversations..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-unit-md">
+<button class="p-2 rounded-full hover:bg-surface-container-high/50 transition-colors text-on-surface-variant relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a friendly university student with a bright, welcoming expression. The photo is set against a clean, out-of-focus library background with warm, natural sunlight streaming through windows, emphasizing a modern light-mode aesthetic that fits the high-end EdTech brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDibbFajx9Xa9XPhXhu7oL5rWx_mDEBJpR8VxmVd2JpL_bdrCMoSrNT1CXxt6ozmtQq0CU4EXZBVLSjTOFhr9bRESw5hudmJrRD1xQsJdjpzqaJuFaPD4kCW0qjAXyC4_rbpBrVwssLBQZ22ruzdrMmmK8pThbfHApwHGpIr8683AuBo7sVa-4cgONt40pPSTHZN_ulQv793jXqgLHhSyasKgH-4YYb6ywza6VaURY49HSjiU2PUtz4exoYF2V81qDJB7PbDhDpTyZY">
+</div>
+</div>
+</header>
+<!-- Main Content: Messaging Hub -->
+<main class="ml-64 pt-16 h-screen flex overflow-hidden">
+<!-- Left Pane: Conversations List -->
+<section class="w-80 flex-shrink-0 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col">
+<div class="p-unit-md border-b border-outline-variant/10">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Conversations</h2>
+</div>
+<div class="flex-1 overflow-y-auto scrollbar-hide">
+<!-- Conversation Item (Active) -->
+<div class="p-unit-md bg-primary-container/5 border-l-4 border-primary cursor-pointer hover:bg-primary-container/10 transition-colors">
+<div class="flex gap-unit-sm">
+<div class="h-12 w-12 rounded-full relative flex-shrink-0">
+<img class="h-full w-full rounded-full object-cover" data-alt="Close-up portrait of an experienced physics professor with a kind smile and spectacles. He is in a brightly lit academic office surrounded by books and a whiteboard with diagrams. The style is clean and professional with soft, warm lighting that conveys trustworthiness and academic rigor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpGKmzdqKFpgWDhaxzAxL-Rc4NmFwYBy5LAxPzYPCi3H1cEHohmkLVpc24_3q6ZReFHzO-vDpA641nIxmSMvvlkp7Tm89e8PwTx9_s12d0-zGFcmGGp-UzqT-iB0jAA9eG--6suR_yKimpp9O9w6O2TyoaNpkWGOMJkWzksc_JtSCSP5cuzaTleC2_oT52o3mv_vH5pwJmd8pNlewU0PMf7_onIL_qi0iYQSzdUuAGYBjteHmaZaotKQ3f-F4-9J2nnBMcc2fii13r">
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-md text-on-surface truncate">Dr. Aris Thorne</span>
+<span class="text-[10px] text-outline whitespace-nowrap">10:45 AM</span>
+</div>
+<p class="text-label-sm text-primary font-semibold truncate italic">Typing...</p>
+</div>
+</div>
+</div>
+<!-- Conversation Item -->
+<div class="p-unit-md hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex gap-unit-sm">
+<div class="h-12 w-12 rounded-full relative flex-shrink-0">
+<img class="h-full w-full rounded-full object-cover" data-alt="Portrait of a young, energetic female mathematics tutor with headphones around her neck. She has a high-energy, modern professional look, set against a minimalist studio background with soft purple and blue ambient lighting, reflecting a premium SaaS EdTech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhN_QgcIQuj5rPbFlNvA13B0v6BKL8DjT2-4hs6ik8-Vi5s271EP-dRbS86PRvn_RtDetb5N38s8HSuivBeX7NOZPurS-tsQmoZDBhpNM6UBNNzMLrkdxbjGhW2Rmy9AsJ3PABTw-RSvXX1PC8OfzdJ5LEzKwcT__SyScZFCk6Ozh2ub1VGXWK3fUFLEeaQEMqQKHM-k9_ANQZOuPux8cNwMqhSAy6-c-FfEvStLa4gpdSmf5FZyQ0R6qIhIA3RebtDfm22KjCH10o">
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-md text-on-surface truncate">Sarah Jenkins</span>
+<span class="text-[10px] text-outline whitespace-nowrap">Yesterday</span>
+</div>
+<p class="text-label-sm text-outline truncate">Great progress on the calculus homework! See you at our next session.</p>
+</div>
+<div class="mt-1">
+<span class="w-2 h-2 bg-primary rounded-full block"></span>
+</div>
+</div>
+</div>
+<!-- More items... -->
+<div class="p-unit-md hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex gap-unit-sm">
+<div class="h-12 w-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary font-bold flex-shrink-0">
+                            MK
+                        </div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-1">
+<span class="font-label-md text-on-surface truncate">Marcus Kaine</span>
+<span class="text-[10px] text-outline whitespace-nowrap">Tue</span>
+</div>
+<p class="text-label-sm text-outline truncate">Can we reschedule the history review to Friday instead?</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Pane: Active Chat -->
+<section class="flex-1 flex flex-col bg-white">
+<!-- Chat Header -->
+<div class="h-16 px-unit-lg flex items-center justify-between glass-effect border-b border-outline-variant/10 z-10">
+<div class="flex items-center gap-unit-md">
+<div class="h-10 w-10 rounded-full bg-surface-container-high overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Portrait of an experienced physics professor with a kind smile and spectacles. He is in a brightly lit academic office surrounded by books and a whiteboard with diagrams. The style is clean and professional with soft, warm lighting that conveys trustworthiness and academic rigor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQDniP0OMfSxLpZNghRdIPC59lA9GEtS0Y6I7APqU7CGWc_uhth9Ioqeka-qmkZhQPW2ScZNOhlb2UFGPWCXLomSOC7QxQV1_x2med3yFLMO2MPtRynJcgTSvCthCDlsRoxUNZoDJa4aCNsUCfp71TxVvut4Q5zUcSnxvLgDLJWLDz4fmzOfvt6cUdy8E-nS5kWjAMdgTRkT4dJMY-59JnIxxZu50i5vhM6lw0O8m_h-hbv6aNKXu6E2Z9eDnHRJHtd-1y4qibIMNo">
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Dr. Aris Thorne</h3>
+<p class="text-[11px] text-green-600 font-medium">Online</p>
+</div>
+</div>
+<div class="flex items-center gap-unit-sm">
+<button class="p-2 text-outline hover:text-primary hover:bg-primary-container/10 rounded-full transition-all">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="p-2 text-outline hover:text-primary hover:bg-primary-container/10 rounded-full transition-all">
+<span class="material-symbols-outlined">call</span>
+</button>
+<button class="p-2 text-outline hover:text-primary hover:bg-primary-container/10 rounded-full transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Chat History -->
+<div class="flex-1 overflow-y-auto p-unit-lg space-y-unit-lg scrollbar-hide">
+<div class="flex justify-center">
+<span class="text-[11px] font-bold uppercase tracking-widest text-outline bg-surface-container px-3 py-1 rounded-full">August 24, 2023</span>
+</div>
+<!-- Message Tutor -->
+<div class="flex gap-unit-md max-w-[80%]">
+<div class="h-8 w-8 rounded-full flex-shrink-0 mt-auto">
+<img class="h-full w-full rounded-full object-cover" data-alt="Portrait of an experienced physics professor with a kind smile and spectacles. He is in a brightly lit academic office surrounded by books and a whiteboard with diagrams. The style is clean and professional with soft, warm lighting that conveys trustworthiness and academic rigor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDspXVlKBMZwTgnxtfiVs5ntk6yActb7GJbRUAKgOypb1fzxtq2qwefdOnurCFpiOJYVRhr7du0llAqvv4o93ReJW8WFKhsjW5uesVD-3n2V2GKtsInTCVWqcSjieDPHpUixv4FJaXclShzNDeKITG2lbOt5-_uKeLo-Naqp5MJuu7O2OhJFpL-ED1Qba3su9JeDVWSniSaVQHArcM2fxMmC7S6pn1SqT9KDHtyHyYVmG8CYPCsz9TEtM889UM_vlLM4pFsYqGV06aZ">
+</div>
+<div>
+<div class="message-bubble-tutor p-unit-md shadow-sm">
+<p class="text-body-md">Hello Alex! I've reviewed your latest submission on quantum mechanics. You're making excellent strides in understanding wave-particle duality.</p>
+</div>
+<span class="text-[10px] text-outline mt-1 ml-2">10:15 AM</span>
+</div>
+</div>
+<!-- Message Student (Self) -->
+<div class="flex flex-row-reverse gap-unit-md max-w-[80%] ml-auto">
+<div class="h-8 w-8 rounded-full flex-shrink-0 mt-auto">
+<img class="h-full w-full rounded-full object-cover" data-alt="A professional headshot of a friendly university student with a bright, welcoming expression. The photo is set against a clean, out-of-focus library background with warm, natural sunlight streaming through windows, emphasizing a modern light-mode aesthetic that fits the high-end EdTech brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMNuM6-B5yUTk7huzyUA504BptDFUNZJArB6fuYiERhkxGt2NIF8it_PtnF-teQpNf0PnNsIVSLccJGhgMMQQ-3qJ3tNJ_pbjT8zQKrH4q_c1nCOROEJPsxsCF63gLo38QAVK17uTcB3tJMwSSlNCgBXwuyse3mfOU3HQzMjqlhe4LOh4kMUNHdTvgQobhoqEl9vk1JHc4wJ_auMeTUB8IpmZpTQ_m7PfeBsoN-GoaRcP0hx9bdjyJ7BEJ_zVY6toHDOjfrnXNHBrG">
+</div>
+<div class="flex flex-col items-end">
+<div class="message-bubble-student p-unit-md shadow-lg shadow-primary/10">
+<p class="text-body-md">Thank you, Dr. Thorne! I'm still a bit confused about the double-slit experiment results when observation occurs. Could we go over that briefly?</p>
+</div>
+<span class="text-[10px] text-outline mt-1 mr-2">10:18 AM</span>
+</div>
+</div>
+<!-- Message Tutor -->
+<div class="flex gap-unit-md max-w-[80%]">
+<div class="h-8 w-8 rounded-full flex-shrink-0 mt-auto">
+<img class="h-full w-full rounded-full object-cover" data-alt="Portrait of an experienced physics professor with a kind smile and spectacles. He is in a brightly lit academic office surrounded by books and a whiteboard with diagrams. The style is clean and professional with soft, warm lighting that conveys trustworthiness and academic rigor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9m2HZZevMydUlb---MJN8GJOZqav0Yo3i_Kv8SeNFwaIlUCAeJDc7H5sQLryFwedSXrmiIIeYtLVBw-F8WrkvF7ZSzfjqJmGRG4IiHBIaGZV-YYDv0CBUt4r9c9f8WBvTXx1wNIRn85zVKMI0SptJ8HwuaSUDx23BNw1rcPmzxDIyaE_IPKD2y-kpVJEy9_GhnLmYrRbgmBxqDHBpGQhj-aGKFsI7uQU5s2a_uHpBaKswq0QS_LlOzgVwmWcBrAYLirZJ94FNQgSL">
+</div>
+<div>
+<div class="message-bubble-tutor p-unit-md shadow-sm">
+<p class="text-body-md">Of course. That's one of the most counter-intuitive parts. Think of it as the wave function "collapsing" into a single state. I've attached a helpful visualization diagram for you.</p>
+</div>
+<div class="mt-2 p-3 bg-surface-container-high rounded-xl border border-outline-variant/30 flex items-center gap-3 cursor-pointer hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">description</span>
+<div class="flex-1">
+<p class="text-label-md text-on-surface">Wave_Function_Collapse.pdf</p>
+<p class="text-[10px] text-outline">2.4 MB • PDF</p>
+</div>
+<span class="material-symbols-outlined text-outline">download</span>
+</div>
+<span class="text-[10px] text-outline mt-1 ml-2">10:25 AM</span>
+</div>
+</div>
+<!-- Message Student (Self) -->
+<div class="flex flex-row-reverse gap-unit-md max-w-[80%] ml-auto">
+<div class="h-8 w-8 rounded-full flex-shrink-0 mt-auto">
+<img class="h-full w-full rounded-full object-cover" data-alt="A professional headshot of a friendly university student with a bright, welcoming expression. The photo is set against a clean, out-of-focus library background with warm, natural sunlight streaming through windows, emphasizing a modern light-mode aesthetic that fits the high-end EdTech brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF_EpC-XpdeHnLI0tdshFeZHKPfrwY-QKLNZk-Llu9Tit1FGwbYTdbcA8_b2arWNktG3C8DxR7bLh5CKJxgey5boZX2z3L4HI3Ss2IKypv_h86rHX1ghVxbOYTtPwx6Ji3Z2jq9q35nxzdvpPWp4-ta96CZpnVXBRfxLNprAmUWeGjlVoXsRhVr4n_dbQg4NDxG__-ViL8oXL0MtBt-gqkqVbngvnePWE2bOS-1ytHs7y21eKVWNmkicQPtPGbJT0tLdr6CMe802_3">
+</div>
+<div class="flex flex-col items-end">
+<div class="message-bubble-student p-unit-md shadow-lg shadow-primary/10">
+<p class="text-body-md">This is exactly what I needed! Let me read through this now.</p>
+</div>
+<div class="flex items-center gap-1 mt-1 mr-2">
+<span class="text-[10px] text-outline">10:30 AM</span>
+<span class="material-symbols-outlined text-primary text-xs" style="font-size: 14px;">done_all</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Rich Input Bar -->
+<div class="p-unit-lg glass-effect border-t border-outline-variant/10">
+<div class="max-w-4xl mx-auto">
+<div class="bg-surface-container-low rounded-2xl p-2 shadow-inner border border-outline-variant/20">
+<div class="flex items-end gap-2">
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">image</span>
+</button>
+<div class="flex-1 px-2">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-body-md py-2 resize-none max-h-32 scrollbar-hide" placeholder="Type your message..." rows="1"></textarea>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mood</span>
+</button>
+<button class="h-10 w-10 flex items-center justify-center rounded-xl bg-primary text-white hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between mt-2 px-2">
+<p class="text-[10px] text-outline">Shift + Enter for new line</p>
+<div class="flex gap-4">
+<span class="flex items-center gap-1 text-[10px] text-outline cursor-pointer hover:text-primary"><span class="material-symbols-outlined text-[14px]">link</span> Shared Files</span>
+<span class="flex items-center gap-1 text-[10px] text-outline cursor-pointer hover:text-primary"><span class="material-symbols-outlined text-[14px]">history</span> History</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side: Tutor Details (Optional Collapsible) -->
+<aside class="w-72 bg-surface border-l border-outline-variant/10 hidden xl:flex flex-col p-unit-lg">
+<div class="flex flex-col items-center text-center mb-unit-lg">
+<div class="h-24 w-24 rounded-full p-1 border-2 border-primary/20 mb-unit-md">
+<img class="h-full w-full rounded-full object-cover" data-alt="Portrait of an experienced physics professor with a kind smile and spectacles. He is in a brightly lit academic office surrounded by books and a whiteboard with diagrams. The style is clean and professional with soft, warm lighting that conveys trustworthiness and academic rigor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJkhYdaknYP26E1ZbqZRj-rG1CZNDPtM_RlD9MEEwphE0nK8K2YutOcb4lWXM2ugkY-uCEcubvm-VUs0-M9glqd5-h8G4PfrDOVxfPrXoH7U0caBZfG92o0y_f7c06_ffOY02Jw0WDp6wGtoJticKiXw3zpaiTTNTST1Wh51lk_GYUXzc8yOD2-8jBsoB81xwf88n4JnZPczLGYy_VNzmQsbiPlxQZIgMG9Jt2R-cWuXepKg-2WbTCjQ9ijrfUVkro93vK3pe_gvnV">
+</div>
+<h4 class="font-headline-sm text-[20px] text-on-surface">Dr. Aris Thorne</h4>
+<p class="text-label-sm text-outline">Professor of Theoretical Physics</p>
+<div class="flex gap-1 mt-unit-sm">
+<span class="px-2 py-0.5 bg-primary-container/10 text-primary text-[10px] rounded-full font-bold">TOP TUTOR</span>
+<span class="px-2 py-0.5 bg-secondary-container/10 text-secondary text-[10px] rounded-full font-bold">PHYSICS</span>
+</div>
+</div>
+<div class="space-y-unit-lg">
+<div>
+<h5 class="text-label-md text-on-surface-variant mb-unit-sm uppercase tracking-wider font-bold text-[11px]">Next Session</h5>
+<div class="bg-surface-container-low p-unit-md rounded-xl border border-outline-variant/20">
+<div class="flex items-center gap-unit-sm mb-1">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_today</span>
+<span class="text-label-md text-on-surface">Tomorrow, 4:00 PM</span>
+</div>
+<p class="text-[11px] text-outline pl-7">Quantum Mechanics 101</p>
+</div>
+</div>
+<div>
+<h5 class="text-label-md text-on-surface-variant mb-unit-sm uppercase tracking-wider font-bold text-[11px]">Shared Assets</h5>
+<div class="grid grid-cols-2 gap-2">
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="A clean, scientific diagram showing a physics experiment with laser beams and mirrors on a high-tech optical table. Minimalist white and blue aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRAG3Y2JB1JsXaCy43fI1dO0fOW43mK_vFgfJFMal7PLXTUPP-u4eqY0nLWjeIXzpXHgCxPSmtsthf11MM66eaHK-JnPWtAI5hDJkjrXUiqylxCtCUeRrOKEXyKm1xZlinYvQ6PcFpP5q1a8kd1W28RY7MZK18jvDyhOYG6figcepIGG4RuIxv6cWWM5DkE73GXZTNYRzriJaNWetoFxTw8Y_HQW61tsN6bSMcEkpLSP9zPOmMI1iJltVezvHmZ5XN4VyM_CcKn88O">
+</div>
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="A mathematical formula neatly written in white chalk on a clean dark slate blackboard. Sophisticated lighting highlights the texture of the board." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpxarVqRp8lAhUK4G5QFLUztx0zo9jOoXPpf2npeTeLHqZfm8s1jvZ58i9zCKcGef3Zup0gmelsMYz4oZ6_rjO1M87BJj4k6AlQ6rp4LZOfS3VdQvS8TuyedRBQm0_RKXQP9SnmbJ4EJIVIF7PNqrUXrkdV_d8alJI4O31cU2whavp4FFQWwg-huLD7yzW7ulxgxNtFdRUGWlKFIB4yAhI9wfq6BhX-C35jQmzUZrOKTPK_tZrR-DhVWtitxBvvVQL_03d8-q5Xdtd">
+</div>
+<div class="aspect-square bg-surface-container rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center">
+<span class="text-label-sm text-primary">+12 more</span>
+</div>
+</div>
+</div>
+</div>
+<button class="mt-auto w-full border border-primary text-primary py-unit-sm rounded-xl font-label-md hover:bg-primary/5 transition-all">
+                View Full Profile
+            </button>
+</aside>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple textarea auto-resize
+        const tx = document.getElementsByTagName('textarea');
+        for (let i = 0; i < tx.length; i++) {
+            tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+            tx[i].addEventListener("input", OnInput, false);
+        }
+
+        function OnInput() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        }
+
+        // Search highlight interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+<script src="/js/app.js"></script>
+<script src="/js/pages/student-messages.js"></script>
+</body></html>

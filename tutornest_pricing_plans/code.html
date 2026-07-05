@@ -1,0 +1,429 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Pricing &amp; Plans | TutorNest</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#faf8ff",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "outline": "#737686",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#dae2fd",
+                    "inverse-on-surface": "#eef0ff",
+                    "tertiary": "#525657",
+                    "on-secondary-fixed-variant": "#5a00c6",
+                    "on-primary-container": "#eeefff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-dim": "#d2d9f4",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f2f3ff",
+                    "on-surface": "#131b2e",
+                    "error-container": "#ffdad6",
+                    "background": "#faf8ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#e0e3e5",
+                    "secondary-fixed": "#eaddff",
+                    "surface": "#faf8ff",
+                    "inverse-surface": "#283044",
+                    "secondary-fixed-dim": "#d2bbff",
+                    "outline-variant": "#c3c6d7",
+                    "secondary-container": "#8a4cfc",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-tint": "#0053db",
+                    "primary": "#004ac6",
+                    "on-secondary-fixed": "#25005a",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#6b6e70",
+                    "on-primary-fixed": "#00174b",
+                    "on-surface-variant": "#434655",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e2e7ff",
+                    "on-secondary-container": "#fffbff",
+                    "secondary": "#712ae2",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "on-tertiary-fixed": "#191c1e",
+                    "on-background": "#131b2e",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#2563eb",
+                    "on-tertiary-container": "#eff1f3",
+                    "primary-fixed": "#dbe1ff",
+                    "surface-variant": "#dae2fd",
+                    "surface-container": "#eaedff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-xs": "4px",
+                    "margin-desktop": "64px",
+                    "container-max": "1280px",
+                    "unit-xl": "64px",
+                    "unit-lg": "32px",
+                    "deep-padding": "80px",
+                    "gutter": "24px",
+                    "unit-sm": "8px",
+                    "unit-md": "16px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-sm": ["Space Grotesk"],
+                    "headline-md": ["Space Grotesk"],
+                    "display-lg-mobile": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+      }
+      .elevated-shadow {
+        box-shadow: 0px 10px 30px rgba(37, 99, 235, 0.05);
+      }
+      .gradient-btn {
+        background: linear-gradient(135deg, #004ac6 0%, #712ae2 100%);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .gradient-btn:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+      }
+    </style>
+</head>
+<body class="bg-surface-bright text-on-surface font-body-md min-h-screen selection:bg-primary-fixed-dim selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 backdrop-blur-xl dark:bg-surface-dim/80 docked full-width top-0 sticky z-50 border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-20">
+<div class="flex items-center gap-unit-lg">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">TutorNest</span>
+<div class="hidden md:flex gap-unit-md items-center">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1" href="#">Find Tutors</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">My Lessons</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-on-tertiary-fixed-variant hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Messages</a>
+</div>
+</div>
+<div class="flex items-center gap-unit-md">
+<div class="hidden lg:flex items-center gap-unit-sm mr-4">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</div>
+<button class="gradient-btn text-on-primary px-unit-md py-2 rounded-full font-label-md">Book Session</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young educator with a friendly smile, set against a blurred academic background with warm lighting and a high-key professional color palette consistent with a premium edtech platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRhHPH9aTo59GD40JWh61GGkEH9VGU1Mlec6LXYHXk_wr5Qt_s43UNuR9foEbQmC8cZ_q2CwS60HIr5uXdncIbMZFXXr0zQTacyzuZwI8_qnIZ_Iev1gxVCwvHiN29ApFvdLBTTLhL4kPEOPXeHoUn-sxL51iPsbLkYsQQOa1iCz9vJ8M01vRVT5Gvi0eBg9KXUCx1BN1ku1G6Hqx__zz2MBGaKsi-udnT-gFk05iW00W8RNDU0CqQzswfrZawteiFUHd7r0i6COuR">
+</div>
+</div>
+</div>
+</nav>
+<main class="relative">
+<!-- Hero Background Animation -->
+<div class="absolute inset-0 -z-10 h-[600px] overflow-hidden">
+
+</div>
+<!-- Hero Section -->
+<section class="pt-unit-xl pb-unit-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-unit-md tracking-tight">Invest in Your <span class="text-primary">Academic Future</span></h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-unit-lg">
+                Choose the perfect plan to accelerate your learning journey. From casual help to intensive expert coaching, we have you covered.
+            </p>
+</section>
+<!-- Pricing Tiers -->
+<section class="py-unit-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Basic Plan -->
+<div class="glass-card elevated-shadow rounded-xl p-unit-lg flex flex-col items-start transition-all hover:scale-[1.01]">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-unit-sm">Free</span>
+<h3 class="font-headline-sm text-headline-sm mb-unit-xs">Basic</h3>
+<div class="flex items-baseline gap-1 mb-unit-md">
+<span class="text-4xl font-bold">$0</span>
+<span class="text-on-surface-variant text-sm">/ forever</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-unit-lg">Perfect for students starting their exploration or needing occasional help.</p>
+<div class="space-y-unit-sm w-full mb-unit-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">5 Tutor searches per month</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Standard messaging</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Public resource access</span>
+</div>
+<div class="flex items-center gap-2 opacity-40">
+<span class="material-symbols-outlined">cancel</span>
+<span class="text-sm">AI Compass matching</span>
+</div>
+</div>
+<button class="w-full py-3 rounded-xl border border-outline-variant font-label-md hover:bg-surface-container-low transition-colors mt-auto">Get Started</button>
+</div>
+<!-- Pro Plan (Popular) -->
+<div class="glass-card elevated-shadow rounded-xl p-unit-lg flex flex-col items-start relative border-primary transition-all hover:scale-[1.01] bg-white/90">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full">Most Popular</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-unit-sm">Standard</span>
+<h3 class="font-headline-sm text-headline-sm mb-unit-xs">Pro</h3>
+<div class="flex items-baseline gap-1 mb-unit-md">
+<span class="text-4xl font-bold">$19</span>
+<span class="text-on-surface-variant text-sm">/ month</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-unit-lg">Designed for active students who want the best matching tools and flexibility.</p>
+<div class="space-y-unit-sm w-full mb-unit-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Unlimited tutor searches</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-semibold">AI Compass™ Matching</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Priority messaging response</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Recorded session archives</span>
+</div>
+</div>
+<button class="w-full py-3 rounded-xl gradient-btn text-on-primary font-label-md mt-auto shadow-lg shadow-primary/20">Upgrade to Pro</button>
+</div>
+<!-- Premium Plan -->
+<div class="glass-card elevated-shadow rounded-xl p-unit-lg flex flex-col items-start transition-all hover:scale-[1.01]">
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest mb-unit-sm">Elite</span>
+<h3 class="font-headline-sm text-headline-sm mb-unit-xs">Premium</h3>
+<div class="flex items-baseline gap-1 mb-unit-md">
+<span class="text-4xl font-bold">$149</span>
+<span class="text-on-surface-variant text-sm">/ year</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-unit-lg">The ultimate academic package for power users seeking peak performance.</p>
+<div class="space-y-unit-sm w-full mb-unit-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Everything in Pro</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Verified Expert badges access</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm">Dedicated account manager</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-semibold">24/7 Priority Support</span>
+</div>
+</div>
+<button class="w-full py-3 rounded-xl border border-primary text-primary font-label-md hover:bg-primary-fixed transition-colors mt-auto">Go Premium</button>
+</div>
+</section>
+<!-- Feature Comparison Table -->
+<section class="py-deep-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-x-auto">
+<h2 class="font-headline-md text-headline-md mb-unit-lg text-center">Compare All Features</h2>
+<table class="w-full border-collapse">
+<thead>
+<tr class="text-left border-b border-outline-variant">
+<th class="py-unit-md font-headline-sm text-headline-sm w-1/2">Features</th>
+<th class="py-unit-md text-center font-label-md text-label-md text-on-surface-variant">Basic</th>
+<th class="py-unit-md text-center font-label-md text-label-md text-primary">Pro</th>
+<th class="py-unit-md text-center font-label-md text-label-md text-on-surface">Premium</th>
+</tr>
+</thead>
+<tbody class="text-on-surface-variant text-sm">
+<tr class="border-b border-outline-variant/30">
+<td class="py-unit-md">Monthly Tutor Searches</td>
+<td class="py-unit-md text-center">5</td>
+<td class="py-unit-md text-center text-primary font-bold">Unlimited</td>
+<td class="py-unit-md text-center font-bold">Unlimited</td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="py-unit-md">Active Lessons</td>
+<td class="py-unit-md text-center">1</td>
+<td class="py-unit-md text-center">10</td>
+<td class="py-unit-md text-center text-primary font-bold">Unlimited</td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="py-unit-md">AI Compass Matching</td>
+<td class="py-unit-md text-center">—</td>
+<td class="py-unit-md text-center"><span class="material-symbols-outlined text-primary">check</span></td>
+<td class="py-unit-md text-center"><span class="material-symbols-outlined text-primary">check</span></td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="py-unit-md">Verified Expert Badge Access</td>
+<td class="py-unit-md text-center">—</td>
+<td class="py-unit-md text-center">—</td>
+<td class="py-unit-md text-center"><span class="material-symbols-outlined text-primary">check</span></td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="py-unit-md">Video Quality</td>
+<td class="py-unit-md text-center">720p</td>
+<td class="py-unit-md text-center">1080p</td>
+<td class="py-unit-md text-center font-bold">4K Ultra</td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="py-unit-md">Priority Support</td>
+<td class="py-unit-md text-center">—</td>
+<td class="py-unit-md text-center">—</td>
+<td class="py-unit-md text-center"><span class="material-symbols-outlined text-primary">check</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- FAQ Section -->
+<section class="py-deep-padding bg-surface-container-low">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-unit-xl">
+<div>
+<h2 class="font-headline-md text-headline-md mb-unit-md">Frequently Asked Questions</h2>
+<p class="text-on-surface-variant mb-unit-lg">Can't find what you're looking for? Contact our 24/7 support team for personalized assistance.</p>
+<div class="w-full aspect-video rounded-2xl overflow-hidden glass-card">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist 3D rendering of a help desk or library space with floating holographic UI elements. Soft blue and purple ambient lighting fills the scene, emphasizing a futuristic, professional, and trustworthy atmosphere in line with a high-end educational platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR0meR2OHKWFjWYdI3ubLDTR2nauHoThMQo_kyjBQ5H8hy8d1904_U3WtsfLWeAhnSW8l-pCbPjE3SI67a5wyAcnRooRjSlnuScmjRF6PHmTFqcBFd1SsIbHarD5kg8dq7Jmpj-GA5b2CEeDeVU8ozfDaN-IK-H4wIgQn3YWVMk9UQGbqONk0VtdZcu7Mk6TgJrABcegQdyvMGfKQ1T5Q7N8cETbzILphvm5_Jz3TdindS13l16BGPglUa7OGJxrczyT7SjSvw5DOG">
+</div>
+</div>
+<div class="space-y-unit-md">
+<details class="group glass-card rounded-xl p-unit-md open:bg-white" open="">
+<summary class="flex justify-between items-center cursor-pointer font-label-md text-label-md list-none">
+<span>Can I cancel my subscription anytime?</span>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="mt-unit-sm text-sm text-on-surface-variant">
+                                Yes, you can cancel your subscription at any time from your account settings. You will continue to have access to your plan benefits until the end of your current billing period.
+                            </div>
+</details>
+<details class="group glass-card rounded-xl p-unit-md open:bg-white">
+<summary class="flex justify-between items-center cursor-pointer font-label-md text-label-md list-none">
+<span>What is AI Compass Matching?</span>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="mt-unit-sm text-sm text-on-surface-variant">
+                                AI Compass uses machine learning to analyze your learning style, goals, and history to recommend the tutors most likely to help you succeed. It boasts a 95% satisfaction rate.
+                            </div>
+</details>
+<details class="group glass-card rounded-xl p-unit-md open:bg-white">
+<summary class="flex justify-between items-center cursor-pointer font-label-md text-label-md list-none">
+<span>Do unused searches roll over?</span>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="mt-unit-sm text-sm text-on-surface-variant">
+                                Currently, tutor searches on the Basic plan reset at the beginning of each calendar month. Pro and Premium plans offer unlimited searches.
+                            </div>
+</details>
+<details class="group glass-card rounded-xl p-unit-md open:bg-white">
+<summary class="flex justify-between items-center cursor-pointer font-label-md text-label-md list-none">
+<span>Are there any hidden fees?</span>
+<span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="mt-unit-sm text-sm text-on-surface-variant">
+                                No hidden fees. The subscription covers your access to the platform tools. Individual tutor session rates are set by the tutors themselves and are clearly displayed.
+                            </div>
+</details>
+</div>
+</div>
+</div>
+</section>
+<!-- Strong CTA -->
+<section class="py-deep-padding text-center relative overflow-hidden">
+<div class="absolute inset-0 -z-10">
+
+</div>
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto relative z-10">
+<div class="glass-card rounded-3xl p-unit-xl elevated-shadow inline-block max-w-3xl">
+<h2 class="font-display-lg text-display-lg-mobile md:text-headline-md mb-unit-sm">Ready to Master Your Subjects?</h2>
+<p class="text-body-lg mb-unit-lg text-on-surface-variant">Join over 50,000 students achieving their best results with TutorNest expert guidance.</p>
+<div class="flex flex-col sm:flex-row gap-unit-md justify-center">
+<button class="gradient-btn text-on-primary px-unit-xl py-4 rounded-full font-label-md text-lg">Start 7-Day Free Trial</button>
+<button class="bg-white border border-outline-variant px-unit-xl py-4 rounded-full font-label-md text-lg hover:bg-surface-container-low transition-colors">Speak to an Expert</button>
+</div>
+<p class="mt-unit-md text-xs text-on-surface-variant/70">No credit card required to start your basic account.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest dark:bg-on-tertiary-fixed w-full py-unit-xl px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter border-t border-outline-variant/50 dark:border-outline/10">
+<div class="flex flex-col gap-unit-sm">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">TutorNest</span>
+<p class="font-body-md text-body-md text-on-surface dark:text-on-tertiary-fixed-dim max-w-xs">Empowering the next generation through expert-led academic mentorship.</p>
+<div class="flex gap-unit-sm mt-unit-md">
+<span class="material-symbols-outlined text-on-surface-variant">public</span>
+<span class="material-symbols-outlined text-on-surface-variant">school</span>
+<span class="material-symbols-outlined text-on-surface-variant">history_edu</span>
+</div>
+</div>
+<div class="flex flex-col gap-unit-sm">
+<h4 class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-widest mb-unit-xs">Company</h4>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-tertiary-fixed-dim hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">About Us</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-tertiary-fixed-dim hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Contact</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-tertiary-fixed-dim hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Blog</a>
+</div>
+<div class="flex flex-col gap-unit-sm">
+<h4 class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-widest mb-unit-xs">Legal</h4>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-tertiary-fixed-dim hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-tertiary-fixed-dim hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-tertiary-fixed-dim hover:text-secondary dark:hover:text-secondary-fixed transition-colors" href="#">FAQ</a>
+</div>
+<div class="flex flex-col gap-unit-sm">
+<h4 class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-widest mb-unit-xs">Newsletter</h4>
+<p class="text-xs text-on-surface-variant mb-unit-sm">Get the latest education tips and platform updates.</p>
+<div class="flex gap-2">
+<input class="bg-surface-container-lowest border border-outline-variant px-3 py-2 rounded-lg text-sm w-full focus:ring-1 focus:ring-primary focus:outline-none" placeholder="Email address" type="email">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-bold transition-transform active:scale-95">Join</button>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-unit-lg">© 2024 TutorNest. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        // Simple Micro-interactions
+        document.querySelectorAll('details').forEach((detail) => {
+            detail.addEventListener('toggle', () => {
+                if (detail.open) {
+                    detail.classList.add('elevated-shadow');
+                } else {
+                    detail.classList.remove('elevated-shadow');
+                }
+            });
+        });
+    </script>
+</body></html>

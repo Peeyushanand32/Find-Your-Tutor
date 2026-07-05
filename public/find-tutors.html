@@ -1,0 +1,549 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Find Tutors | TutorNest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-container": "#eff1f3",
+                "on-secondary-fixed-variant": "#5a00c6",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed-dim": "#d2bbff",
+                "on-tertiary": "#ffffff",
+                "surface-dim": "#d2d9f4",
+                "outline-variant": "#c3c6d7",
+                "on-primary-fixed": "#00174b",
+                "on-primary": "#ffffff",
+                "surface-container": "#eaedff",
+                "on-error-container": "#93000a",
+                "surface-tint": "#0053db",
+                "secondary-container": "#8a4cfc",
+                "secondary": "#712ae2",
+                "on-secondary-container": "#fffbff",
+                "primary-container": "#2563eb",
+                "primary": "#004ac6",
+                "on-primary-container": "#eeefff",
+                "on-secondary": "#ffffff",
+                "inverse-primary": "#b4c5ff",
+                "inverse-surface": "#283044",
+                "tertiary-container": "#6b6e70",
+                "background": "#faf8ff",
+                "error-container": "#ffdad6",
+                "tertiary-fixed-dim": "#c4c7c9",
+                "primary-fixed": "#dbe1ff",
+                "surface-bright": "#faf8ff",
+                "on-tertiary-fixed": "#191c1e",
+                "error": "#ba1a1a",
+                "on-error": "#ffffff",
+                "primary-fixed-dim": "#b4c5ff",
+                "surface": "#faf8ff",
+                "secondary-fixed": "#eaddff",
+                "on-secondary-fixed": "#25005a",
+                "surface-container-highest": "#dae2fd",
+                "on-tertiary-fixed-variant": "#444749",
+                "tertiary-fixed": "#e0e3e5",
+                "inverse-on-surface": "#eef0ff",
+                "surface-container-low": "#f2f3ff",
+                "on-primary-fixed-variant": "#003ea8",
+                "on-surface": "#131b2e",
+                "surface-container-high": "#e2e7ff",
+                "outline": "#737686",
+                "on-surface-variant": "#434655",
+                "on-background": "#131b2e",
+                "tertiary": "#525657",
+                "surface-variant": "#dae2fd"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "unit-xs": "4px",
+                "unit-sm": "8px",
+                "gutter": "24px",
+                "margin-desktop": "64px",
+                "margin-mobile": "20px",
+                "unit-md": "16px",
+                "unit-lg": "32px",
+                "deep-padding": "80px",
+                "unit-xl": "64px",
+                "container-max": "1280px"
+            },
+            "fontFamily": {
+                "display-lg": ["Space Grotesk"],
+                "label-sm": ["Inter"],
+                "label-md": ["Inter"],
+                "headline-md": ["Space Grotesk"],
+                "body-md": ["Inter"],
+                "body-lg": ["Inter"],
+                "headline-sm": ["Space Grotesk"],
+                "display-lg-mobile": ["Space Grotesk"]
+            },
+            "fontSize": {
+                "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .premium-shadow {
+            shadow-sm: 0px 10px 30px rgba(37, 99, 235, 0.05);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .tutor-gradient-border {
+            position: relative;
+            background: linear-gradient(to right, #004ac6, #712ae2);
+            padding: 1px;
+        }
+
+        .tutor-gradient-bg {
+            background: linear-gradient(135deg, #004ac6 0%, #712ae2 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface-on-background/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-outline-variant/30 dark:border-outline/20 shadow-sm transition-all duration-300">
+<nav class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-20">
+<div class="flex items-center gap-unit-xl">
+<a class="font-headline-sm text-headline-sm font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" href="javascript:void(0)">TutorNest</a>
+<div class="hidden md:flex items-center gap-unit-lg">
+<a class="text-primary font-bold border-b-2 border-primary font-label-md text-label-md hover:scale-105 transition-transform" href="javascript:void(0)">Find Tutors</a>
+<a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-transform hover:scale-105" href="javascript:void(0)">Courses</a>
+<a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-transform hover:scale-105" href="javascript:void(0)">For Tutors</a>
+<a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-transform hover:scale-105" href="javascript:void(0)">Pricing</a>
+</div>
+</div>
+<div class="flex items-center gap-unit-md">
+<button class="text-on-surface-variant font-medium font-label-md text-label-md px-unit-md py-unit-sm hover:text-primary transition-colors">Log In</button>
+<button class="bg-gradient-to-r from-primary to-secondary text-on-primary font-label-md text-label-md px-unit-lg py-unit-sm rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all">Sign Up</button>
+</div>
+</nav>
+</header>
+<main class="min-h-screen">
+<!-- Search & Filter Section -->
+<section class="py-unit-xl bg-surface-container-low border-b border-outline-variant/20">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<h1 class="font-display-lg text-display-lg mb-unit-lg">Find your perfect expert</h1>
+<!-- Robust Search & Filter Bar -->
+<div class="glass-card rounded-xl p-unit-md shadow-lg flex flex-col gap-unit-md lg:flex-row lg:items-center lg:gap-gutter">
+<!-- Subject Search -->
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-unit-md top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3 rounded-lg border-outline-variant bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-body-md" placeholder="What subject do you need help with?" type="text">
+</div>
+<!-- Quick Filters -->
+<div class="flex flex-wrap items-center gap-unit-sm">
+<select class="rounded-lg border-outline-variant bg-surface-container-lowest text-label-md py-3 pl-4 pr-10 focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+<option>Grade Level</option>
+<option>Elementary</option>
+<option>Middle School</option>
+<option>High School</option>
+<option>University</option>
+</select>
+<select class="rounded-lg border-outline-variant bg-surface-container-lowest text-label-md py-3 pl-4 pr-10 focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+<option>Price Range</option>
+<option>$20 - $40 /hr</option>
+<option>$40 - $70 /hr</option>
+<option>$70+ /hr</option>
+</select>
+<select class="rounded-lg border-outline-variant bg-surface-container-lowest text-label-md py-3 pl-4 pr-10 focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+<option>Rating</option>
+<option>4.5 &amp; up</option>
+<option>4.0 &amp; up</option>
+</select>
+<select class="rounded-lg border-outline-variant bg-surface-container-lowest text-label-md py-3 pl-4 pr-10 focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+<option>Availability</option>
+<option>Weekends</option>
+<option>Evenings</option>
+<option>Mornings</option>
+</select>
+</div>
+<button class="bg-primary text-on-primary px-unit-xl py-3 rounded-lg font-label-md hover:bg-primary-container transition-colors">Apply</button>
+</div>
+<!-- Mode Toggle -->
+<div class="mt-unit-lg flex items-center gap-unit-md">
+<span class="text-label-md text-on-surface-variant">Mode:</span>
+<div class="flex bg-surface-container-high p-1 rounded-full border border-outline-variant/30">
+<button class="px-unit-lg py-unit-xs rounded-full text-label-md bg-surface-container-lowest shadow-sm text-primary transition-all">All</button>
+<button class="px-unit-lg py-unit-xs rounded-full text-label-md text-on-surface-variant hover:text-primary transition-all">Online</button>
+<button class="px-unit-lg py-unit-xs rounded-full text-label-md text-on-surface-variant hover:text-primary transition-all">In-Person</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Tutor Grid -->
+<section class="py-deep-padding max-w-container-max mx-auto px-margin-desktop">
+<div class="flex justify-between items-center mb-unit-xl">
+<p class="font-body-md text-on-surface-variant">Showing <span class="font-bold text-on-surface">1,248</span> professional tutors</p>
+<div class="flex items-center gap-unit-sm">
+<span class="text-label-md text-on-surface-variant">Sort by:</span>
+<select class="bg-transparent border-none text-label-md font-bold text-primary focus:ring-0 cursor-pointer">
+<option>Top Rated</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Newest</option>
+</select>
+</div>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Tutor Card 1 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Professional portrait of a middle-aged female educator with warm smiling eyes, wearing a stylish blazer, against a clean minimalist academic office background. The lighting is bright and airy, reflecting a premium EdTech light mode aesthetic with soft blueish shadows. She looks knowledgeable and approachable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxBTj1Cg8WfDctCwZfizyEbz4G_183JwXPFlGu9CiI2fUToO_rYwm-HP1B5JvTCAHvM4eUjk_nhS3PMkDX4Zb_70hbh0-shbxC7_9JKQ4DdRWmqE3zBlMXYuza7iWXndxjUms3t13-nJltTeLIwIcOhgHNDRSl6H7YcXs1e9qgxmT8tndVqWIcrpOh_hTDk4ciwz3KvaLAvgBhzgBrgr9D1YemW5LOCGfSweqdtJiLq9qxpXLKQsZGhjWDdJmdwGleNeW2nB1RqgSl">
+<div class="absolute top-unit-md left-unit-md flex flex-col gap-unit-xs">
+<span class="bg-secondary text-on-secondary px-unit-sm py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                Verified Educator
+                            </span>
+</div>
+<div class="absolute bottom-unit-md right-unit-md">
+<div class="bg-surface-container-lowest/90 backdrop-blur px-unit-sm py-1 rounded-lg shadow-sm flex items-center gap-1 border border-outline-variant/30">
+<span class="material-symbols-outlined text-amber-500 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-label-md">4.9</span>
+<span class="text-on-surface-variant text-[12px]">(124)</span>
+</div>
+</div>
+</div>
+<div class="p-unit-lg flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-unit-sm">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Dr. Sarah Jenkins</h3>
+<p class="text-primary font-label-md">Advanced Mathematics &amp; Physics</p>
+</div>
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-on-surface">$75</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ hour</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md line-clamp-3 mb-unit-lg">
+                            PhD in Theoretical Physics with over 12 years of experience helping students master complex calculus and mechanics. Specialized in AP prep and University entrance exams.
+                        </p>
+<div class="mt-auto flex gap-unit-sm">
+<button class="flex-1 bg-surface-container text-primary font-label-md py-3 rounded-xl hover:bg-primary hover:text-on-primary transition-all duration-300">View Profile</button>
+<button class="px-unit-md bg-primary-container text-on-primary rounded-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tutor Card 2 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 group flex flex-col h-full border-primary/20">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A young charismatic male tutor with glasses, sitting at a modern desk with a laptop and books. The background is a bright contemporary studio with plants and soft natural light. High-end photography style with a vibrant yet clean color palette consistent with a premium education brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIp8gtj_a8N_jPLdeh2D2Sz5SFmVDDfVebtUXI8yBiBTWXKLfh0EAI0azFHqOJdGQsWjRMzfrqD0eriRH9zr_1qEGiRJD2vwq2OUfic8bswiNaShg0ecTmkbQ538Jx81WqprJf7OpQeiYG_rBLDFRe3A3VMfmE2nJ3sU6h0EVZdEADr0Ubf8beJ5DkZ-TrmZtp8_KWniG2xeH5D5GS1OVbyvTTOV1W-uzGnKueIJdMKb0_kxrnDtjgQ9rqxsWQpAir2SL6ec_OGMcc">
+<div class="absolute top-unit-md left-unit-md flex flex-col gap-unit-xs">
+<span class="bg-primary text-on-primary px-unit-sm py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                                Top Rated
+                            </span>
+</div>
+<div class="absolute bottom-unit-md right-unit-md">
+<div class="bg-surface-container-lowest/90 backdrop-blur px-unit-sm py-1 rounded-lg shadow-sm flex items-center gap-1 border border-outline-variant/30">
+<span class="material-symbols-outlined text-amber-500 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-label-md">5.0</span>
+<span class="text-on-surface-variant text-[12px]">(284)</span>
+</div>
+</div>
+</div>
+<div class="p-unit-lg flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-unit-sm">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Mark Richardson</h3>
+<p class="text-primary font-label-md">English Literature &amp; Essay Writing</p>
+</div>
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-on-surface">$55</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ hour</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md line-clamp-3 mb-unit-lg">
+                            Award-winning journalist and creative writer. I help students develop a unique voice and perfect their SAT/ACT essay techniques through personalized feedback.
+                        </p>
+<div class="mt-auto flex gap-unit-sm">
+<button class="flex-1 bg-surface-container text-primary font-label-md py-3 rounded-xl hover:bg-primary hover:text-on-primary transition-all duration-300">View Profile</button>
+<button class="px-unit-md bg-primary-container text-on-primary rounded-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tutor Card 3 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Confident female tutor in her late 20s with curly hair, sitting in a bright airy study room. Soft morning sunlight filtering through windows, high-quality professional bokeh. The image has a clean, professional, and sophisticated feel, matching the blue and purple brand accents of TutorNest." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFZOKa0-OZCgMAgBJVPXYANn6G5owfnekT34ZBUYCNPwmltx6fz1QFtvTyAhfa1WpjnenkarBYdPhE6ZO2QVuj2L-mNTx9x6587CeKA9BIm8bPXftwbPdust5YgoreXR3iqlNgpOELAiUZerk_Q4_AJ7OwYLj_reHyUfYVuhGjnBgBS-BmbTXEuJnE7PS-rarjn0pjd72V8moRm9oE66QOt8c0kDjd6ccf2tD48Txh3zwl8CXdyoD15mexeG2apS6imX4QruedtprO">
+<div class="absolute top-unit-md left-unit-md flex flex-col gap-unit-xs">
+<span class="bg-secondary text-on-secondary px-unit-sm py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                Verified Educator
+                            </span>
+</div>
+<div class="absolute bottom-unit-md right-unit-md">
+<div class="bg-surface-container-lowest/90 backdrop-blur px-unit-sm py-1 rounded-lg shadow-sm flex items-center gap-1 border border-outline-variant/30">
+<span class="material-symbols-outlined text-amber-500 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-label-md">4.8</span>
+<span class="text-on-surface-variant text-[12px]">(92)</span>
+</div>
+</div>
+</div>
+<div class="p-unit-lg flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-unit-sm">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Elena Rodriguez</h3>
+<p class="text-primary font-label-md">Spanish &amp; International Studies</p>
+</div>
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-on-surface">$40</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ hour</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md line-clamp-3 mb-unit-lg">
+                            Native Spanish speaker with a Master's in Linguistics. Passionate about immersive learning and cultural exchange. Fun, engaging sessions for all age groups.
+                        </p>
+<div class="mt-auto flex gap-unit-sm">
+<button class="flex-1 bg-surface-container text-primary font-label-md py-3 rounded-xl hover:bg-primary hover:text-on-primary transition-all duration-300">View Profile</button>
+<button class="px-unit-md bg-primary-container text-on-primary rounded-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tutor Card 4 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Mature male educator with a kind smile, grey hair, wearing a white shirt in a modern bright library. The scene is professional and academic, with soft depth of field focusing on the tutor. The lighting is natural and bright, conveying expertise and trust for a high-end educational platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-WABAdMjsYQwxHG1Wyi_tAAnWXbbmPzypxnlbEkZ5BSW2du7So3iKNKO2C_24TbPj8bnkb7YPKt_ipr_5wFkXU4aSOwIDMGZ5mAtOXIeZNXr_BEJC8mcyn0dFwneNotz_LOlc30nbKK3AdXMBtUbxNx3ybk5Q1tI4THU5oxa0VtqOya6Ag7qrR0Lg9_SrTvGwtmxUuiZ0DYhweLYTdBP74CIWyiWq1V0DV8Ckj_zdiLMCSw4c6RhXh-UxaK0HElCaGvLaGa2jjFEt">
+<div class="absolute top-unit-md left-unit-md">
+<span class="bg-secondary text-on-secondary px-unit-sm py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                Verified Educator
+                            </span>
+</div>
+<div class="absolute bottom-unit-md right-unit-md">
+<div class="bg-surface-container-lowest/90 backdrop-blur px-unit-sm py-1 rounded-lg shadow-sm flex items-center gap-1 border border-outline-variant/30">
+<span class="material-symbols-outlined text-amber-500 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-label-md">4.9</span>
+<span class="text-on-surface-variant text-[12px]">(156)</span>
+</div>
+</div>
+</div>
+<div class="p-unit-lg flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-unit-sm">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Prof. David Chen</h3>
+<p class="text-primary font-label-md">Computer Science &amp; Data Ethics</p>
+</div>
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-on-surface">$90</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ hour</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md line-clamp-3 mb-unit-lg">
+                            Former Silicon Valley engineer and current adjunct professor. I teach full-stack development, Python, and the fundamentals of AI with a focus on practical projects.
+                        </p>
+<div class="mt-auto flex gap-unit-sm">
+<button class="flex-1 bg-surface-container text-primary font-label-md py-3 rounded-xl hover:bg-primary hover:text-on-primary transition-all duration-300">View Profile</button>
+<button class="px-unit-md bg-primary-container text-on-primary rounded-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tutor Card 5 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 group flex flex-col h-full border-primary/20">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A smiling Black female tutor in a bright workspace, surrounded by art supplies and a digital tablet. She has an artistic, creative vibe. High-key lighting, minimalist room with pops of color. The style is modern, professional, and visually engaging, suitable for a premium EdTech SaaS." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNgd7y48WsqVwZgf43fdV_o6CRRpJV43qbp7sP-ATqT1JWgLckeylkp0AhJS13oWcd7Sp60z2lhcyPeUhcOH_AdxV6FtWT1hdc-MonnsxW3WHwE6d6dICNUkeAFgmhKeS02jBPSGnuvyGBSYbchp61vAEoOY_bgy75plzpvNLcC4dl-tjKm41BICxo6O2Jkvf8mX-vQPcqoyFoqP1e4wEp2QYkIRiTMo6yamRn2GTUtbP4fcaHoSIkXUr0mDx2ToKZARxNmSu4EMCA">
+<div class="absolute top-unit-md left-unit-md">
+<span class="bg-primary text-on-primary px-unit-sm py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                                Top Rated
+                            </span>
+</div>
+<div class="absolute bottom-unit-md right-unit-md">
+<div class="bg-surface-container-lowest/90 backdrop-blur px-unit-sm py-1 rounded-lg shadow-sm flex items-center gap-1 border border-outline-variant/30">
+<span class="material-symbols-outlined text-amber-500 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-label-md">5.0</span>
+<span class="text-on-surface-variant text-[12px]">(210)</span>
+</div>
+</div>
+</div>
+<div class="p-unit-lg flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-unit-sm">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Jordan Williams</h3>
+<p class="text-primary font-label-md">Graphic Design &amp; Digital Art</p>
+</div>
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-on-surface">$60</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ hour</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md line-clamp-3 mb-unit-lg">
+                            Creative Director with a passion for teaching. Master Adobe Creative Cloud and UI/UX design principles. I focus on building portfolios that get students hired.
+                        </p>
+<div class="mt-auto flex gap-unit-sm">
+<button class="flex-1 bg-surface-container text-primary font-label-md py-3 rounded-xl hover:bg-primary hover:text-on-primary transition-all duration-300">View Profile</button>
+<button class="px-unit-md bg-primary-container text-on-primary rounded-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tutor Card 6 -->
+<div class="glass-card rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 group flex flex-col h-full">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A focused female tutor of Asian descent in a clean white laboratory setting, wearing a lab coat and holding a beaker. Professional lighting with clean white and clinical blue tones. The image represents academic rigor and scientific expertise, presented in a modern, high-end digital design context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKQOmiNw8IN87I9j5hFbTdw-C_hjlnJ_IZaSOROr2HZGpT_pBNPgzh3vI4hmuJaUOJCpFEHQxhHwrmTAsAFNm-qnT6pe4cOvc7eQhUNDlmCw-9fx0U0ICDmC5syj9iurpRM9F42Wpnyt0JHu_lfkzDpiHKN_Y3OkwVEnkvBySeYMJ55hm9Bwq_4riUn2goGTCuNaLoGaz-SxyvJjwub6fZ0sO4DDEHyUO_MuLpI8eU8MG8wlfUAsRKZUnUPFYNYr_TrMvXHAvz9YJO">
+<div class="absolute top-unit-md left-unit-md">
+<span class="bg-secondary text-on-secondary px-unit-sm py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                Verified Educator
+                            </span>
+</div>
+<div class="absolute bottom-unit-md right-unit-md">
+<div class="bg-surface-container-lowest/90 backdrop-blur px-unit-sm py-1 rounded-lg shadow-sm flex items-center gap-1 border border-outline-variant/30">
+<span class="material-symbols-outlined text-amber-500 text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-label-md">4.7</span>
+<span class="text-on-surface-variant text-[12px]">(67)</span>
+</div>
+</div>
+</div>
+<div class="p-unit-lg flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-unit-sm">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Dr. Lisa Wong</h3>
+<p class="text-primary font-label-md">Chemistry &amp; Biology</p>
+</div>
+<div class="text-right">
+<span class="block font-headline-sm text-headline-sm text-on-surface">$65</span>
+<span class="text-[12px] text-on-surface-variant font-medium">/ hour</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-md line-clamp-3 mb-unit-lg">
+                            Specializing in MCAT preparation and high school chemistry. I make complex organic chemistry accessible through visualization and practical application.
+                        </p>
+<div class="mt-auto flex gap-unit-sm">
+<button class="flex-1 bg-surface-container text-primary font-label-md py-3 rounded-xl hover:bg-primary hover:text-on-primary transition-all duration-300">View Profile</button>
+<button class="px-unit-md bg-primary-container text-on-primary rounded-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-deep-padding flex justify-center items-center gap-unit-sm">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">3</button>
+<span class="px-2">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">24</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-deep-padding bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-desktop text-center">
+<div class="max-w-3xl mx-auto">
+<h2 class="font-display-lg text-display-lg mb-unit-lg">Can't find the right fit?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-unit-xl">Tell us your goals, and we'll hand-match you with a tutor who fits your specific needs and learning style.</p>
+<button class="tutor-gradient-bg text-on-primary px-unit-xl py-4 rounded-full font-label-md text-label-md shadow-xl hover:scale-105 transition-transform">Get Personalized Matching</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-on-background border-t border-outline-variant dark:border-outline/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter py-deep-padding px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="font-headline-md text-headline-md font-extrabold text-primary dark:text-primary-fixed mb-unit-md">TutorNest</div>
+<p class="font-body-md text-on-surface-variant dark:text-surface-dim">Empowering education through verified expertise and modern learning tools.</p>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-unit-lg">Platform</h4>
+<ul class="flex flex-col gap-unit-sm">
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">Find Tutors</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">Courses</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">Tutor Handbook</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-unit-lg">Company</h4>
+<ul class="flex flex-col gap-unit-sm">
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">About Us</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">Careers</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">Contact Support</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-unit-lg">Legal</h4>
+<ul class="flex flex-col gap-unit-sm">
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">Privacy Policy</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-dim hover:text-secondary transition-colors" href="javascript:void(0)">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 py-unit-lg text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-dim">© 2024 TutorNest EdTech. All rights reserved. Empowering education through verified expertise.</p>
+</div>
+</footer>
+<script>
+        // Micro-interaction for filter bar focus
+        const searchInput = document.querySelector('input[type="text"]');
+        const filterContainer = searchInput.closest('.glass-card');
+        
+        searchInput.addEventListener('focus', () => {
+            filterContainer.classList.add('ring-2', 'ring-primary/20', 'border-primary/30');
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            filterContainer.classList.remove('ring-2', 'ring-primary/20', 'border-primary/30');
+        });
+
+        // Sticky Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('h-16', 'shadow-md');
+                header.classList.remove('h-20', 'shadow-sm');
+            } else {
+                header.classList.add('h-20', 'shadow-sm');
+                header.classList.remove('h-16', 'shadow-md');
+            }
+        });
+    </script>
+<script src="/js/app.js"></script>
+<script src="/js/pages/find-tutors.js"></script>
+</body></html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sarah Jenkins - Advanced Mathematics &amp; Calculus Tutor | TutorNest</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#712ae2",
+                    "on-primary-container": "#eeefff",
+                    "surface": "#faf8ff",
+                    "tertiary-fixed": "#e0e3e5",
+                    "outline-variant": "#c3c6d7",
+                    "on-tertiary-container": "#eff1f3",
+                    "primary-fixed": "#dbe1ff",
+                    "surface-container-low": "#f2f3ff",
+                    "outline": "#737686",
+                    "on-primary-fixed": "#00174b",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#434655",
+                    "on-surface": "#131b2e",
+                    "on-secondary-container": "#fffbff",
+                    "tertiary": "#525657",
+                    "inverse-surface": "#283044",
+                    "surface-variant": "#dae2fd",
+                    "surface-container-highest": "#dae2fd",
+                    "tertiary-container": "#6b6e70",
+                    "primary-container": "#2563eb",
+                    "on-tertiary-fixed": "#191c1e",
+                    "secondary-container": "#8a4cfc",
+                    "surface-dim": "#d2d9f4",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#131b2e",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "on-secondary-fixed": "#25005a",
+                    "surface-tint": "#0053db",
+                    "on-secondary-fixed-variant": "#5a00c6",
+                    "surface-bright": "#faf8ff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "on-secondary": "#ffffff",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "inverse-on-surface": "#eef0ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container": "#eaedff",
+                    "secondary-fixed": "#eaddff",
+                    "surface-container-high": "#e2e7ff",
+                    "background": "#faf8ff",
+                    "secondary-fixed-dim": "#d2bbff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-sm": "8px",
+                    "unit-xl": "64px",
+                    "unit-xs": "4px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "unit-md": "16px",
+                    "container-max": "1280px",
+                    "unit-lg": "32px",
+                    "margin-mobile": "20px",
+                    "deep-padding": "80px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Space Grotesk"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "display-lg-mobile": ["Space Grotesk"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #004ac6, #712ae2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body {
+            background-color: #faf8ff;
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Top Navigation Bar (Shared Component Strategy) -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-unit-md max-w-container-max mx-auto bg-white/70 dark:bg-surface/70 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0px_10px_30px_rgba(37,99,235,0.05)]">
+<div class="flex items-center gap-unit-md">
+<span class="font-headline-md text-headline-md font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">TutorNest</span>
+<div class="hidden md:flex gap-unit-md ml-unit-xl">
+<a class="font-body-md text-body-md text-primary border-b-2 border-primary font-bold pb-1" href="javascript:void(0)">Find Tutors</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline hover:text-primary transition-colors" href="javascript:void(0)">My Classes</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline hover:text-primary transition-colors" href="javascript:void(0)">Resources</a>
+</div>
+</div>
+<div class="flex items-center gap-unit-md">
+<button class="font-label-md text-label-md px-unit-md py-unit-sm text-primary hover:scale-105 transition-transform duration-200">Log In</button>
+<button class="font-label-md text-label-md px-unit-lg py-unit-sm bg-gradient-to-r from-primary to-secondary text-white rounded-full hover:scale-105 transition-transform duration-200 shadow-md">Join for Free</button>
+</div>
+</nav>
+<main class="pt-unit-xl mt-unit-xl max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<!-- Hero Section -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-unit-lg mb-unit-xl">
+<div class="md:col-span-8 flex flex-col md:flex-row gap-unit-lg items-center md:items-start text-center md:text-left">
+<div class="relative">
+<div class="w-40 h-40 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of Sarah Jenkins, a friendly and confident mathematics tutor in her late 30s. She is smiling warmly against a soft-focus office background with books. The lighting is natural and bright, conveying a premium and trustworthy academic atmosphere with high-key whites and subtle blue tones consistent with a modern EdTech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8fwRFOSaCb-H1O1FgVxVFApAAa4OIt56rapVevWh4HQPCKaZUb5Oi44tWoWqpcoQ8r8swv9NHGMPZy0MRoVIoMjQy5N0UMS7hJiJhsXryfdZuQfK2s_shrpYECW2EM0Y5-SBn1SnzyLeG2h0I5SRybs925zEMu3CzMNlR4MvtuGRmWydYn7dOJM_DT0BCOWTCXJm35kxy9yZ6vPkxjebegprIkpPZj3-NdUz84jpPi2p4_B3aEzm4drq_Fbu2jEACzthVAFsDQ5_h">
+</div>
+<div class="absolute bottom-2 right-2 bg-primary text-white p-2 rounded-full shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1 space-y-unit-sm">
+<div class="flex flex-col md:flex-row md:items-center gap-unit-sm">
+<h1 class="font-headline-md text-headline-md text-on-surface">Sarah Jenkins</h1>
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full font-label-sm text-label-sm w-fit mx-auto md:mx-0 border border-primary/20">Verified Educator</span>
+</div>
+<p class="font-headline-sm text-headline-sm text-primary-container">Advanced Mathematics &amp; Calculus Expert</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-unit-md pt-unit-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md">4.9 (240 reviews)</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-outline">history</span>
+<span class="font-label-md text-label-md">500+ Hours Taught</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-outline">language</span>
+<span class="font-label-md text-label-md">English, Spanish</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-unit-xl">
+<!-- Left Column: Main Content -->
+<div class="lg:col-span-8 space-y-unit-xl pb-unit-xl">
+<!-- About Me -->
+<section>
+<h2 class="font-headline-sm text-headline-sm mb-unit-md">About Me</h2>
+<div class="bg-white p-unit-lg rounded-xl border border-outline-variant/30 shadow-sm leading-relaxed text-on-surface-variant">
+<p class="mb-unit-md">Hi, I'm Sarah! With over 10 years of experience in specialized mathematical instruction, I've dedicated my career to making complex concepts accessible and exciting for students of all levels. I specialize in helping high school and college students master Advanced Calculus, Linear Algebra, and SAT preparation.</p>
+<p>My teaching philosophy focuses on "Intuitive Mastery"—understanding the 'why' behind the formulas, which builds lasting confidence. Whether you're struggling with limits or aiming for a perfect 800 on your Math SAT, I tailor every session to your unique learning style and pace.</p>
+</div>
+</section>
+<!-- Subjects -->
+<section>
+<h2 class="font-headline-sm text-headline-sm mb-unit-md">Specialized Subjects</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-unit-md">
+<div class="bg-surface-container-low p-unit-md rounded-lg border border-primary/10">
+<h3 class="font-label-md text-label-md text-primary mb-2">Mathematics</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-white px-3 py-1 rounded-md text-label-sm font-label-sm border border-outline-variant/30">Calculus BC</span>
+<span class="bg-white px-3 py-1 rounded-md text-label-sm font-label-sm border border-outline-variant/30">Linear Algebra</span>
+<span class="bg-white px-3 py-1 rounded-md text-label-sm font-label-sm border border-outline-variant/30">Trigonometry</span>
+<span class="bg-white px-3 py-1 rounded-md text-label-sm font-label-sm border border-outline-variant/30">Algebra II</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-unit-md rounded-lg border border-secondary/10">
+<h3 class="font-label-md text-label-md text-secondary mb-2">Test Prep</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-white px-3 py-1 rounded-md text-label-sm font-label-sm border border-outline-variant/30">SAT Math Specialist</span>
+<span class="bg-white px-3 py-1 rounded-md text-label-sm font-label-sm border border-outline-variant/30">ACT Mathematics</span>
+<span class="bg-white px-3 py-1 rounded-md text-label-sm font-label-sm border border-outline-variant/30">AP Calculus AB</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Education & Certification -->
+<section>
+<h2 class="font-headline-sm text-headline-sm mb-unit-md">Education &amp; Certifications</h2>
+<div class="space-y-unit-md">
+<div class="flex items-start gap-unit-md p-unit-md bg-white rounded-xl border border-outline-variant/20">
+<div class="w-12 h-12 rounded-lg bg-primary/5 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">school</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md">M.Sc. in Mathematics</h4>
+<p class="text-label-sm text-on-surface-variant">Massachusetts Institute of Technology (MIT) • 2014</p>
+</div>
+</div>
+<div class="flex items-start gap-unit-md p-unit-md bg-white rounded-xl border border-outline-variant/20">
+<div class="w-12 h-12 rounded-lg bg-secondary/5 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary">card_membership</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md">Certified Advanced Educator (NTA)</h4>
+<p class="text-label-sm text-on-surface-variant">National Tutoring Association • 2016</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Reviews -->
+<section>
+<div class="flex justify-between items-end mb-unit-md">
+<h2 class="font-headline-sm text-headline-sm">Student Reviews</h2>
+<a class="text-primary font-label-md hover:underline" href="javascript:void(0)">View all 240 reviews</a>
+</div>
+<div class="space-y-unit-md">
+<!-- Review 1 -->
+<div class="bg-white p-unit-lg rounded-xl border border-outline-variant/20 shadow-sm">
+<div class="flex justify-between items-start mb-unit-sm">
+<div class="flex items-center gap-unit-sm">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center font-bold text-primary">JD</div>
+<div>
+<h5 class="font-label-md text-label-md">James D.</h5>
+<p class="text-label-sm text-outline">AP Calculus Student</p>
+</div>
+</div>
+<div class="flex text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant italic">"Sarah literally saved my grade. I was failing Calc BC, and after just 5 sessions, I actually understood what a derivative meant. Got a 5 on the AP exam!"</p>
+</div>
+<!-- Review 2 -->
+<div class="bg-white p-unit-lg rounded-xl border border-outline-variant/20 shadow-sm">
+<div class="flex justify-between items-start mb-unit-sm">
+<div class="flex items-center gap-unit-sm">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center font-bold text-secondary">ML</div>
+<div>
+<h5 class="font-label-md text-label-md">Maria L.</h5>
+<p class="text-label-sm text-outline">Parent of High School Junior</p>
+</div>
+</div>
+<div class="flex text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant italic">"Excellent communicator and very patient. Sarah has a gift for explaining the same problem in three different ways until it clicks."</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sidebar Booking Widget -->
+<aside class="lg:col-span-4">
+<div class="sticky top-[100px]">
+<div class="glass-card p-unit-lg rounded-2xl shadow-xl border border-white/50 space-y-unit-lg">
+<div class="flex justify-between items-center">
+<div>
+<span class="font-display-lg text-primary">$65</span>
+<span class="text-on-surface-variant">/ hour</span>
+</div>
+<div class="text-right">
+<p class="text-label-sm text-secondary font-bold">1st Session Free</p>
+</div>
+</div>
+<!-- Calendar Mockup -->
+<div class="space-y-unit-sm">
+<label class="font-label-md text-label-md block">Select Date &amp; Time</label>
+<div class="grid grid-cols-7 gap-1 border border-outline-variant/30 p-2 rounded-lg bg-white/50">
+<div class="text-center text-[10px] text-outline font-bold">M</div>
+<div class="text-center text-[10px] text-outline font-bold">T</div>
+<div class="text-center text-[10px] text-outline font-bold">W</div>
+<div class="text-center text-[10px] text-outline font-bold">T</div>
+<div class="text-center text-[10px] text-outline font-bold">F</div>
+<div class="text-center text-[10px] text-outline font-bold">S</div>
+<div class="text-center text-[10px] text-outline font-bold">S</div>
+<!-- Week row -->
+<div class="text-center py-2 text-label-sm hover:bg-primary-container/10 rounded cursor-pointer">12</div>
+<div class="text-center py-2 text-label-sm hover:bg-primary-container/10 rounded cursor-pointer">13</div>
+<div class="text-center py-2 text-label-sm bg-primary text-white rounded cursor-pointer font-bold">14</div>
+<div class="text-center py-2 text-label-sm hover:bg-primary-container/10 rounded cursor-pointer">15</div>
+<div class="text-center py-2 text-label-sm hover:bg-primary-container/10 rounded cursor-pointer">16</div>
+<div class="text-center py-2 text-label-sm hover:bg-primary-container/10 rounded cursor-pointer">17</div>
+<div class="text-center py-2 text-label-sm hover:bg-primary-container/10 rounded cursor-pointer">18</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 py-2 rounded-md border border-outline-variant/30 text-label-sm hover:bg-white transition-colors">10:00 AM</button>
+<button class="flex-1 py-2 rounded-md border border-primary text-primary bg-primary-container/10 text-label-sm font-bold">2:30 PM</button>
+<button class="flex-1 py-2 rounded-md border border-outline-variant/30 text-label-sm hover:bg-white transition-colors">4:00 PM</button>
+</div>
+</div>
+<!-- CTA Buttons -->
+<div class="space-y-unit-sm">
+<button class="w-full py-unit-md bg-gradient-to-r from-primary to-secondary text-white font-label-md rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-200">Book Free Trial</button>
+<button class="w-full py-unit-md border border-primary text-primary font-label-md rounded-xl hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+                                Message Sarah
+                            </button>
+</div>
+<p class="text-center text-label-sm text-on-surface-variant pt-unit-sm">
+                            Response time: <span class="font-bold text-primary">~2 hours</span>
+</p>
+<div class="border-t border-outline-variant/20 pt-unit-md space-y-unit-sm">
+<div class="flex items-center gap-2 text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-green-500" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                                100% Satisfaction Guarantee
+                            </div>
+<div class="flex items-center gap-2 text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-blue-500" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+                                Free rescheduling up to 24h
+                            </div>
+</div>
+</div>
+<!-- Small Stat Card Below -->
+<div class="mt-unit-lg bg-surface-container-high/50 p-unit-md rounded-xl border border-outline-variant/20 flex items-center gap-unit-md">
+<div class="w-16 h-16 rounded-lg bg-cover bg-center shrink-0" data-alt="A small detailed map showing the Greater Boston area with a subtle blue location pin. The map is in a clean, minimalist style with light grey roads and soft blue water features, matching the TutorNest design aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDusukzjjmzssRhgVWRrchFBtpZW8HtNs9U9fMrpPM5qnmmGntX1-S1iVNF6BCgtGg8qwEjpoQ8wfhLsvcIuxkYBpADnCstfwXvsB6yaPxsHRFD8qYfpmsTD46FC0uybImZeMoPDIK6YKcJtTMJ0E5W6wGpLUeMGuumucaXahR-NwHDQA49cKKEsyVA7euXSkDAUzeVpwnUS4z-UZpoiEHaOIKkX64SZAMsWc1vPqu9Rc6tJeEItDtyOwiTWqD9423KDKKzYaAb6OhC')"></div>
+<div>
+<p class="text-label-sm font-bold">Available for In-Person</p>
+<p class="text-label-sm text-outline">Boston &amp; Cambridge area</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer (Shared Component Strategy) -->
+<footer class="mt-unit-xl w-full py-unit-xl px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-unit-md border-t border-outline-variant/20 bg-surface-container-lowest">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface mb-2">TutorNest</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 TutorNest. Elevating Academic Excellence.</p>
+</div>
+<div class="flex gap-unit-lg flex-wrap justify-center">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary hover:underline transition-all" href="javascript:void(0)">Become a Tutor</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary hover:underline transition-all" href="javascript:void(0)">Help Center</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary hover:underline transition-all" href="javascript:void(0)">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary hover:underline transition-all" href="javascript:void(0)">Terms of Service</a>
+</div>
+</footer>
+<script>
+        // Micro-interaction for calendar slots
+        const timeSlots = document.querySelectorAll('button.text-label-sm');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                timeSlots.forEach(s => {
+                    s.classList.remove('border-primary', 'text-primary', 'bg-primary-container/10', 'font-bold');
+                    s.classList.add('border-outline-variant/30');
+                });
+                slot.classList.remove('border-outline-variant/30');
+                slot.classList.add('border-primary', 'text-primary', 'bg-primary-container/10', 'font-bold');
+            });
+        });
+
+        // Simple scroll reveal for cards
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section > div, aside > div').forEach(el => {
+            el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-4');
+            observer.observe(el);
+        });
+    </script>
+<script src="/js/app.js"></script>
+<script src="/js/pages/tutor-detail.js"></script>
+</body></html>
