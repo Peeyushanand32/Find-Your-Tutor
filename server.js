@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const db = require('./db');
+const { User, Booking, Message, Inquiry, WalletRequest } = require('./db');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Route Guard: Restrict non-logged in users from accessing any pages except home and reset password
-app.get('/*.html', (req, res, next) => {
+app.get('/*.html', async (req, res, next) => {
   const page = req.path.toLowerCase();
   if (page === '/index.html' || page === '/reset-password.html' || page === '/subscription.html' || page === '/pricing.html') {
     return next();
@@ -27,7 +27,7 @@ app.get('/*.html', (req, res, next) => {
   }
 
   // Restrict Basic/unsubscribed students from accessing dashboard, messages, or calendar
-  const user = db.findOne('users', { id: userId });
+  const user = await User.findOne({ id: userId });
   if (user && user.role === 'student' && (user.plan === 'Basic' || !user.plan)) {
     if (page === '/student-dashboard.html' || page === '/student-messages.html' || page === '/student-calendar.html') {
       return res.redirect('/pricing.html');
@@ -50,14 +50,14 @@ passport.use(new GoogleStrategy({
     clientSecret: "YOUR_GOOGLE_CLIENT_SECRET",
     callbackURL: "/api/auth/google/callback"
   },
-  function(accessToken, refreshToken, profile, done) {
+  async function(accessToken, refreshToken, profile, done) {
     // Check if user already exists in db.json by email or googleId
     const email = profile.emails[0].value;
-    let user = db.findOne('users', { email: email.toLowerCase() });
+    let user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
       // Register a new student profile dynamically using Google Details
-      user = db.insert('users', {
+      user = await User.create({
         email: email.toLowerCase(),
         password: "oauth_generated_password",
         name: profile.displayName,
@@ -79,19 +79,19 @@ passport.use(new GoogleStrategy({
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Authentication Middleware helper
-function getCurrentUser(req) {
+async function getCurrentUser(req) {
   const userId = req.cookies.userId;
   if (!userId) return null;
-  const user = db.findOne('users', { id: userId });
+  const user = await User.findOne({ id: userId });
   if (user && !user.createdAt) {
     user.createdAt = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-    db.update('users', { id: userId }, { createdAt: user.createdAt });
+    await User.findOneAndUpdate({ id: userId }, { createdAt: user.createdAt });
   }
   return user;
 }
 
-function requireAuth(req, res, next) {
-  const user = getCurrentUser(req);
+async function requireAuth(req, res, next) {
+  const user = await getCurrentUser(req);
   if (!user) {
     return res.status(401).json({ error: 'Unauthorized. Please log in.' });
   }
@@ -101,8 +101,8 @@ function requireAuth(req, res, next) {
 
 // ----------------- Auth API Endpoints -----------------
 
-app.get('/api/auth/me', (req, res) => {
-  const user = getCurrentUser(req);
+app.get('/api/auth/me', async (req, res) => {
+  const user = await getCurrentUser(req);
   if (!user) return res.json({ loggedIn: false });
 
   // Exclude password
@@ -110,13 +110,13 @@ app.get('/api/auth/me', (req, res) => {
   res.json({ loggedIn: true, user: userSafe });
 });
 
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
-  const user = db.findOne('users', { email: email.toLowerCase() });
+  const user = await User.findOne({ email: email.toLowerCase() });
   if (!user || user.password !== password) {
     return res.status(401).json({ error: 'Invalid email or password' });
   }
@@ -148,13 +148,13 @@ app.get('/api/auth/google/callback',
   }
 );
 
-app.post('/api/auth/register', (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   const { email, password, name, role, phone } = req.body;
   if (!email || !password || !name || !role || !phone) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const existingUser = db.findOne('users', { email: email.toLowerCase() });
+  const existingUser = await User.findOne({ email: email.toLowerCase() });
   if (existingUser) {
     return res.status(400).json({ error: 'Email already exists' });
   }
@@ -190,7 +190,7 @@ app.post('/api/auth/register', (req, res) => {
     });
   }
 
-  const createdUser = db.insert('users', newUser);
+  const createdUser = await User.create(newUser);
   res.cookie('userId', createdUser.id, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
   const { password: _, ...userSafe } = createdUser;
   res.json({ success: true, user: userSafe });
@@ -218,7 +218,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     return res.status(400).json({ error: 'Email address is required' });
   }
 
-  const user = db.findOne('users', { email: email.toLowerCase() });
+  const user = await User.findOne({ email: email.toLowerCase() });
   if (!user) {
     return res.status(404).json({ error: 'No account found with this email' });
   }
@@ -227,7 +227,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   const resetToken = crypto.randomBytes(16).toString('hex');
   const resetExpiry = Date.now() + 3600000;
 
-  db.update('users', { id: user.id }, { resetToken, resetExpiry });
+  await User.findOneAndUpdate({ id: user.id }, { resetToken, resetExpiry });
 
   const resetLink = `http://localhost:3000/reset-password.html?token=${resetToken}`;
 
@@ -271,18 +271,18 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 });
 
 // Confirm Reset Password Request
-app.post('/api/auth/reset-password', (req, res) => {
+app.post('/api/auth/reset-password', async (req, res) => {
   const { token, password } = req.body;
   if (!token || !password) {
     return res.status(400).json({ error: 'Token and password are required' });
   }
 
-  const user = db.findOne('users', { resetToken: token });
+  const user = await User.findOne({ resetToken: token });
   if (!user || user.resetExpiry < Date.now()) {
     return res.status(400).json({ error: 'Reset token is invalid or has expired.' });
   }
 
-  db.update('users', { id: user.id }, { 
+  await User.findOneAndUpdate({ id: user.id }, { 
     password, 
     resetToken: null, 
     resetExpiry: null 
@@ -293,9 +293,9 @@ app.post('/api/auth/reset-password', (req, res) => {
 
 // ----------------- Tutors API Endpoints -----------------
 
-app.get('/api/tutors', (req, res) => {
+app.get('/api/tutors', async (req, res) => {
   const { subject, minPrice, maxPrice, rating, gradeLevel, availability, sort } = req.query;
-  let tutors = db.find('users', { role: 'tutor' });
+  let tutors = await User.find({ role: 'tutor' });
 
   // Apply filters
   if (subject && subject.trim() !== '') {
@@ -337,8 +337,8 @@ app.get('/api/tutors', (req, res) => {
   res.json(tutors);
 });
 
-app.get('/api/users/:id', requireAuth, (req, res) => {
-  const user = db.findOne('users', { id: req.params.id });
+app.get('/api/users/:id', requireAuth, async (req, res) => {
+  const user = await User.findOne({ id: req.params.id });
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }
@@ -346,16 +346,16 @@ app.get('/api/users/:id', requireAuth, (req, res) => {
   res.json(safeUser);
 });
 
-app.get('/api/tutors/:id', (req, res) => {
-  const tutor = db.findOne('users', { id: req.params.id, role: 'tutor' });
+app.get('/api/tutors/:id', async (req, res) => {
+  const tutor = await User.findOne({ id: req.params.id, role: 'tutor' });
   if (!tutor) {
     return res.status(404).json({ error: 'Tutor not found' });
   }
-  const reviews = db.find('reviews', { tutorId: tutor.id });
+  const reviews = [];
   res.json({ tutor, reviews });
 });
 
-app.put('/api/tutors/:id', requireAuth, (req, res) => {
+app.put('/api/tutors/:id', requireAuth, async (req, res) => {
   if (req.user.id !== req.params.id) {
     return res.status(403).json({ error: 'Permission denied' });
   }
@@ -379,25 +379,25 @@ app.put('/api/tutors/:id', requireAuth, (req, res) => {
     updateData.availability = Array.isArray(availability) ? availability : [];
   }
 
-  const updated = db.update('users', { id: req.user.id }, updateData);
-  res.json({ success: true, user: updated[0] });
+  const updated = await User.findOneAndUpdate({ id: req.user.id }, updateData, { new: true });
+  res.json({ success: true, user: updated });
 });
 
 // ----------------- Bookings API Endpoints -----------------
 
-app.get('/api/bookings', requireAuth, (req, res) => {
+app.get('/api/bookings', requireAuth, async (req, res) => {
   let bookings;
   if (req.user.role === 'student') {
-    bookings = db.find('bookings', { studentId: req.user.id });
+    bookings = await Booking.find({ studentId: req.user.id });
   } else {
-    bookings = db.find('bookings', { tutorId: req.user.id });
+    bookings = await Booking.find({ tutorId: req.user.id });
   }
   // Sort by date, soonest first
   bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
   res.json(bookings);
 });
 
-app.post('/api/bookings', requireAuth, (req, res) => {
+app.post('/api/bookings', requireAuth, async (req, res) => {
   if (req.user.role !== 'student') {
     return res.status(403).json({ error: 'Only students can book lessons' });
   }
@@ -411,7 +411,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'All booking fields are required' });
   }
 
-  const tutor = db.findOne('users', { id: tutorId, role: 'tutor' });
+  const tutor = await User.findOne({ id: tutorId, role: 'tutor' });
   if (!tutor) {
     return res.status(404).json({ error: 'Tutor not found' });
   }
@@ -424,7 +424,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
   }
 
   // Deduct student balance
-  db.update('users', { id: req.user.id }, { balance: parseFloat((req.user.balance - totalCost).toFixed(2)) });
+  await User.findOneAndUpdate({ id: req.user.id }, { balance: parseFloat((req.user.balance - totalCost).toFixed(2)) });
 
   const meetingRoomName = `TutorNest-${subject.replace(/[^a-zA-Z0-9]/g, '')}-${Math.random().toString(36).substring(2, 10)}`;
   const newBooking = {
@@ -441,10 +441,10 @@ app.post('/api/bookings', requireAuth, (req, res) => {
     meetingLink: `https://meet.jit.si/${meetingRoomName}`
   };
 
-  const booking = db.insert('bookings', newBooking);
+  const booking = await Booking.create(newBooking);
 
   // Send automatic notification message in chat
-  db.insert('messages', {
+  await Message.create({
     senderId: req.user.id,
     senderName: req.user.name,
     receiverId: tutor.id,
@@ -456,8 +456,8 @@ app.post('/api/bookings', requireAuth, (req, res) => {
   res.json({ success: true, booking });
 });
 
-app.put('/api/bookings/:id', requireAuth, (req, res) => {
-  const booking = db.findOne('bookings', { id: req.params.id });
+app.put('/api/bookings/:id', requireAuth, async (req, res) => {
+  const booking = await Booking.findOne({ id: req.params.id });
   if (!booking) {
     return res.status(404).json({ error: 'Booking not found' });
   }
@@ -476,12 +476,12 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
   if (status === 'completed' && booking.status !== 'completed') {
     // Transfer funds to Tutor's wallet balance
     const earnings = booking.rate * booking.duration;
-    const tutor = db.findOne('users', { id: booking.tutorId });
+    const tutor = await User.findOne({ id: booking.tutorId });
     if (tutor) {
       const newBal = parseFloat((tutor.walletBalance + earnings).toFixed(2));
       const newTotal = parseFloat((tutor.totalEarnings + earnings).toFixed(2));
       const newHours = (tutor.hoursTaught || 0) + booking.duration;
-      db.update('users', { id: tutor.id }, {
+      await User.findOneAndUpdate({ id: tutor.id }, {
         walletBalance: newBal,
         totalEarnings: newTotal,
         hoursTaught: newHours
@@ -490,9 +490,9 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
   } else if (status === 'cancelled' && booking.status !== 'cancelled' && booking.status !== 'completed') {
     // Refund Student (if it wasn't cancelled already)
     const refund = booking.rate * booking.duration;
-    const student = db.findOne('users', { id: booking.studentId });
+    const student = await User.findOne({ id: booking.studentId });
     if (student) {
-      db.update('users', { id: student.id }, { balance: parseFloat((student.balance + refund).toFixed(2)) });
+      await User.findOneAndUpdate({ id: student.id }, { balance: parseFloat((student.balance + refund).toFixed(2)) });
     }
   }
 
@@ -503,7 +503,7 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
     updatedFields.meetingLink = `https://meet.jit.si/${meetingRoomName}`;
     booking.meetingLink = updatedFields.meetingLink;
   }
-  db.update('bookings', { id: booking.id }, updatedFields);
+  await Booking.findOneAndUpdate({ id: booking.id }, updatedFields);
 
   // Send status update notification message
   const updaterName = req.user.name;
@@ -512,7 +512,7 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
     msgText += `\n🔗 Join Video Session: ${booking.meetingLink}`;
   }
 
-  db.insert('messages', {
+  await Message.create({
     senderId: req.user.id,
     senderName: updaterName,
     receiverId: req.user.id === booking.studentId ? booking.tutorId : booking.studentId,
@@ -524,7 +524,7 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
   // If request is accepted by the teacher, send email and SMS
   const wasAccepted = (status === 'scheduled' && oldStatus !== 'scheduled' && req.user.id === booking.tutorId);
   if (wasAccepted) {
-    const student = db.findOne('users', { id: booking.studentId });
+    const student = await User.findOne({ id: booking.studentId });
     if (student) {
       const tutor = req.user;
       const meetingUrl = updatedFields.meetingLink || booking.meetingLink;
@@ -578,19 +578,19 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
 
 // ----------------- Messages API Endpoints -----------------
 
-app.get('/api/messages', requireAuth, (req, res) => {
-  const messages = db.find('messages', item =>
-    item.senderId === req.user.id || item.receiverId === req.user.id
-  );
+app.get('/api/messages', requireAuth, async (req, res) => {
+  const messages = await Message.find({
+    $or: [{ senderId: req.user.id }, { receiverId: req.user.id }]
+  });
   // Sort chronologically
   messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
   res.json(messages);
 });
 
-app.get('/api/messages/channels', requireAuth, (req, res) => {
-  const messages = db.find('messages', item =>
-    item.senderId === req.user.id || item.receiverId === req.user.id
-  );
+app.get('/api/messages/channels', requireAuth, async (req, res) => {
+  const messages = await Message.find({
+    $or: [{ senderId: req.user.id }, { receiverId: req.user.id }]
+  });
 
   const channels = {};
   messages.forEach(msg => {
@@ -617,7 +617,7 @@ app.get('/api/messages/channels', requireAuth, (req, res) => {
   res.json(Object.values(channels).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
 });
 
-app.post('/api/messages', requireAuth, (req, res) => {
+app.post('/api/messages', requireAuth, async (req, res) => {
   const { receiverId, text } = req.body;
   if (!receiverId || !text) {
     return res.status(400).json({ error: 'Receiver ID and message content are required' });
@@ -633,7 +633,7 @@ app.post('/api/messages', requireAuth, (req, res) => {
     }
   }
 
-  const receiver = db.findOne('users', { id: receiverId });
+  const receiver = await User.findOne({ id: receiverId });
   if (!receiver) {
     return res.status(404).json({ error: 'Recipient not found' });
   }
@@ -645,7 +645,7 @@ app.post('/api/messages', requireAuth, (req, res) => {
     const studentId = isStudent ? req.user.id : receiver.id;
     const tutorId = isStudent ? receiver.id : req.user.id;
     
-    const bookings = db.find('bookings', { studentId, tutorId });
+    const bookings = await Booking.find({ studentId, tutorId });
     const hasAcceptedBooking = bookings.some(b => b.status === 'scheduled' || b.status === 'completed');
     
     if (!hasAcceptedBooking) {
@@ -662,12 +662,12 @@ app.post('/api/messages', requireAuth, (req, res) => {
     timestamp: new Date().toISOString()
   };
 
-  const created = db.insert('messages', newMsg);
+  const created = await Message.create(newMsg);
   res.json(created);
 });
 
-app.delete('/api/messages/:id', requireAuth, (req, res) => {
-  const msg = db.findOne('messages', { id: req.params.id });
+app.delete('/api/messages/:id', requireAuth, async (req, res) => {
+  const msg = await Message.findOne({ id: req.params.id });
   if (!msg) {
     return res.status(404).json({ error: 'Message not found' });
   }
@@ -677,17 +677,17 @@ app.delete('/api/messages/:id', requireAuth, (req, res) => {
     return res.status(403).json({ error: 'Unauthorized to delete this message' });
   }
 
-  db.delete('messages', { id: req.params.id });
+  await Message.deleteOne({ id: req.params.id });
   res.json({ success: true });
 });
 
 // ----------------- Wallet API Endpoints -----------------
 
-app.get('/api/wallet', requireAuth, (req, res) => {
+app.get('/api/wallet', requireAuth, async (req, res) => {
   if (req.user.role !== 'tutor') {
     return res.status(403).json({ error: 'Only tutors have wallets' });
   }
-  const history = db.find('walletRequests', { tutorId: req.user.id });
+  const history = await WalletRequest.find({ tutorId: req.user.id });
   res.json({
     balance: req.user.walletBalance || 0,
     earnings: req.user.totalEarnings || 0,
@@ -695,7 +695,7 @@ app.get('/api/wallet', requireAuth, (req, res) => {
   });
 });
 
-app.post('/api/wallet/payout', requireAuth, (req, res) => {
+app.post('/api/wallet/payout', requireAuth, async (req, res) => {
   if (req.user.role !== 'tutor') {
     return res.status(403).json({ error: 'Only tutors can request payouts' });
   }
@@ -712,9 +712,9 @@ app.post('/api/wallet/payout', requireAuth, (req, res) => {
 
   // Deduct
   const newBal = parseFloat((req.user.walletBalance - amount).toFixed(2));
-  db.update('users', { id: req.user.id }, { walletBalance: newBal });
+  await User.findOneAndUpdate({ id: req.user.id }, { walletBalance: newBal });
 
-  const payoutReq = db.insert('walletRequests', {
+  const payoutReq = await WalletRequest.create({
     tutorId: req.user.id,
     amount,
     status: "pending",
@@ -727,7 +727,7 @@ app.post('/api/wallet/payout', requireAuth, (req, res) => {
 
 // ----------------- Profile / Settings Endpoints -----------------
 
-app.put('/api/users/profile', requireAuth, (req, res) => {
+app.put('/api/users/profile', requireAuth, async (req, res) => {
   const { name, bio, phone, languages, currentPassword, newPassword, grade, city, hourlyBudget, targetSubject, targetExam, avatar } = req.body;
   const updateData = {};
 
@@ -751,13 +751,13 @@ app.put('/api/users/profile', requireAuth, (req, res) => {
     updateData.password = newPassword;
   }
 
-  const updated = db.update('users', { id: req.user.id }, updateData);
-  res.json({ success: true, user: updated[0] });
+  const updated = await User.findOneAndUpdate({ id: req.user.id }, updateData, { new: true });
+  res.json({ success: true, user: updated });
 });
 
 // ----------------- Inquiry Endpoints & Export -----------------
 
-app.post('/api/inquiries', (req, res) => {
+app.post('/api/inquiries', async (req, res) => {
   const { name, studentName, grade, subject, phone, location, email, message } = req.body;
   if (!email && !phone) {
     return res.status(400).json({ error: 'Email or phone number is required' });
@@ -775,7 +775,7 @@ app.post('/api/inquiries', (req, res) => {
     date: new Date().toISOString()
   };
 
-  const inquiry = db.insert('inquiries', newInquiry);
+  const inquiry = await Inquiry.create(newInquiry);
 
   // Optional: Sync to Google Sheets Webhook online in real-time
   const googleSheetWebhook = process.env.GOOGLE_SHEET_WEBHOOK || "https://script.google.com/macros/s/AKfycbzUbbpYRq8gVXJSas2474ReotIvkINrHaVyV4ImHm9dVVteNEGa1kVZIrwvHkUXtX1mlA/exec";
@@ -790,8 +790,8 @@ app.post('/api/inquiries', (req, res) => {
   res.json({ success: true, inquiry });
 });
 
-app.get('/api/admin/inquiries/export', (req, res) => {
-  const inquiries = db.get('inquiries');
+app.get('/api/admin/inquiries/export', async (req, res) => {
+  const inquiries = await Inquiry.find({});
 
   // UTF-8 BOM to ensure Excel opens accented characters correctly
   let csvContent = '\uFEFF';
@@ -853,7 +853,7 @@ app.post('/api/payments/order', async (req, res) => {
   }
 });
 
-app.post('/api/payments/verify', requireAuth, (req, res) => {
+app.post('/api/payments/verify', requireAuth, async (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planName } = req.body;
   const crypto = require('crypto');
 
@@ -865,8 +865,8 @@ app.post('/api/payments/verify', requireAuth, (req, res) => {
   if (generatedSignature === razorpay_signature) {
     // Signature verified successfully
     // Update user's subscription plan in DB
-    const updated = db.update('users', { id: req.user.id }, { plan: planName || 'Premium' });
-    const { password, ...userSafe } = updated[0];
+    const updated = await User.findOneAndUpdate({ id: req.user.id }, { plan: planName || 'Premium' }, { new: true });
+    const { password, ...userSafe } = updated;
     res.status(200).json({ success: true, message: 'Payment verified successfully', user: userSafe });
   } else {
     res.status(400).json({ success: false, message: 'Invalid payment signature' });
@@ -919,14 +919,14 @@ app.post('/api/checkout/create-session', requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/checkout/confirm', requireAuth, (req, res) => {
+app.post('/api/checkout/confirm', requireAuth, async (req, res) => {
   const { sessionId, planName } = req.body;
   if (!sessionId || !planName) {
     return res.status(400).json({ error: 'Session ID and Plan Name are required' });
   }
 
-  const updated = db.update('users', { id: req.user.id }, { plan: planName });
-  const { password, ...userSafe } = updated[0];
+  const updated = await User.findOneAndUpdate({ id: req.user.id }, { plan: planName }, { new: true });
+  const { password, ...userSafe } = updated;
   res.json({ success: true, user: userSafe });
 });
 

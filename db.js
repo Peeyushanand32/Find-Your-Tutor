@@ -1,171 +1,29 @@
+const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/tutornest';
 const DB_PATH = path.join(__dirname, 'db.json');
 
-// Mock data seed
+mongoose.connect(MONGODB_URI).then(() => {
+  console.log('Successfully connected to MongoDB database');
+}).catch((err) => {
+  console.warn('MongoDB not running. Falling back to local JSON database.');
+});
+
+// Seed data definition
 const initialData = {
-  users: [
-    {
-      id: "student1",
-      email: "student@tutornest.com",
-      password: "password",
-      name: "James Doe",
-      role: "student",
-      avatar: "JD",
-      balance: 15000.00,
-      plan: "Basic",
-      bio: "High school senior preparing for AP Calculus and college admission.",
-      languages: ["English"],
-      phone: "+1 (555) 019-2834"
-    },
-    {
-      id: "tutor1",
-      email: "tutor1@tutornest.com",
-      password: "password",
-      name: "Dr. Sarah Jenkins",
-      role: "tutor",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuAxBTj1Cg8WfDctCwZfizyEbz4G_183JwXPFlGu9CiI2fUToO_rYwm-HP1B5JvTCAHvM4eUjk_nhS3PMkDX4Zb_70hbh0-shbxC7_9JKQ4DdRWmqE3zBlMXYuza7iWXndxjUms3t13-nJltTeLIwIcOhgHNDRSl6H7YcXs1e9qgxmT8tndVqWIcrpOh_hTDk4ciwz3KvaLAvgBhzgBrgr9D1YemW5LOCGfSweqdtJiLq9qxpXLKQsZGhjWDdJmdwGleNeW2nB1RqgSl",
-      rate: 1500,
-      rating: 4.9,
-      reviewsCount: 124,
-      hoursTaught: 500,
-      languages: ["English", "Spanish"],
-      bio: "PhD in Theoretical Physics with over 12 years of experience helping students master complex calculus and mechanics. Specialized in AP prep and University entrance exams.",
-      subjects: ["Calculus BC", "Linear Algebra", "Trigonometry", "Algebra II", "Physics", "AP Calculus AB"],
-      title: "Advanced Mathematics & Physics Expert",
-      education: [
-        { degree: "M.Sc. in Mathematics", institution: "Massachusetts Institute of Technology (MIT)", year: "2014" },
-        { degree: "Certified Advanced Educator (NTA)", institution: "National Tutoring Association", year: "2016" }
-      ],
-      location: "Boston & Cambridge area",
-      walletBalance: 4200.00,
-      totalEarnings: 32500.00
-    },
-    {
-      id: "tutor2",
-      email: "tutor2@tutornest.com",
-      password: "password",
-      name: "Dr. Elena Rodriguez",
-      role: "tutor",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDEGg-u5yRLWHdkc27eeFShpa4qFiGMPumwlH9fe0TMLDQm30X-bt-eFwPABmJ_oygIrbgkAbllbaqxVstvST1XybHVYECas_jmu9UbNdoj91cxuKRktf9dBXAUaK8Ed_Lo303kTeqseMKsT5biJGrkK5cSLu72g-8efnVS7NxxWgtc2U32djhhTD-uoU4AGqMhkSlMShsB8YqPFtnyF67ZBfYo3gbi7Oj-j71UP2MCv4MUmbcmePkbjN1Rvv6SZ45sR6oQ7qywVN8z",
-      rate: 1800,
-      rating: 4.9,
-      reviewsCount: 120,
-      hoursTaught: 380,
-      languages: ["English", "French"],
-      bio: "MIT Graduate with 10+ years experience in helping students master complex mathematical theories. Interactive sessions designed for high engagement.",
-      subjects: ["Calculus", "SAT Math", "Linear Algebra", "Algebra I"],
-      title: "Advanced Mathematics & Calculus",
-      education: [
-        { degree: "Ph.D. in Applied Mathematics", institution: "Stanford University", year: "2012" }
-      ],
-      location: "San Francisco, CA & Online",
-      walletBalance: 8800.00,
-      totalEarnings: 84000.00
-    },
-    {
-      id: "tutor3",
-      email: "tutor3@tutornest.com",
-      password: "password",
-      name: "Prof. Julian Chen",
-      role: "tutor",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDqacdh7BOToUcZKkUgWUxlr0kpETq5RPgUbRFD535c4tELKoLXM2JzRUYTX1Q26g2IAga0ckZLudR6sFTQZKsBWF4OO5EnZq_Rd1wmH33V14JVFYMX0P_KULrqY9lA1ttktD6H_E1zsbaU9LFz8O10M7bJ312FReUYVirCGnTAVrhHJj43tQRgwX07aZL_--qXttdnODTfB3SmJcPcBBqR08M9BohWs9lNbS-6kEhIKOAc8R_SFlIYNgDMgO526Vp7r6gGJZUa9_H8",
-      rate: 2000,
-      rating: 5.0,
-      reviewsCount: 85,
-      hoursTaught: 450,
-      languages: ["English", "Mandarin"],
-      bio: "Ex-Google Senior Engineer. Specializing in AI/ML fundamentals and software architecture for students.",
-      subjects: ["Python", "Data Science", "Backend", "Computer Science"],
-      title: "Computer Science & Python Expert",
-      education: [
-        { degree: "B.Sc. in Computer Science", institution: "UC Berkeley", year: "2015" }
-      ],
-      location: "Seattle, WA & Online",
-      walletBalance: 12000.00,
-      totalEarnings: 154000.00
-    }
-  ],
-  bookings: [
-    {
-      id: "booking1",
-      studentId: "student1",
-      studentName: "James Doe",
-      tutorId: "tutor1",
-      tutorName: "Dr. Sarah Jenkins",
-      subject: "Calculus BC",
-      date: "2026-07-10",
-      time: "2:30 PM",
-      status: "scheduled", // scheduled, pending, completed, cancelled
-      rate: 1500.00,
-      duration: 1
-    },
-    {
-      id: "booking2",
-      studentId: "student1",
-      studentName: "James Doe",
-      tutorId: "tutor3",
-      tutorName: "Prof. Julian Chen",
-      subject: "Python Basics",
-      date: "2026-07-12",
-      time: "10:00 AM",
-      status: "pending",
-      rate: 2000.00,
-      duration: 1
-    },
-    {
-      id: "booking3",
-      studentId: "student1",
-      studentName: "James Doe",
-      tutorId: "tutor1",
-      tutorName: "Dr. Sarah Jenkins",
-      subject: "Trigonometry",
-      date: "2026-07-02",
-      time: "4:00 PM",
-      status: "completed",
-      rate: 1500.00,
-      duration: 1
-    }
-  ],
-  messages: [
-    {
-      id: "msg1",
-      senderId: "student1",
-      senderName: "James Doe",
-      receiverId: "tutor1",
-      receiverName: "Dr. Sarah Jenkins",
-      text: "Hi Dr. Jenkins, I would like to schedule a trial session for Calculus BC prep.",
-      timestamp: "2026-07-04T10:15:30Z"
-    },
-    {
-      id: "msg2",
-      senderId: "tutor1",
-      senderName: "Dr. Sarah Jenkins",
-      receiverId: "student1",
-      receiverName: "James Doe",
-      text: "Hello James! I would be glad to help. Please select an available slot on my profile page.",
-      timestamp: "2026-07-04T11:20:00Z"
-    }
-  ],
+  users: [],
+  bookings: [],
+  messages: [],
   inquiries: [],
-  walletRequests: [
-    {
-      id: "req1",
-      tutorId: "tutor1",
-      amount: 15000.00,
-      status: "paid", // pending, paid
-      date: "2026-07-01",
-      method: "Direct Deposit to Wells Fargo"
-    }
-  ]
+  walletRequests: []
 };
 
-class LocalDatabase {
+class LocalFallbackDB {
   constructor() {
     this.load();
   }
-
   load() {
     try {
       if (fs.existsSync(DB_PATH)) {
@@ -176,84 +34,281 @@ class LocalDatabase {
         this.save();
       }
     } catch (e) {
-      console.error('Failed to load database, resetting...', e);
       this.data = JSON.parse(JSON.stringify(initialData));
     }
   }
-
   save() {
     try {
       fs.writeFileSync(DB_PATH, JSON.stringify(this.data, null, 2), 'utf8');
     } catch (e) {
-      console.error('Failed to save database', e);
+      console.error('Failed to save fallback database', e);
     }
   }
+}
+const localDB = new LocalFallbackDB();
 
-  get(table) {
-    return this.data[table] || [];
-  }
+// Schema Definitions
+const Schemas = {
+  User: new mongoose.Schema({
+    id: { type: String, unique: true, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    name: { type: String, required: true },
+    role: { type: String, enum: ['student', 'tutor'], required: true },
+    avatar: { type: String, default: '' },
+    plan: { type: String, default: 'Basic' },
+    bio: { type: String, default: '' },
+    languages: { type: [String], default: ['English'] },
+    phone: { type: String, default: '' },
+    balance: { type: Number, default: 0 },
+    city: { type: String, default: '' },
+    targetGrades: { type: [String], default: [] },
+    targetSubject: { type: String, default: '' },
+    targetExam: { type: String, default: '' },
+    budget: { type: Number, default: 0 },
+    rate: { type: Number, default: 0 },
+    rating: { type: Number, default: 5 },
+    reviewsCount: { type: Number, default: 0 },
+    hoursTaught: { type: Number, default: 0 },
+    subjects: { type: [String], default: [] },
+    title: { type: String, default: '' },
+    education: {
+      type: [{
+        degree: String,
+        institution: String,
+        year: String
+      }],
+      default: []
+    },
+    location: { type: String, default: '' },
+    walletBalance: { type: Number, default: 0 },
+    totalEarnings: { type: Number, default: 0 },
+    availability: { type: [String], default: [] },
+    createdAt: { type: Date, default: Date.now },
+    resetToken: { type: String, default: '' },
+    resetExpiry: { type: Date }
+  }),
+  Booking: new mongoose.Schema({
+    id: { type: String, unique: true, required: true },
+    studentId: { type: String, required: true },
+    studentName: { type: String, required: true },
+    tutorId: { type: String, required: true },
+    tutorName: { type: String, required: true },
+    subject: { type: String, required: true },
+    date: { type: String, required: true },
+    time: { type: String, required: true },
+    status: { type: String, enum: ['scheduled', 'pending', 'completed', 'cancelled'], default: 'pending' },
+    rate: { type: Number, required: true },
+    duration: { type: Number, default: 1 }
+  }),
+  Message: new mongoose.Schema({
+    id: { type: String, unique: true, required: true },
+    senderId: { type: String, required: true },
+    senderName: { type: String, required: true },
+    receiverId: { type: String, required: true },
+    receiverName: { type: String, required: true },
+    text: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now }
+  }),
+  Inquiry: new mongoose.Schema({
+    id: { type: String, unique: true, required: true },
+    name: { type: String, default: '' },
+    studentName: { type: String, default: '' },
+    grade: { type: String, default: '' },
+    subject: { type: String, default: '' },
+    phone: { type: String, default: '' },
+    location: { type: String, default: '' },
+    email: { type: String, default: '' },
+    message: { type: String, default: '' },
+    date: { type: Date, default: Date.now }
+  }),
+  WalletRequest: new mongoose.Schema({
+    id: { type: String, unique: true, required: true },
+    tutorId: { type: String, required: true },
+    amount: { type: Number, required: true },
+    status: { type: String, enum: ['pending', 'paid'], default: 'pending' },
+    date: { type: String, required: true },
+    method: { type: String, default: '' }
+  })
+};
 
-  find(table, filterFn) {
-    const list = this.get(table);
-    if (typeof filterFn === 'function') {
-      return list.filter(filterFn);
-    }
-    if (typeof filterFn === 'object') {
+function makeModelWrapper(modelName, collectionName) {
+  const MongooseModel = mongoose.model(modelName, Schemas[modelName]);
+  
+  return {
+    find: async function(filter = {}) {
+      if (mongoose.connection.readyState === 1) {
+        return await MongooseModel.find(filter).lean();
+      }
+      localDB.load();
+      let list = localDB.data[collectionName] || [];
+      if (typeof filter === 'function') {
+        return list.filter(filter);
+      }
       return list.filter(item => {
-        for (let key in filterFn) {
-          if (item[key] !== filterFn[key]) return false;
+        if (filter.$or && Array.isArray(filter.$or)) {
+          return filter.$or.some(subFilter => {
+            for (let key in subFilter) {
+              if (item[key] !== subFilter[key]) return false;
+            }
+            return true;
+          });
+        }
+        for (let key in filter) {
+          if (item[key] !== filter[key]) return false;
         }
         return true;
       });
-    }
-    return list;
-  }
+    },
 
-  findOne(table, filterFn) {
-    const list = this.find(table, filterFn);
-    return list.length > 0 ? list[0] : null;
-  }
+    findOne: async function(filter = {}) {
+      if (mongoose.connection.readyState === 1) {
+        return await MongooseModel.findOne(filter).lean();
+      }
+      const results = await this.find(filter);
+      return results.length > 0 ? results[0] : null;
+    },
 
-  insert(table, record) {
-    if (!this.data[table]) {
-      this.data[table] = [];
-    }
-    const newRecord = {
-      id: `${table.substring(0, 3)}_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-      ...record
-    };
-    this.data[table].push(newRecord);
-    this.save();
-    return newRecord;
-  }
+    create: async function(data) {
+      if (mongoose.connection.readyState === 1) {
+        const doc = await MongooseModel.create(data);
+        return doc.toObject();
+      }
+      localDB.load();
+      if (!localDB.data[collectionName]) {
+        localDB.data[collectionName] = [];
+      }
+      const newRecord = {
+        id: data.id || `${collectionName.substring(0, 3)}_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+        ...data
+      };
+      localDB.data[collectionName].push(newRecord);
+      localDB.save();
+      return newRecord;
+    },
 
-  update(table, filterFn, updateObj) {
-    const records = this.find(table, filterFn);
-    records.forEach(item => {
-      Object.assign(item, updateObj);
-    });
-    if (records.length > 0) {
-      this.save();
-    }
-    return records;
-  }
+    updateOne: async function(filter, updateObj) {
+      if (mongoose.connection.readyState === 1) {
+        return await MongooseModel.updateOne(filter, updateObj);
+      }
+      localDB.load();
+      const records = await this.find(filter);
+      records.forEach(item => {
+        const actualUpdate = updateObj.$set ? updateObj.$set : updateObj;
+        Object.assign(item, actualUpdate);
+      });
+      localDB.save();
+      return { nModified: records.length };
+    },
 
-  delete(table, filterFn) {
-    const list = this.get(table);
-    let filter;
-    if (typeof filterFn === 'function') {
-      filter = filterFn;
-    } else {
-      filter = item => {
-        for (let key in filterFn) {
-          if (item[key] !== filterFn[key]) return false;
+    updateMany: async function(filter, updateObj) {
+      return await this.updateOne(filter, updateObj);
+    },
+
+    findOneAndUpdate: async function(filter, updateObj, options = {}) {
+      if (mongoose.connection.readyState === 1) {
+        return await MongooseModel.findOneAndUpdate(filter, updateObj, { new: true, ...options }).lean();
+      }
+      localDB.load();
+      const record = await this.findOne(filter);
+      if (record) {
+        const actualUpdate = updateObj.$set ? updateObj.$set : updateObj;
+        Object.assign(record, actualUpdate);
+        localDB.save();
+      }
+      return record;
+    },
+
+    deleteOne: async function(filter) {
+      if (mongoose.connection.readyState === 1) {
+        return await MongooseModel.deleteOne(filter);
+      }
+      localDB.load();
+      const list = localDB.data[collectionName] || [];
+      localDB.data[collectionName] = list.filter(item => {
+        for (let key in filter) {
+          if (item[key] === filter[key]) return false;
         }
         return true;
-      };
+      });
+      localDB.save();
+      return { deletedCount: 1 };
+    },
+
+    deleteMany: async function(filter = {}) {
+      if (mongoose.connection.readyState === 1) {
+        return await MongooseModel.deleteMany(filter);
+      }
+      localDB.load();
+      if (Object.keys(filter).length === 0) {
+        localDB.data[collectionName] = [];
+      } else {
+        const list = localDB.data[collectionName] || [];
+        localDB.data[collectionName] = list.filter(item => {
+          for (let key in filter) {
+            if (item[key] === filter[key]) return false;
+          }
+          return true;
+        });
+      }
+      localDB.save();
+      return { deletedCount: 1 };
     }
-    this.data[table] = list.filter(item => !filter(item));
-    this.save();
+  };
+}
+
+const User = makeModelWrapper('User', 'users');
+const Booking = makeModelWrapper('Booking', 'bookings');
+const Message = makeModelWrapper('Message', 'messages');
+const Inquiry = makeModelWrapper('Inquiry', 'inquiries');
+const WalletRequest = makeModelWrapper('WalletRequest', 'walletRequests');
+
+function getModelByTable(table) {
+  switch (table) {
+    case 'users': return User;
+    case 'bookings': return Booking;
+    case 'messages': return Message;
+    case 'inquiries': return Inquiry;
+    case 'walletRequests': return WalletRequest;
+    default:
+      return {
+        find: async () => [],
+        findOne: async () => null,
+        create: async (data) => data,
+        updateMany: async () => ({ nModified: 0 }),
+        deleteMany: async () => ({ deletedCount: 0 })
+      };
   }
 }
 
-module.exports = new LocalDatabase();
+module.exports = {
+  findOne: async (table, filter) => {
+    const model = getModelByTable(table);
+    return await model.findOne(filter);
+  },
+  find: async (table, filter) => {
+    const model = getModelByTable(table);
+    return await model.find(filter);
+  },
+  insert: async (table, record) => {
+    const model = getModelByTable(table);
+    return await model.create(record);
+  },
+  update: async (table, filter, updateObj) => {
+    const model = getModelByTable(table);
+    return await model.updateMany(filter, updateObj);
+  },
+  delete: async (table, filter) => {
+    const model = getModelByTable(table);
+    return await model.deleteMany(filter);
+  },
+  get: async (table) => {
+    const model = getModelByTable(table);
+    return await model.find({});
+  },
+  User,
+  Booking,
+  Message,
+  Inquiry,
+  WalletRequest
+};
