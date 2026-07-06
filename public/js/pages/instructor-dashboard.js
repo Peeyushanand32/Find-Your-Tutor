@@ -139,8 +139,8 @@ async function updateRequest(id, status) {
     });
     if (res.ok) {
       showToast(`Request ${status === 'scheduled' ? 'accepted' : 'declined'} successfully!`, 'success');
-      // Refresh
-      setTimeout(() => window.location.reload(), 1000);
+      // Refresh dynamically
+      initDashboard();
     } else {
       const data = await res.json();
       showToast(data.error || 'Failed to update request', 'error');
@@ -159,13 +159,16 @@ async function completeLesson(id) {
     });
     if (res.ok) {
       showToast('Lesson marked as completed! Earnings added to wallet.', 'success');
-      // Reload current user state and dashboard to show updated earnings
+      // Reload current user state and dashboard to show updated earnings dynamically
       const authRes = await fetch('/api/auth/me');
       const authData = await authRes.json();
       if (authData.loggedIn) {
         currentUser = authData.user;
+        if (typeof updateNavbar === 'function') {
+          updateNavbar();
+        }
       }
-      setTimeout(() => window.location.reload(), 1500);
+      initDashboard();
     } else {
       const data = await res.json();
       showToast(data.error || 'Failed to update lesson status', 'error');
