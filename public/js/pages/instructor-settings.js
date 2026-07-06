@@ -1,6 +1,7 @@
 // Instructor Settings specific logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initSettings, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initSettings();
 });
 
 function initSettings() {

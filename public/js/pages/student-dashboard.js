@@ -1,7 +1,8 @@
 // Student Dashboard (student-dashboard.html) specific logic
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Wait for auth to complete
-  setTimeout(initDashboard, 150);
+  await window.authPromise;
+  initDashboard();
 });
 
 async function initDashboard() {

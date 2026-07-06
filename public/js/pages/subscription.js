@@ -1,6 +1,7 @@
 // Subscription checkout page logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initSubscription, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initSubscription();
 });
 
 function initSubscription() {

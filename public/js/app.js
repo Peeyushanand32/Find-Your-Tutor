@@ -1,4 +1,9 @@
 // TutorNest Shared Application Controller
+let authResolver;
+window.authPromise = new Promise((resolve) => {
+  authResolver = resolve;
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Fetch current authentication state
   checkAuth();
@@ -58,6 +63,10 @@ async function checkAuth() {
     console.error('Auth verification failed', e);
     updateNavbar();
     setupSidebarLinks();
+  } finally {
+    if (typeof authResolver === 'function') {
+      authResolver();
+    }
   }
 }
 

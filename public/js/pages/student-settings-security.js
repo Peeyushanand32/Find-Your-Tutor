@@ -1,6 +1,7 @@
 // Student Settings Security page logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initSecurity, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initSecurity();
 });
 
 function initSecurity() {

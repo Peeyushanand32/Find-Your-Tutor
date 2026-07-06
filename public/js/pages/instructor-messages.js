@@ -1,6 +1,7 @@
 // Chat Hub specific logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initMessages, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initMessages();
 });
 
 let activeContactId = null;

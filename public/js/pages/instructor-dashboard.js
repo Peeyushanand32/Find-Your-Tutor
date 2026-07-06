@@ -1,6 +1,7 @@
 // Instructor Dashboard specific logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initDashboard, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initDashboard();
 });
 
 async function initDashboard() {

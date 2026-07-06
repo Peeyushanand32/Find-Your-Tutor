@@ -1,6 +1,7 @@
 // Instructor Requests History
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initHistory, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initHistory();
 });
 
 async function initHistory() {

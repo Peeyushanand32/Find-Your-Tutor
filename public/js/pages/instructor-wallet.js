@@ -1,6 +1,7 @@
 // Instructor Wallet page logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initWallet, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initWallet();
 });
 
 async function initWallet() {

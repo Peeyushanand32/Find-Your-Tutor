@@ -1,6 +1,7 @@
 // Student Calendar specific logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initCalendar, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initCalendar();
 });
 
 async function initCalendar() {

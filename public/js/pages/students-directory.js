@@ -1,6 +1,7 @@
 // Instructor Student Directory page logic
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initDirectory, 150);
+document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
+  initDirectory();
 });
 
 async function initDirectory() {
