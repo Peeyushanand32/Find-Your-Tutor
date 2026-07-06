@@ -16,7 +16,7 @@ async function initWallet() {
   // Populate balance card
   const balanceText = document.querySelector('.md\\:col-span-4.glass p.font-display-lg');
   if (balanceText) {
-    balanceText.textContent = `$${(currentUser.walletBalance || 0).toFixed(2)}`;
+    balanceText.textContent = `₹${(currentUser.walletBalance || 0).toFixed(2)}`;
   }
 
   // Load transactions
@@ -87,7 +87,7 @@ async function loadTransactions() {
     }
 
     tableBody.innerHTML = transactions.map(tx => {
-      const amountText = tx.isPositive ? `+$${tx.amount.toFixed(2)}` : `-$${tx.amount.toFixed(2)}`;
+      const amountText = tx.isPositive ? `+₹${tx.amount.toFixed(2)}` : `-₹${tx.amount.toFixed(2)}`;
       const amountClass = tx.isPositive ? 'text-green-600 font-bold' : 'text-on-surface font-semibold';
       const statusClass = tx.status === 'completed' || tx.status === 'paid' 
         ? 'bg-green-500/10 text-green-600' 
@@ -136,7 +136,7 @@ function openWithdrawModal() {
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
-      <p class="text-label-sm text-on-surface-variant">Available balance: <b>$${(currentUser.walletBalance || 0).toFixed(2)}</b></p>
+      <p class="text-label-sm text-on-surface-variant">Available balance: <b>₹${(currentUser.walletBalance || 0).toFixed(2)}</b></p>
       
       <div id="withdraw-error" class="hidden bg-error-container text-on-error-container p-3 rounded-lg text-label-sm border border-error/20"></div>
 
@@ -149,8 +149,8 @@ function openWithdrawModal() {
         <div class="space-y-1">
           <label class="font-label-md text-label-md text-on-surface-variant">Transfer Method</label>
           <select name="method" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md bg-white">
-            <option value="Direct Deposit (Wells Fargo)">Direct Deposit (Wells Fargo)</option>
-            <option value="PayPal">PayPal Account</option>
+            <option value="UPI Transfer (GPay/PhonePe)">UPI Transfer (GPay/PhonePe)</option>
+            <option value="Direct Bank Transfer (NEFT/IMPS)">Direct Bank Transfer (NEFT/IMPS)</option>
             <option value="Stripe Account Payout">Stripe Instant Payout</option>
           </select>
         </div>

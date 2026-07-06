@@ -132,7 +132,7 @@ function updateNavbar() {
   let rightNavHtml = '';
   if (currentUser) {
     const isStudent = currentUser.role === 'student';
-    const balanceText = isStudent ? `<span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-label-sm font-semibold mr-2 border border-primary/20">Balance: $${currentUser.balance.toFixed(2)}</span>` : '';
+    const balanceText = isStudent ? `<span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-label-sm font-semibold mr-2 border border-primary/20">Balance: ₹${currentUser.balance.toFixed(2)}</span>` : '';
     
     const avatarUrl = currentUser.avatar.startsWith('http') ? currentUser.avatar : '';
     const avatarInner = avatarUrl 
@@ -450,30 +450,50 @@ async function logout() {
 }
 
 function convertCurrencyToRupees() {
-  const walker = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_TEXT,
-    null,
-    false
-  );
-
-  let node;
-  while (node = walker.nextNode()) {
-    if (node.nodeValue.includes('$')) {
-      node.nodeValue = node.nodeValue.replace(/\$/g, '₹');
+  function convertNode(node) {
+    if (!node) return;
+    if (node.nodeType === Node.ELEMENT_NODE && (node.tagName === 'SCRIPT' || node.tagName === 'STYLE')) {
+      return;
+    }
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (node.nodeValue.includes('$')) {
+        node.nodeValue = node.nodeValue.replace(/\$/g, '₹');
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      if (node.placeholder && node.placeholder.includes('$')) {
+        node.placeholder = node.placeholder.replace(/\$/g, '₹');
+      }
+      if (node.tagName === 'OPTION' && node.textContent.includes('$')) {
+        node.textContent = node.textContent.replace(/\$/g, '₹');
+      }
+      node.childNodes.forEach(convertNode);
     }
   }
 
-  // inputs
-  document.querySelectorAll('input[placeholder*="$"]').forEach(input => {
-    input.placeholder = input.placeholder.replace(/\$/g, '₹');
+  // Initial conversion
+  convertNode(document.body);
+
+  // Set up observer for dynamic changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        convertNode(node);
+      });
+      if (mutation.type === 'characterData') {
+        convertNode(mutation.target);
+      }
+      if (mutation.type === 'attributes' && mutation.attributeName === 'placeholder') {
+        convertNode(mutation.target);
+      }
+    });
   });
-  
-  // select options
-  document.querySelectorAll('option').forEach(option => {
-    if (option.textContent.includes('$')) {
-      option.textContent = option.textContent.replace(/\$/g, '₹');
-    }
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true,
+    attributeFilter: ['placeholder']
   });
 }
 

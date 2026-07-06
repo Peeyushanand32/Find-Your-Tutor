@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Update hourly rate in Sidebar Booking widget
     const rateSpan = document.querySelector('span.font-display-lg');
-    if (rateSpan) rateSpan.textContent = `$${tutor.rate}`;
+    if (rateSpan) rateSpan.textContent = `₹${tutor.rate}`;
 
     // Update message button text
     if (msgBtn) {

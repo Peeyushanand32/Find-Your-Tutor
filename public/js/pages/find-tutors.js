@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   <p class="text-primary font-label-md">${tutor.title || 'Expert Tutor'}</p>
                 </div>
                 <div class="text-right">
-                  <span class="block font-headline-sm text-headline-sm text-on-surface">$${tutor.rate}</span>
+                  <span class="block font-headline-sm text-headline-sm text-on-surface">₹${tutor.rate}</span>
                   <span class="text-[12px] text-on-surface-variant font-medium">/ hour</span>
                 </div>
               </div>

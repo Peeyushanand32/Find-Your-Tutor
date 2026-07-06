@@ -108,7 +108,7 @@ async function initDashboard() {
     // 5. Render Wallet Overview
     const walletBalanceText = document.querySelector('.glass-card.p-unit-lg.bg-on-surface h3.font-display-lg');
     if (walletBalanceText) {
-      walletBalanceText.textContent = `$${(currentUser.walletBalance || 0).toFixed(2)}`;
+      walletBalanceText.textContent = `₹${(currentUser.walletBalance || 0).toFixed(2)}`;
     }
 
     // 6. Stats performance
