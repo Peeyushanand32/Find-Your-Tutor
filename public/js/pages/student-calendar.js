@@ -118,8 +118,8 @@ window.selectBooking = function(id) {
   
   if (platform) {
     if (booking.status === 'scheduled') {
-      const displayLink = (booking.meetingLink || '').replace('https://', '');
-      platform.innerHTML = `<a href="${booking.meetingLink}" target="_blank" class="text-primary hover:underline font-mono text-[13px] break-all">${displayLink}</a>`;
+      const displayLink = `tutornest.com/session?id=${booking.id}`;
+      platform.innerHTML = `<a href="/session.html?bookingId=${booking.id}" class="text-primary hover:underline font-mono text-[13px] break-all">${displayLink}</a>`;
     } else {
       platform.textContent = 'Awaiting Tutor Approval';
     }
@@ -130,7 +130,7 @@ window.selectBooking = function(id) {
       joinBtn.disabled = false;
       joinBtn.className = 'w-full bg-primary text-on-primary py-4 rounded-xl font-label-md hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-primary/20 cursor-pointer text-center';
       joinBtn.textContent = 'Join Session';
-      joinBtn.onclick = () => window.open(booking.meetingLink, '_blank');
+      joinBtn.onclick = () => window.location.href = `/session.html?bookingId=${booking.id}`;
     } else {
       joinBtn.disabled = true;
       joinBtn.className = 'w-full bg-primary text-on-primary py-4 rounded-xl font-label-md opacity-50 cursor-not-allowed transition-all shadow-lg shadow-primary/20 text-center';

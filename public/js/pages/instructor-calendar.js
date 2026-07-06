@@ -75,8 +75,7 @@ async function initCalendar() {
       } else {
         meetingLinksList.innerHTML = scheduled.map(b => {
           const displayDate = new Date(b.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-          const meetingUrl = b.meetingLink || `https://meet.jit.si/TutorNest-${b.subject.replace(/[^a-zA-Z0-9]/g, '')}-${b.id}`;
-          const formattedUrl = meetingUrl.replace('https://', '');
+          const formattedUrl = `tutornest.com/session?id=${b.id}`;
           return `
             <div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
               <div class="flex justify-between items-start mb-2">
@@ -88,7 +87,7 @@ async function initCalendar() {
               </div>
               <div class="flex items-center gap-2 bg-surface-container-lowest p-2 rounded-lg border border-outline-variant/20">
                 <span class="text-label-sm truncate flex-1 opacity-60 font-mono text-[12px]">${formattedUrl}</span>
-                <button onclick="window.open('${meetingUrl}', '_blank')" class="px-2 py-1 bg-primary text-on-primary text-[11px] rounded font-semibold hover:scale-105 transition-transform" title="Join Meeting">Join</button>
+                <button onclick="window.location.href='/session.html?bookingId=${b.id}'" class="px-2 py-1 bg-primary text-on-primary text-[11px] rounded font-semibold hover:scale-105 transition-transform" title="Join Meeting">Join</button>
               </div>
             </div>
           `;

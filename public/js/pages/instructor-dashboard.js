@@ -47,7 +47,7 @@ async function initDashboard() {
       } else {
         sessionsList.innerHTML = scheduled.slice(0, 4).map(session => {
           const joinBtn = session.meetingLink 
-            ? `<a href="${session.meetingLink}" target="_blank" class="px-unit-md py-2 border border-primary text-primary rounded-xl font-label-md flex items-center gap-2 hover:bg-primary/5 transition-colors">
+            ? `<a href="/session.html?bookingId=${session.id}" class="px-unit-md py-2 border border-primary text-primary rounded-xl font-label-md flex items-center gap-2 hover:bg-primary/5 transition-colors">
                  <span class="material-symbols-outlined text-sm">video_call</span>
                  Join Call
                </a>`

@@ -91,7 +91,7 @@ async function initDashboard() {
             : `<span class="bg-green-500/10 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Scheduled</span>`;
 
           const joinBtn = (booking.status === 'scheduled' && booking.meetingLink)
-            ? `<a href="${booking.meetingLink}" target="_blank" class="mt-2 inline-flex items-center gap-1 text-[12px] text-primary hover:underline font-bold"><span class="material-symbols-outlined text-[16px]">video_call</span> Join Call</a>`
+            ? `<a href="/session.html?bookingId=${booking.id}" class="mt-2 inline-flex items-center gap-1 text-[12px] text-primary hover:underline font-bold"><span class="material-symbols-outlined text-[16px]">video_call</span> Join Call</a>`
             : '';
 
           return `
