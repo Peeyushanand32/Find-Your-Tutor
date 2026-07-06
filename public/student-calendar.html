@@ -303,57 +303,59 @@
 </section>
 <!-- Right Column: Details & Widgets -->
 <aside class="w-full lg:w-[380px] flex flex-col gap-gutter">
-<!-- Session Details Widget -->
-<div class="glass-card rounded-[2rem] p-unit-lg flex flex-col relative overflow-hidden">
-<div class="absolute top-0 right-0 p-4">
-<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Upcoming</span>
-</div>
-<h4 class="font-headline-sm text-headline-sm mb-6">Session Details</h4>
-<div class="flex items-center gap-4 mb-6">
-<img class="w-16 h-16 rounded-2xl object-cover ring-2 ring-surface-container-high" data-alt="Close-up portrait of a professional academic tutor, middle-aged with glasses, wearing a smart casual blazer, warm and intelligent expression, high-end photography with soft bokeh library background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4iW5o2CePb8kKhclbMsXXT5i-JiD00APpFeHet9HZ1p1JtQDPTfETZaOOOuVssuB2DskM7JqDxlgCxnoZg3QNPa8it5cjHgOt2igN3Weai2imaEulMFx9oinULTxkidm_ZioO9AgClp3MsnjkpWVahRCmkWMhVBg2ZB_qgKoxoD5_nLu-gWUdcm2K3ASOGgpSJQl4hlfIIrNaVGJZUAHtK4zVB-fOQgJ0L7uZ7KYvxUBl0ZdBIKa9bbFvVyESzZvV-N5sl9OJfW_N"/>
-<div>
-<p class="font-headline-sm text-primary text-lg">Dr. Elena Vance</p>
-<p class="text-on-surface-variant font-label-md">Computer Science</p>
-</div>
-</div>
-<div class="space-y-4 mb-8">
-<div class="flex items-center gap-4 text-on-surface-variant">
-<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">calendar_month</span>
-</div>
-<div>
-<p class="text-xs font-label-sm opacity-60">DATE</p>
-<p class="font-label-md text-on-surface">Friday, Sept 6, 2024</p>
-</div>
-</div>
-<div class="flex items-center gap-4 text-on-surface-variant">
-<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">schedule</span>
-</div>
-<div>
-<p class="text-xs font-label-sm opacity-60">TIME</p>
-<p class="font-label-md text-on-surface">04:00 PM - 05:30 PM</p>
-</div>
-</div>
-<div class="flex items-center gap-4 text-on-surface-variant">
-<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">link</span>
-</div>
-<div>
-<p class="text-xs font-label-sm opacity-60">PLATFORM</p>
-<p class="font-label-md text-on-surface">TutorNest Video Call</p>
-</div>
-</div>
-</div>
-<div class="flex flex-col gap-3">
-<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-primary/20">
-                            Join Session
-                        </button>
-<button class="w-full bg-surface-container-high text-on-surface py-4 rounded-xl font-label-md hover:bg-surface-container-highest transition-colors">
-                            Reschedule
-                        </button>
-</div>
-</div>
+        <!-- Session Details Widget -->
+        <div id="session-details-card" class="glass-card rounded-[2rem] p-unit-lg flex flex-col relative overflow-hidden">
+          <div class="absolute top-0 right-0 p-4">
+            <span id="detail-status" class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Select a lesson</span>
+          </div>
+          <h4 class="font-headline-sm text-headline-sm mb-6">Session Details</h4>
+          
+          <div id="detail-content-wrapper" class="flex flex-col flex-1">
+            <div class="flex items-center gap-4 mb-6">
+              <div id="detail-avatar-container" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary text-white font-bold flex items-center justify-center text-headline-sm">TN</div>
+              <div>
+                <p id="detail-name" class="font-headline-sm text-primary text-lg">TutorNest Session</p>
+                <p id="detail-subject" class="text-on-surface-variant font-label-md">Choose a session to begin</p>
+              </div>
+            </div>
+            
+            <div class="space-y-4 mb-8">
+              <div class="flex items-center gap-4 text-on-surface-variant">
+                <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-primary">calendar_month</span>
+                </div>
+                <div>
+                  <p class="text-xs font-label-sm opacity-60">DATE</p>
+                  <p id="detail-date" class="font-label-md text-on-surface">—</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-4 text-on-surface-variant">
+                <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-primary">schedule</span>
+                </div>
+                <div>
+                  <p class="text-xs font-label-sm opacity-60">TIME</p>
+                  <p id="detail-time" class="font-label-md text-on-surface">—</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-4 text-on-surface-variant">
+                <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-primary">link</span>
+                </div>
+                <div>
+                  <p class="text-xs font-label-sm opacity-60">PLATFORM</p>
+                  <p id="detail-platform" class="font-label-md text-on-surface">—</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex flex-col gap-3 mt-auto">
+              <button id="detail-join-btn" disabled class="w-full bg-primary text-on-primary py-4 rounded-xl font-label-md opacity-50 cursor-not-allowed transition-all shadow-lg shadow-primary/20">
+                Join Session
+              </button>
+            </div>
+          </div>
+        </div>
 <!-- Learning Progress Widget -->
 <div class="glass-card rounded-[2rem] p-unit-lg">
 <div class="flex justify-between items-center mb-6">

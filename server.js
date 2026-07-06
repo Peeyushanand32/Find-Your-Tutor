@@ -382,6 +382,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
   // Deduct student balance
   db.update('users', { id: req.user.id }, { balance: parseFloat((req.user.balance - totalCost).toFixed(2)) });
 
+  const meetingRoomName = `TutorNest-${subject.replace(/[^a-zA-Z0-9]/g, '')}-${Math.random().toString(36).substring(2, 10)}`;
   const newBooking = {
     studentId: req.user.id,
     studentName: req.user.name,
@@ -392,7 +393,8 @@ app.post('/api/bookings', requireAuth, (req, res) => {
     time,
     status: "pending", // starts as pending for instructor approval
     rate: tutor.rate,
-    duration: hours
+    duration: hours,
+    meetingLink: `https://meet.jit.si/${meetingRoomName}`
   };
 
   const booking = db.insert('bookings', newBooking);
@@ -450,16 +452,27 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
     }
   }
 
-  db.update('bookings', { id: booking.id }, { status });
+  let updatedFields = { status };
+  if (status === 'scheduled' && !booking.meetingLink) {
+    const meetingRoomName = `TutorNest-${booking.subject.replace(/[^a-zA-Z0-9]/g, '')}-${booking.id}`;
+    updatedFields.meetingLink = `https://meet.jit.si/${meetingRoomName}`;
+    booking.meetingLink = updatedFields.meetingLink;
+  }
+  db.update('bookings', { id: booking.id }, updatedFields);
 
   // Send status update notification message
   const updaterName = req.user.name;
+  let msgText = `🔔 Lesson Update: The lesson on ${booking.date} at ${booking.time} was updated to: ${status.toUpperCase()} by ${updaterName}.`;
+  if (status === 'scheduled' && booking.meetingLink) {
+    msgText += `\n🔗 Join Video Session: ${booking.meetingLink}`;
+  }
+
   db.insert('messages', {
     senderId: req.user.id,
     senderName: updaterName,
     receiverId: req.user.id === booking.studentId ? booking.tutorId : booking.studentId,
     receiverName: req.user.id === booking.studentId ? booking.tutorName : booking.studentName,
-    text: `🔔 Lesson Update: The lesson on ${booking.date} at ${booking.time} was updated to: ${status.toUpperCase()} by ${updaterName}.`,
+    text: msgText,
     timestamp: new Date().toISOString()
   });
 

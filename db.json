@@ -154,7 +154,8 @@
       "time": "2:30 PM",
       "status": "scheduled",
       "rate": 1500,
-      "duration": 1
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-CalculusBC-booking1"
     },
     {
       "id": "booking2",

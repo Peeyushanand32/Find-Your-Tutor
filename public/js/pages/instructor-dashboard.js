@@ -46,6 +46,13 @@ async function initDashboard() {
         `;
       } else {
         sessionsList.innerHTML = scheduled.slice(0, 4).map(session => {
+          const joinBtn = session.meetingLink 
+            ? `<a href="${session.meetingLink}" target="_blank" class="px-unit-md py-2 border border-primary text-primary rounded-xl font-label-md flex items-center gap-2 hover:bg-primary/5 transition-colors">
+                 <span class="material-symbols-outlined text-sm">video_call</span>
+                 Join Call
+               </a>`
+            : '';
+
           return `
             <div class="flex flex-wrap md:flex-nowrap items-center justify-between p-unit-md hover:bg-surface-container-low transition-colors rounded-2xl border border-outline-variant/20 mb-2">
               <div class="flex items-center gap-unit-md">
@@ -59,6 +66,7 @@ async function initDashboard() {
               </div>
               <div class="mt-unit-md md:mt-0 flex items-center gap-unit-md">
                 <span class="text-label-sm text-outline">${session.date}</span>
+                ${joinBtn}
                 <button onclick="completeLesson('${session.id}')" class="bg-gradient-to-r from-primary to-secondary px-unit-md py-2 rounded-xl text-white font-label-md flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform">
                   <span class="material-symbols-outlined text-sm">check_circle</span>
                   Mark Completed

@@ -90,6 +90,10 @@ async function initDashboard() {
             ? `<span class="bg-amber-500/10 text-amber-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Pending Approval</span>`
             : `<span class="bg-green-500/10 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Scheduled</span>`;
 
+          const joinBtn = (booking.status === 'scheduled' && booking.meetingLink)
+            ? `<a href="${booking.meetingLink}" target="_blank" class="mt-2 inline-flex items-center gap-1 text-[12px] text-primary hover:underline font-bold"><span class="material-symbols-outlined text-[16px]">video_call</span> Join Call</a>`
+            : '';
+
           return `
             <div class="flex items-center gap-unit-lg p-unit-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group">
               <div class="w-16 h-16 rounded-xl bg-primary-container/10 flex flex-col items-center justify-center text-primary border border-primary/10">
@@ -104,6 +108,7 @@ async function initDashboard() {
                 </div>
                 <h4 class="font-headline-sm text-[18px]">1-on-1 Session with ${booking.tutorName}</h4>
                 <p class="text-on-surface-variant text-label-md">Instructor: ${booking.tutorName}</p>
+                ${joinBtn}
               </div>
               <button onclick="window.location.href='/student-calendar.html'" class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward_ios</button>
             </div>
