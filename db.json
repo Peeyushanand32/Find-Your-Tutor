@@ -52,7 +52,7 @@
           "year": "2016"
         }
       ],
-      "location": "Boston & Cambridge area",
+      "location": "Boston",
       "walletBalance": 4200,
       "totalEarnings": 32500
     },
@@ -86,7 +86,7 @@
           "year": "2012"
         }
       ],
-      "location": "San Francisco, CA & Online",
+      "location": "San Francisco",
       "walletBalance": 8800,
       "totalEarnings": 84000
     },
@@ -120,7 +120,7 @@
           "year": "2015"
         }
       ],
-      "location": "Seattle, WA & Online",
+      "location": "Seattle",
       "walletBalance": 12000,
       "totalEarnings": 154000
     },
@@ -164,7 +164,7 @@
       ],
       "title": "",
       "education": [],
-      "location": "Online",
+      "location": "Delhi",
       "walletBalance": 0,
       "totalEarnings": 0
     },
@@ -175,7 +175,7 @@
       "name": "PEEYUSH ANAND",
       "role": "student",
       "avatar": "PA",
-      "balance": 100,
+      "balance": 55,
       "plan": "Pro",
       "bio": "Hello! I am PEEYUSH ANAND.",
       "languages": [
@@ -223,6 +223,20 @@
       "status": "completed",
       "rate": 1500,
       "duration": 1
+    },
+    {
+      "id": "boo_1783323581028_27",
+      "studentId": "use_1783321461288_461",
+      "studentName": "PEEYUSH ANAND",
+      "tutorId": "use_1783315154055_891",
+      "tutorName": "PEEYUSH ANAND",
+      "subject": "General Education",
+      "date": "2026-07-14",
+      "time": "2:30 PM",
+      "status": "pending",
+      "rate": 45,
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-k3zysv2k"
     }
   ],
   "messages": [
@@ -243,6 +257,15 @@
       "receiverName": "James Doe",
       "text": "Hello James! I would be glad to help. Please select an available slot on my profile page.",
       "timestamp": "2026-07-04T11:20:00Z"
+    },
+    {
+      "id": "mes_1783323581030_994",
+      "senderId": "use_1783321461288_461",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
+      "timestamp": "2026-07-06T07:39:41.030Z"
     }
   ],
   "inquiries": [

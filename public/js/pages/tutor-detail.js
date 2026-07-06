@@ -50,6 +50,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const rateSpan = document.querySelector('span.font-display-lg');
     if (rateSpan) rateSpan.textContent = `₹${tutor.rate}`;
 
+    // Update location text dynamically
+    const locPara = Array.from(document.querySelectorAll('aside p.text-outline')).find(el => el.textContent.includes('Boston') || el.parentElement.innerHTML.includes('Available'));
+    if (locPara) {
+      locPara.textContent = tutor.location || 'Online';
+    }
+
     // Update message button text
     if (msgBtn) {
       msgBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">mail</span> Message ${tutor.name.split(' ')[0]}`;
@@ -180,6 +186,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         openAuthModal('login');
         return;
       }
+      if (currentUser.role === 'student' && (currentUser.plan === 'Basic' || !currentUser.plan)) {
+        showToast('Messaging teachers requires an active subscription. Redirecting to subscription page...', 'error');
+        setTimeout(() => {
+          window.location.href = '/subscription.html?plan=Premium';
+        }, 2000);
+        return;
+      }
       const page = currentUser.role === 'student' ? '/student-messages.html' : '/instructor-messages.html';
       window.location.href = `${page}?contactId=${tutorId}`;
     });
@@ -199,9 +212,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (currentUser.plan === 'Basic' || !currentUser.plan) {
-        showToast('Booking lessons requires an active subscription. Redirecting to pricing plans...', 'error');
+        showToast('Booking lessons requires an active subscription. Redirecting to subscription page...', 'error');
         setTimeout(() => {
-          window.location.href = '/pricing.html';
+          window.location.href = '/subscription.html?plan=Premium';
         }, 2000);
         return;
       }

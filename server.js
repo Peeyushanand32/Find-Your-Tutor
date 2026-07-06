@@ -17,13 +17,21 @@ app.use(cookieParser());
 // Route Guard: Restrict non-logged in users from accessing any pages except home and reset password
 app.get('/*.html', (req, res, next) => {
   const page = req.path.toLowerCase();
-  if (page === '/index.html' || page === '/reset-password.html') {
+  if (page === '/index.html' || page === '/reset-password.html' || page === '/subscription.html' || page === '/pricing.html') {
     return next();
   }
   
   const userId = req.cookies.userId;
   if (!userId) {
     return res.redirect('/index.html?login=true');
+  }
+
+  // Restrict Basic/unsubscribed students from accessing dashboard or messages
+  const user = db.findOne('users', { id: userId });
+  if (user && user.role === 'student' && (user.plan === 'Basic' || !user.plan)) {
+    if (page === '/student-dashboard.html' || page === '/student-messages.html') {
+      return res.redirect('/subscription.html?plan=Premium');
+    }
   }
   next();
 });
@@ -158,7 +166,7 @@ app.post('/api/auth/register', (req, res) => {
       subjects: ["General Education"],
       title: "Expert Tutor",
       education: [],
-      location: "Online",
+      location: "Delhi",
       walletBalance: 0.00,
       totalEarnings: 0.00
     });

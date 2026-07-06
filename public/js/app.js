@@ -56,6 +56,15 @@ async function checkAuth() {
     const data = await res.json();
     if (data.loggedIn) {
       currentUser = data.user;
+      
+      // Route Guard: restrict Basic plan students from dashboard and messages
+      const path = window.location.pathname.toLowerCase();
+      if (currentUser.role === 'student' && (currentUser.plan === 'Basic' || !currentUser.plan)) {
+        if (path.includes('student-dashboard.html') || path.includes('student-messages.html')) {
+          window.location.href = '/subscription.html?plan=Premium';
+          return;
+        }
+      }
     }
     updateNavbar();
     setupSidebarLinks();

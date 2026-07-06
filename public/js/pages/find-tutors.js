@@ -93,9 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Client-side location filter based on Mode
       if (mode === 'Online') {
-        tutors = tutors.filter(t => t.location && t.location.toLowerCase().includes('online'));
+        // All tutors offer online classes
+        tutors = tutors;
       } else if (mode === 'In-Person') {
-        tutors = tutors.filter(t => t.location && !t.location.toLowerCase().includes('online') || t.location.toLowerCase().includes('near me') || t.location.toLowerCase().includes('boston'));
+        // In-Person matches physical cities (non-empty/non-generic)
+        tutors = tutors.filter(t => t.location && t.location.toLowerCase() !== 'online');
       }
 
       // Update count
