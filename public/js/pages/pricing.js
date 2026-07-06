@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   buttons.forEach(btn => {
     const text = btn.textContent.trim().toLowerCase();
-    if (text.includes('get started') || text.includes('choose') || text.includes('upgrade') || text.includes('subscribe')) {
+    if (text.includes('get started') || text.includes('choose') || text.includes('upgrade') || text.includes('subscribe') || text.includes('premium')) {
       // Find the card title
       let card = btn.closest('.glass-card') || btn.parentElement;
       let planName = 'Premium';

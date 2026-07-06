@@ -182,21 +182,22 @@
 <div class="h-32 premium-gradient relative"></div>
 <div class="px-unit-lg pb-unit-lg -mt-16 flex flex-col md:flex-row md:items-end gap-unit-md">
 <div class="relative">
-<img class="w-32 h-32 rounded-3xl border-4 border-white object-cover shadow-lg" data-alt="Close-up portrait of a motivated teenage student Alex Johnson, featuring a clean aesthetic, wearing a modern blue hoodie. The background is softly blurred with hints of a bright, modern learning library. The lighting is crisp and optimistic, emphasizing high-quality digital photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAV8vVdYUnO3P80huiKE74X5ydy_UpDRoC5MUUjQwikTeNeLxdf_x9OLy9Fjhv9RpoLuXfmPnV_Si_Dm8h5gF5ZdqWV6e0R_HLOcfovAZPIsTdp4QcQI5I1CUd509yhbLpr4uYr6t3sOzsMj-cHgpTiMZu5vDqY6fcJ81iQk3Ed8FSvrpPVHWMcqwYKebIv2FR9rqU243WvqFVh_8hvNYuPihz0H54LRHG7hRkia5hzffDJES9qYNsQW_V9F95U_dowkgywEKm5Zna3">
-<button class="absolute bottom-2 right-2 bg-white p-1.5 rounded-lg shadow-md hover:scale-105 transition-transform">
+<img id="avatarPreview" class="w-32 h-32 rounded-3xl border-4 border-white object-cover shadow-lg" data-alt="Student Avatar" src="">
+<input type="file" id="avatarFileInput" accept="image/*" class="hidden">
+<button id="uploadAvatarBtn" type="button" class="absolute bottom-2 right-2 bg-white p-1.5 rounded-lg shadow-md hover:scale-105 transition-transform">
 <span class="material-symbols-outlined text-primary text-sm">edit</span>
 </button>
 </div>
 <div class="flex-1 pb-2">
-<h3 class="font-headline-md text-headline-md">Alex Johnson</h3>
+<h3 class="font-headline-md text-headline-md" id="headerName">Alex Johnson</h3>
 <div class="flex flex-wrap gap-4 mt-2 text-on-surface-variant">
 <div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-sm">school</span>
-<span class="font-label-md">11th Grade • IB Diploma</span>
+<span class="font-label-md" id="headerGrade">11th Grade</span>
 </div>
 <div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-sm">location_on</span>
-<span class="font-label-md">San Francisco, CA</span>
+<span class="font-label-md" id="headerLocation">San Francisco, CA</span>
 </div>
 </div>
 </div>
@@ -280,42 +281,60 @@
 </div>
 </div>
 </div>
-<!-- Account Settings -->
+<!-- Profile Settings Form -->
 <div class="glass-card p-unit-lg rounded-3xl">
-<h4 class="font-headline-sm text-headline-sm mb-unit-lg">Account Settings</h4>
+<h4 class="font-headline-sm text-headline-sm mb-unit-lg">Profile & Study Settings</h4>
+<form id="profileForm" class="space-y-6">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-unit-md">
 <div class="space-y-1">
-<label class="font-label-md text-on-surface-variant ml-1">Email Address</label>
-<input class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="email" value="alex.johnson@example.com">
+<label class="font-label-md text-on-surface-variant ml-1">Full Name</label>
+<input id="nameInput" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" placeholder="Your Name">
 </div>
 <div class="space-y-1">
-<label class="font-label-md text-on-surface-variant ml-1">Password</label>
-<div class="relative">
-<input class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="password" value="••••••••••••">
-<button class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant">
-<span class="material-symbols-outlined text-sm">visibility</span>
-</button>
+<label class="font-label-md text-on-surface-variant ml-1">Email Address (Read-only)</label>
+<input id="emailInput" disabled class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-surface-container-low text-outline outline-none" type="email">
 </div>
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant ml-1">Phone Number</label>
+<input id="phoneInput" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="tel" placeholder="+1 (555) 000-0000">
 </div>
-<div class="md:col-span-2 flex items-center justify-between p-unit-md border border-outline-variant/20 rounded-2xl bg-surface-container-low/30">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">notifications_active</span>
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant ml-1">Current Class / Grade</label>
+<select id="gradeSelect" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all">
+  <option value="9th Grade">9th Grade</option>
+  <option value="10th Grade">10th Grade</option>
+  <option value="11th Grade">11th Grade</option>
+  <option value="12th Grade">12th Grade</option>
+  <option value="College">College</option>
+  <option value="Other">Other</option>
+</select>
 </div>
-<div>
-<p class="font-label-md">Learning Reminders</p>
-<p class="text-xs text-on-surface-variant">Daily goals and session alerts</p>
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant ml-1">City</label>
+<input id="cityInput" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" placeholder="e.g. New Delhi">
 </div>
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant ml-1">Hourly Budget (INR / hr)</label>
+<input id="budgetInput" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="number" min="0" placeholder="e.g. 500">
 </div>
-<div class="w-12 h-6 bg-primary rounded-full relative cursor-pointer shadow-inner">
-<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-all"></div>
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant ml-1">Looking for Teacher in Subject</label>
+<input id="targetSubjectInput" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" placeholder="e.g. Advanced Calculus">
 </div>
+<div class="space-y-1">
+<label class="font-label-md text-on-surface-variant ml-1">Exam preparing for</label>
+<input id="targetExamInput" required class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" placeholder="e.g. JEE, SAT, Board Exams">
+</div>
+<div class="md:col-span-2 space-y-1">
+<label class="font-label-md text-on-surface-variant ml-1">Short Bio &amp; Goals</label>
+<textarea id="bioTextarea" class="w-full min-h-[100px] px-4 py-3 rounded-xl border border-outline-variant/50 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Tell us about yourself and what you expect from lessons..."></textarea>
 </div>
 </div>
 <div class="mt-unit-lg flex gap-3">
-<button class="bg-primary text-white px-unit-lg py-3 rounded-xl font-label-md hover:scale-[1.02] transition-transform">Save Changes</button>
-<button class="text-on-surface-variant px-unit-md py-3 rounded-xl font-label-md hover:bg-surface-container transition-all">Discard</button>
+<button type="submit" class="bg-primary text-white px-unit-lg py-3 rounded-xl font-label-md hover:scale-[1.02] transition-transform">Save Changes</button>
+<button type="button" onclick="window.location.reload()" class="text-on-surface-variant px-unit-md py-3 rounded-xl font-label-md hover:bg-surface-container transition-all">Discard</button>
 </div>
+</form>
 </div>
 </div>
 <!-- Sidebar Info (Col 9-12) -->

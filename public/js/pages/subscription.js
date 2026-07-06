@@ -46,6 +46,44 @@ function initSubscription() {
         submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span><span>Processing Payment...</span>';
       }
 
+      if (window.isNote100Applied) {
+        try {
+          showToast('Activating subscription...', 'success');
+          const confirmRes = await fetch('/api/checkout/confirm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId: `free_coupon_Note100_${Date.now()}`,
+              planName: planName
+            })
+          });
+          const confirmData = await confirmRes.json();
+          if (confirmRes.ok && confirmData.success) {
+            showToast('Subscription activated successfully!', 'success');
+            if (window.currentUser) {
+              window.currentUser.plan = planName;
+            }
+            setTimeout(() => {
+              const dashboardUrl = currentUser.role === 'tutor' ? '/instructor-dashboard.html' : '/student-dashboard.html';
+              window.location.href = `${dashboardUrl}?session_id=mock_session_${Date.now()}&plan=${encodeURIComponent(planName)}`;
+            }, 1500);
+          } else {
+            showToast(confirmData.error || 'Failed to activate plan', 'error');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Activate Plan (Free)</span>';
+            }
+          }
+        } catch (confirmErr) {
+          showToast('Error activating subscription.', 'error');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Activate Plan (Free)</span>';
+          }
+        }
+        return;
+      }
+
       try {
         const isAnnual = document.getElementById('annualBtn')?.classList.contains('bg-white');
         let amount = 1;
@@ -91,7 +129,8 @@ function initSubscription() {
                     window.currentUser.plan = planName;
                   }
                   setTimeout(() => {
-                    window.location.href = '/student-dashboard.html';
+                    const dashboardUrl = currentUser.role === 'tutor' ? '/instructor-dashboard.html' : '/student-dashboard.html';
+                    window.location.href = `${dashboardUrl}?session_id=mock_session_${Date.now()}&plan=${encodeURIComponent(planName)}`;
                   }, 1500);
                 } else {
                   showToast(verifyData.message || 'Verification failed', 'error');
@@ -151,6 +190,67 @@ function initSubscription() {
           } else {
             form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
           }
+        }
+      });
+    }
+
+    // Handle coupon apply
+    const applyBtn = document.getElementById('applyCouponBtn');
+    const couponInput = document.getElementById('couponInput');
+    const couponStatus = document.getElementById('couponStatus');
+    const totalPriceEl = document.getElementById('totalPrice');
+    const submitBtn = document.querySelector('button.gradient-btn');
+
+    if (applyBtn && couponInput) {
+      applyBtn.addEventListener('click', () => {
+        const code = couponInput.value.trim().toUpperCase();
+        if (code === 'DISCOUNT100' || code === 'NOTE100') {
+          window.isNote100Applied = true;
+          
+          if (couponStatus) {
+            couponStatus.textContent = `Coupon ${code} applied successfully! 100% off.`;
+            couponStatus.className = 'text-xs mt-1 text-green-600 font-semibold';
+            couponStatus.classList.remove('hidden');
+          }
+          
+          if (totalPriceEl) {
+            totalPriceEl.textContent = '₹0.00';
+          }
+
+          if (submitBtn) {
+            const btnText = submitBtn.querySelector('span:not(.material-symbols-outlined)');
+            if (btnText) btnText.textContent = 'Activate Plan (Free)';
+          }
+
+          showToast(`Coupon ${code} applied! 100% discount.`, 'success');
+        } else {
+          window.isNote100Applied = false;
+          
+          if (couponStatus) {
+            couponStatus.textContent = 'Invalid coupon code.';
+            couponStatus.className = 'text-xs mt-1 text-red-600 font-semibold';
+            couponStatus.classList.remove('hidden');
+          }
+
+          // Restore original pricing display
+          const isAnnual = document.getElementById('annualBtn')?.classList.contains('bg-white');
+          let priceText = "₹1.00";
+          if (planName === 'Premium') {
+            priceText = isAnnual ? "₹40.00" : "₹5.00";
+          } else {
+            priceText = isAnnual ? "₹8.00" : "₹1.00";
+          }
+          if (totalPriceEl) {
+            totalPriceEl.textContent = priceText;
+          }
+
+          // Restore payment button text
+          if (submitBtn) {
+            const btnText = submitBtn.querySelector('span:not(.material-symbols-outlined)');
+            if (btnText) btnText.textContent = 'Pay Securely';
+          }
+
+          showToast('Invalid coupon code.', 'error');
         }
       });
     }

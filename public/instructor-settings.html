@@ -206,24 +206,25 @@
 <div class="flex flex-col md:flex-row gap-unit-lg items-center md:items-start">
 <div class="relative group">
 <div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden bg-surface-container shadow-inner border border-outline-variant/50">
-<img class="w-full h-full object-cover" data-alt="Close up professional portrait of a modern educator looking directly at the camera with confidence and expertise. Soft natural lighting emphasizes clarity and professionalism. The background is a crisp, off-white studio wall with subtle geometric shadows, maintaining a clean light-mode SaaS interface aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaa77H5N17GtihfH6DrYO2yaP3dIilLJLbv0GESPz_RPJz_a4ku72IPO-ltY5KsEeqiK_kh8W-o6WsHEp-i6VmOC35vEkCSOYgSGlCF2Wst22OxYUFkZIgwd-fFubUrffMWRASi43U2Cc9U6-LZFcn_RboeHtLBJ5NJ6QIK6K7u3RnbTLnz_Vb1KiiszbsvpSpho7Fwi_XNvcjIW3IY8czP6jw8DTzQ0CHUcnHyEmBI_yKxi1Xn_dPjPe1OShRP9FisG9N1YlfwbQ8">
+<img id="avatarPreview" class="w-full h-full object-cover" data-alt="Tutor Avatar" src="">
 </div>
-<button class="absolute -bottom-2 -right-2 bg-primary text-on-primary p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+<input type="file" id="avatarFileInput" accept="image/*" class="hidden">
+<button id="uploadAvatarBtn" type="button" class="absolute -bottom-2 -right-2 bg-primary text-on-primary p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-sm">photo_camera</span>
 </button>
 </div>
 <div class="flex-1 w-full space-y-4">
 <div class="space-y-1">
 <label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Full Name</label>
-<input class="w-full font-headline-md text-headline-md bg-transparent border-none focus:ring-2 focus:ring-primary/20 rounded-lg px-2 -ml-2 text-on-surface" type="text" value="Dr. Jonathan Aris">
+<input id="nameInput" required class="w-full font-headline-md text-headline-md bg-transparent border-none focus:ring-2 focus:ring-primary/20 rounded-lg px-2 -ml-2 text-on-surface" type="text">
 </div>
 <div class="space-y-1">
 <label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Professional Title</label>
-<input class="w-full font-body-lg text-body-lg text-primary bg-transparent border-none focus:ring-2 focus:ring-primary/20 rounded-lg px-2 -ml-2" type="text" value="Senior Mathematics &amp; Theoretical Physics Tutor">
+<input id="titleInput" required class="w-full font-body-lg text-body-lg text-primary bg-transparent border-none focus:ring-2 focus:ring-primary/20 rounded-lg px-2 -ml-2" type="text">
 </div>
 <div class="space-y-1">
 <label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Location (City)</label>
-<input class="w-full font-body-md text-body-md text-on-surface bg-transparent border-none focus:ring-2 focus:ring-primary/20 rounded-lg px-2 -ml-2" type="text" placeholder="Location (City)" value="">
+<input id="locationInput" required class="w-full font-body-md text-body-md text-on-surface bg-transparent border-none focus:ring-2 focus:ring-primary/20 rounded-lg px-2 -ml-2" type="text" placeholder="Location (City)">
 </div>
 <div class="flex items-center gap-3 mt-2">
 <span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-label-md font-label-md">
@@ -244,7 +245,7 @@
                                 </h3>
 <button class="text-primary hover:bg-primary/5 px-3 py-1 rounded-lg transition-colors font-label-md">Formatting Tips</button>
 </div>
-<textarea class="w-full min-h-[160px] p-4 bg-surface-container-low border border-outline-variant/50 rounded-xl font-body-md text-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Tell students about your teaching philosophy, experience, and what they can expect from your lessons...">Experienced academic with over 10 years of teaching at the university level. I specialize in making complex mathematical concepts accessible and engaging. My approach focuses on building strong foundational intuition before tackling advanced problem sets.</textarea>
+<textarea id="bioTextarea" required class="w-full min-h-[160px] p-4 bg-surface-container-low border border-outline-variant/50 rounded-xl font-body-md text-on-surface-variant focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Tell students about your teaching philosophy, experience, and what they can expect from your lessons..."></textarea>
 </section>
 <!-- Subjects Section -->
 <section class="glass-card rounded-xl p-unit-lg">
@@ -253,28 +254,13 @@
 <span class="material-symbols-outlined text-primary">menu_book</span>
                                     Specialized Subjects
                                 </h3>
-<button class="flex items-center gap-1 text-primary font-label-md">
+<button type="button" id="addSubjectBtn" class="flex items-center gap-1 text-primary font-label-md">
 <span class="material-symbols-outlined text-sm">add</span>
                                     Add Subject
                                 </button>
 </div>
-<div class="flex flex-wrap gap-3">
-<div class="group flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/30 hover:border-primary transition-colors">
-<span class="font-label-md">Advanced Calculus</span>
-<button class="material-symbols-outlined text-sm text-outline hover:text-error">close</button>
-</div>
-<div class="group flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/30 hover:border-primary transition-colors">
-<span class="font-label-md">Quantum Mechanics</span>
-<button class="material-symbols-outlined text-sm text-outline hover:text-error">close</button>
-</div>
-<div class="group flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/30 hover:border-primary transition-colors">
-<span class="font-label-md">Linear Algebra</span>
-<button class="material-symbols-outlined text-sm text-outline hover:text-error">close</button>
-</div>
-<div class="group flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/30 hover:border-primary transition-colors">
-<span class="font-label-md">Differential Equations</span>
-<button class="material-symbols-outlined text-sm text-outline hover:text-error">close</button>
-</div>
+<div id="subjectsContainer" class="flex flex-wrap gap-3">
+  <!-- Dynamic tags will render here -->
 </div>
 </section>
 <!-- Education & Certifications -->
@@ -284,42 +270,13 @@
 <span class="material-symbols-outlined text-primary">school</span>
                                     Education &amp; Certifications
                                 </h3>
-<button class="flex items-center gap-1 text-primary font-label-md">
+<button type="button" id="addEducationBtn" class="flex items-center gap-1 text-primary font-label-md">
 <span class="material-symbols-outlined text-sm">add</span>
                                     Add New
                                 </button>
 </div>
-<div class="space-y-4">
-<div class="flex gap-4 p-4 rounded-xl border border-outline-variant/20 bg-surface-container-low hover:border-primary/30 transition-all group">
-<div class="h-12 w-12 bg-white rounded-lg flex items-center justify-center border border-outline-variant/30 shrink-0">
-<span class="material-symbols-outlined text-primary text-3xl">workspace_premium</span>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex justify-between items-start">
-<h4 class="font-label-md text-on-surface truncate">PhD in Theoretical Physics</h4>
-<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">edit</button>
-<button class="material-symbols-outlined text-on-surface-variant hover:text-error">delete</button>
-</div>
-</div>
-<p class="text-body-md text-on-surface-variant">Oxford University • 2012 - 2016</p>
-</div>
-</div>
-<div class="flex gap-4 p-4 rounded-xl border border-outline-variant/20 bg-surface-container-low hover:border-primary/30 transition-all group">
-<div class="h-12 w-12 bg-white rounded-lg flex items-center justify-center border border-outline-variant/30 shrink-0">
-<span class="material-symbols-outlined text-primary text-3xl">history_edu</span>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex justify-between items-start">
-<h4 class="font-label-md text-on-surface truncate">MSc Mathematical Science</h4>
-<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">edit</button>
-<button class="material-symbols-outlined text-on-surface-variant hover:text-error">delete</button>
-</div>
-</div>
-<p class="text-body-md text-on-surface-variant">Imperial College London • 2010 - 2012</p>
-</div>
-</div>
+<div id="educationContainer" class="space-y-4">
+  <!-- Dynamic education entries will render here -->
 </div>
 </section>
 </div>
@@ -336,25 +293,23 @@
 <label class="block text-label-sm font-label-sm text-outline mb-2 uppercase tracking-wider">Hourly Rate (₹)</label>
 <div class="relative">
 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">₹</span>
-<input class="w-full pl-8 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-secondary text-on-surface font-bold text-headline-sm" type="number" value="85">
+<input id="rateInput" required class="w-full pl-8 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-secondary text-on-surface font-bold text-headline-sm" type="number">
 </div>
 <p class="text-label-sm text-on-surface-variant mt-2 italic">Avg. for your level: ₹75 - ₹95</p>
+</div>
+<div class="pt-6 border-t border-outline-variant/30">
+<label class="block text-label-sm font-label-sm text-outline mb-2 uppercase tracking-wider">Grades / Classes Taught</label>
+<input id="targetGradesInput" required class="w-full px-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-secondary text-on-surface text-label-md" type="text" placeholder="e.g. High School, Class 10, Class 12">
 </div>
 <div class="pt-6 border-t border-outline-variant/30">
 <h4 class="font-label-md mb-4 flex items-center justify-between">
                                         Weekly Availability
                                         <span class="material-symbols-outlined text-on-surface-variant cursor-pointer">settings</span>
 </h4>
-<div class="grid grid-cols-7 gap-1">
-<div class="h-10 bg-primary text-on-primary flex items-center justify-center rounded-lg text-xs font-bold shadow-sm">M</div>
-<div class="h-10 bg-primary text-on-primary flex items-center justify-center rounded-lg text-xs font-bold shadow-sm">T</div>
-<div class="h-10 bg-primary text-on-primary flex items-center justify-center rounded-lg text-xs font-bold shadow-sm">W</div>
-<div class="h-10 bg-primary text-on-primary flex items-center justify-center rounded-lg text-xs font-bold shadow-sm">T</div>
-<div class="h-10 bg-primary text-on-primary flex items-center justify-center rounded-lg text-xs font-bold shadow-sm">F</div>
-<div class="h-10 bg-surface-container-high text-outline flex items-center justify-center rounded-lg text-xs font-bold">S</div>
-<div class="h-10 bg-surface-container-high text-outline flex items-center justify-center rounded-lg text-xs font-bold">S</div>
+<div id="availabilityGrid" class="grid grid-cols-7 gap-1">
+  <!-- Dynamic day buttons will render here -->
 </div>
-<p class="text-label-sm text-on-surface-variant mt-3">Current: 12 slots available/week</p>
+<p id="availabilityStatus" class="text-label-sm text-on-surface-variant mt-3">Current: 0 days selected/week</p>
 </div>
 </div>
 </section>

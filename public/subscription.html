@@ -270,9 +270,10 @@
 <div class="space-y-unit-xs pt-unit-sm">
   <label class="font-label-md text-label-md text-on-surface-variant">Have a discount code?</label>
   <div class="flex gap-unit-sm">
-    <input type="text" placeholder="Enter code" class="flex-grow bg-white border border-outline-variant rounded-lg px-3 py-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-label-md">
-    <button class="px-unit-md py-2 bg-primary text-white rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors active:scale-95">Apply</button>
+    <input type="text" id="couponInput" placeholder="Enter code" class="flex-grow bg-white border border-outline-variant rounded-lg px-3 py-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-body-md text-label-md">
+    <button type="button" id="applyCouponBtn" class="px-unit-md py-2 bg-primary text-white rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors active:scale-95">Apply</button>
   </div>
+  <p id="couponStatus" class="text-xs mt-1 hidden"></p>
   <p class="text-[10px] text-outline font-label-sm">Have a referral code? Enter it above.</p>
 </div><div class="flex justify-between items-center pt-unit-md">
 <span class="font-headline-sm text-headline-sm text-on-surface">Total</span>
@@ -393,7 +394,7 @@
         summaryPlanName.innerText = `${planName} Plan - Monthly`;
         basePrice.innerText = monthlyPrice;
         discountRow.style.display = 'none';
-        totalPrice.innerText = monthlyPrice;
+        totalPrice.innerText = window.isNote100Applied ? "₹0.00" : monthlyPrice;
       } else {
         annualBtn.classList.add('bg-white', 'shadow-sm', 'text-primary');
         annualBtn.classList.remove('text-on-surface-variant');
@@ -403,7 +404,7 @@
         summaryPlanName.innerText = `${planName} Plan - Annual`;
         basePrice.innerText = annualPriceBase;
         discountRow.style.display = 'flex';
-        totalPrice.innerText = annualPriceTotal;
+        totalPrice.innerText = window.isNote100Applied ? "₹0.00" : annualPriceTotal;
       }
     }
 

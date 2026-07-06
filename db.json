@@ -7,7 +7,7 @@
       "name": "James Doe",
       "role": "student",
       "avatar": "JD",
-      "balance": 15000,
+      "balance": 14775,
       "plan": "Basic",
       "bio": "High school senior preparing for AP Calculus and college admission.",
       "languages": [
@@ -22,7 +22,7 @@
       "name": "Dr. Sarah Jenkins",
       "role": "tutor",
       "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuAxBTj1Cg8WfDctCwZfizyEbz4G_183JwXPFlGu9CiI2fUToO_rYwm-HP1B5JvTCAHvM4eUjk_nhS3PMkDX4Zb_70hbh0-shbxC7_9JKQ4DdRWmqE3zBlMXYuza7iWXndxjUms3t13-nJltTeLIwIcOhgHNDRSl6H7YcXs1e9qgxmT8tndVqWIcrpOh_hTDk4ciwz3KvaLAvgBhzgBrgr9D1YemW5LOCGfSweqdtJiLq9qxpXLKQsZGhjWDdJmdwGleNeW2nB1RqgSl",
-      "rate": 1500,
+      "rate": 50,
       "rating": 4.9,
       "reviewsCount": 124,
       "hoursTaught": 500,
@@ -30,7 +30,7 @@
         "English",
         "Spanish"
       ],
-      "bio": "PhD in Theoretical Physics with over 12 years of experience helping students master complex calculus and mechanics. Specialized in AP prep and University entrance exams.",
+      "bio": "Passionate mathematician helping students achieve top scores in Calculus and Algebra.",
       "subjects": [
         "Calculus BC",
         "Linear Algebra",
@@ -39,7 +39,7 @@
         "Physics",
         "AP Calculus AB"
       ],
-      "title": "Advanced Mathematics & Physics Expert",
+      "title": "",
       "education": [
         {
           "degree": "M.Sc. in Mathematics",
@@ -52,9 +52,10 @@
           "year": "2016"
         }
       ],
-      "location": "Boston",
+      "location": "New Delhi, India",
       "walletBalance": 4200,
-      "totalEarnings": 32500
+      "totalEarnings": 32500,
+      "plan": "Basic"
     },
     {
       "id": "tutor2",
@@ -158,15 +159,15 @@
       "rate": 45,
       "rating": 5,
       "reviewsCount": 0,
-      "hoursTaught": 0,
+      "hoursTaught": 6,
       "subjects": [
         "General Education"
       ],
       "title": "",
       "education": [],
       "location": "Delhi",
-      "walletBalance": 0,
-      "totalEarnings": 0
+      "walletBalance": 270,
+      "totalEarnings": 270
     },
     {
       "id": "use_1783321461288_461",
@@ -176,12 +177,86 @@
       "role": "student",
       "avatar": "PA",
       "balance": 55,
-      "plan": "Pro",
+      "plan": "Basic",
       "bio": "Hello! I am PEEYUSH ANAND.",
       "languages": [
         "English"
       ],
       "phone": ""
+    },
+    {
+      "id": "use_1783355638247_104",
+      "email": "peeyushanand2@gmail.com",
+      "password": "qwer",
+      "name": "PEEYUSH ANAND",
+      "role": "tutor",
+      "avatar": "PA",
+      "balance": 0,
+      "plan": "Pro",
+      "bio": "I am an expert tutor in various subjects.zxcfvghjk Ready to help you learn!",
+      "languages": [
+        "English"
+      ],
+      "phone": "+917505635684",
+      "rate": 45,
+      "rating": 5,
+      "reviewsCount": 0,
+      "hoursTaught": 0,
+      "subjects": [
+        "General Education"
+      ],
+      "title": "Expert Tutor",
+      "education": [],
+      "location": "Delhi",
+      "walletBalance": 0,
+      "totalEarnings": 0,
+      "targetGrades": "",
+      "availability": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "createdAt": "2026-07-03T17:51:54.005Z"
+    },
+    {
+      "id": "use_1783359289805_26",
+      "email": "sd@gmail.com",
+      "password": "password",
+      "name": "Rahul Verma",
+      "role": "tutor",
+      "avatar": "RV",
+      "balance": 0,
+      "plan": "Basic",
+      "bio": "I am an expert tutor in various subjects. Ready to help you learn!",
+      "languages": [
+        "English"
+      ],
+      "phone": "45678987633",
+      "rate": 45,
+      "rating": 5,
+      "reviewsCount": 0,
+      "hoursTaught": 0,
+      "subjects": [
+        "General Education"
+      ],
+      "title": "Expert Tutor",
+      "education": [],
+      "location": "Delhi",
+      "walletBalance": 0,
+      "totalEarnings": 0,
+      "targetGrades": "",
+      "availability": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "createdAt": "2026-07-03T17:50:46.497Z"
     }
   ],
   "bookings": [
@@ -233,10 +308,94 @@
       "subject": "General Education",
       "date": "2026-07-14",
       "time": "2:30 PM",
-      "status": "pending",
+      "status": "completed",
       "rate": 45,
       "duration": 1,
       "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-k3zysv2k"
+    },
+    {
+      "id": "boo_1783348997543_429",
+      "studentId": "student1",
+      "studentName": "James Doe",
+      "tutorId": "use_1783315154055_891",
+      "tutorName": "PEEYUSH ANAND",
+      "subject": "General Education",
+      "date": "2026-07-14",
+      "time": "2:30 PM",
+      "status": "completed",
+      "rate": 45,
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-xennpfzb"
+    },
+    {
+      "id": "boo_1783349734666_650",
+      "studentId": "student1",
+      "studentName": "James Doe",
+      "tutorId": "use_1783315154055_891",
+      "tutorName": "PEEYUSH ANAND",
+      "subject": "General Education",
+      "date": "2026-07-14",
+      "time": "2:30 PM",
+      "status": "completed",
+      "rate": 45,
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-dswwtpgk"
+    },
+    {
+      "id": "boo_1783349758922_387",
+      "studentId": "student1",
+      "studentName": "James Doe",
+      "tutorId": "use_1783315154055_891",
+      "tutorName": "PEEYUSH ANAND",
+      "subject": "General Education",
+      "date": "2026-07-14",
+      "time": "2:30 PM",
+      "status": "completed",
+      "rate": 45,
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-p9rh9ajx"
+    },
+    {
+      "id": "boo_1783350359201_406",
+      "studentId": "student1",
+      "studentName": "James Doe",
+      "tutorId": "use_1783315154055_891",
+      "tutorName": "PEEYUSH ANAND",
+      "subject": "General Education",
+      "date": "2026-07-14",
+      "time": "2:30 PM",
+      "status": "cancelled",
+      "rate": 45,
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-9jpuvnxt"
+    },
+    {
+      "id": "boo_1783350625770_539",
+      "studentId": "student1",
+      "studentName": "James Doe",
+      "tutorId": "use_1783315154055_891",
+      "tutorName": "PEEYUSH ANAND",
+      "subject": "General Education",
+      "date": "2026-07-14",
+      "time": "2:30 PM",
+      "status": "completed",
+      "rate": 45,
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-w761tjic"
+    },
+    {
+      "id": "boo_1783350823168_558",
+      "studentId": "student1",
+      "studentName": "James Doe",
+      "tutorId": "use_1783315154055_891",
+      "tutorName": "PEEYUSH ANAND",
+      "subject": "General Education",
+      "date": "2026-07-14",
+      "time": "2:30 PM",
+      "status": "completed",
+      "rate": 45,
+      "duration": 1,
+      "meetingLink": "https://meet.jit.si/TutorNest-GeneralEducation-ex3wgg60"
     }
   ],
   "messages": [
@@ -266,6 +425,276 @@
       "receiverName": "PEEYUSH ANAND",
       "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
       "timestamp": "2026-07-06T07:39:41.030Z"
+    },
+    {
+      "id": "mes_1783340140909_176",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "use_1783321461288_461",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: SCHEDULED by PEEYUSH ANAND.\n🔗 Join Video Session: https://meet.jit.si/TutorNest-GeneralEducation-k3zysv2k",
+      "timestamp": "2026-07-06T12:15:40.908Z"
+    },
+    {
+      "id": "mes_1783346681394_862",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "tutor3",
+      "receiverName": "Prof. Julian Chen",
+      "text": "hiih",
+      "timestamp": "2026-07-06T14:04:41.394Z"
+    },
+    {
+      "id": "mes_1783346682916_244",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "tutor3",
+      "receiverName": "Prof. Julian Chen",
+      "text": "jiii",
+      "timestamp": "2026-07-06T14:04:42.916Z"
+    },
+    {
+      "id": "mes_1783346684452_822",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "tutor3",
+      "receiverName": "Prof. Julian Chen",
+      "text": "hii",
+      "timestamp": "2026-07-06T14:04:44.452Z"
+    },
+    {
+      "id": "mes_1783346685575_989",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "tutor3",
+      "receiverName": "Prof. Julian Chen",
+      "text": "jiji",
+      "timestamp": "2026-07-06T14:04:45.575Z"
+    },
+    {
+      "id": "mes_1783346704794_405",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "hii",
+      "timestamp": "2026-07-06T14:05:04.794Z"
+    },
+    {
+      "id": "mes_1783346706320_564",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "hii",
+      "timestamp": "2026-07-06T14:05:06.320Z"
+    },
+    {
+      "id": "mes_1783346707961_292",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "hii",
+      "timestamp": "2026-07-06T14:05:07.961Z"
+    },
+    {
+      "id": "mes_1783346709035_280",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "hihi",
+      "timestamp": "2026-07-06T14:05:09.035Z"
+    },
+    {
+      "id": "mes_1783347041398_78",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "how are you",
+      "timestamp": "2026-07-06T14:10:41.398Z"
+    },
+    {
+      "id": "mes_1783348997544_342",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
+      "timestamp": "2026-07-06T14:43:17.544Z"
+    },
+    {
+      "id": "mes_1783349734685_241",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
+      "timestamp": "2026-07-06T14:55:34.685Z"
+    },
+    {
+      "id": "mes_1783349758924_395",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
+      "timestamp": "2026-07-06T14:55:58.924Z"
+    },
+    {
+      "id": "mes_1783349769708_443",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: SCHEDULED by PEEYUSH ANAND.\n🔗 Join Video Session: https://meet.jit.si/TutorNest-GeneralEducation-xennpfzb",
+      "timestamp": "2026-07-06T14:56:09.708Z"
+    },
+    {
+      "id": "mes_1783349770644_862",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: SCHEDULED by PEEYUSH ANAND.\n🔗 Join Video Session: https://meet.jit.si/TutorNest-GeneralEducation-dswwtpgk",
+      "timestamp": "2026-07-06T14:56:10.644Z"
+    },
+    {
+      "id": "mes_1783349771593_784",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: SCHEDULED by PEEYUSH ANAND.\n🔗 Join Video Session: https://meet.jit.si/TutorNest-GeneralEducation-p9rh9ajx",
+      "timestamp": "2026-07-06T14:56:11.593Z"
+    },
+    {
+      "id": "mes_1783350099051_956",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "use_1783321461288_461",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:01:39.050Z"
+    },
+    {
+      "id": "mes_1783350100250_311",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:01:40.250Z"
+    },
+    {
+      "id": "mes_1783350101543_449",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:01:41.543Z"
+    },
+    {
+      "id": "mes_1783350102713_303",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:01:42.713Z"
+    },
+    {
+      "id": "mes_1783350359203_585",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
+      "timestamp": "2026-07-06T15:05:59.203Z"
+    },
+    {
+      "id": "mes_1783350366684_349",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: CANCELLED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:06:06.684Z"
+    },
+    {
+      "id": "mes_1783350625772_896",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
+      "timestamp": "2026-07-06T15:10:25.772Z"
+    },
+    {
+      "id": "mes_1783350634830_559",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: SCHEDULED by PEEYUSH ANAND.\n🔗 Join Video Session: https://meet.jit.si/TutorNest-GeneralEducation-w761tjic",
+      "timestamp": "2026-07-06T15:10:34.830Z"
+    },
+    {
+      "id": "mes_1783350823170_732",
+      "senderId": "student1",
+      "senderName": "James Doe",
+      "receiverId": "use_1783315154055_891",
+      "receiverName": "PEEYUSH ANAND",
+      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"General Education\".",
+      "timestamp": "2026-07-06T15:13:43.170Z"
+    },
+    {
+      "id": "mes_1783350830683_240",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: SCHEDULED by PEEYUSH ANAND.\n🔗 Join Video Session: https://meet.jit.si/TutorNest-GeneralEducation-ex3wgg60",
+      "timestamp": "2026-07-06T15:13:50.683Z"
+    },
+    {
+      "id": "mes_1783352230865_59",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:37:10.864Z"
+    },
+    {
+      "id": "mes_1783352232085_378",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:37:12.085Z"
+    },
+    {
+      "id": "mes_1783352233717_695",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:37:13.717Z"
+    },
+    {
+      "id": "mes_1783352234911_361",
+      "senderId": "use_1783315154055_891",
+      "senderName": "PEEYUSH ANAND",
+      "receiverId": "student1",
+      "receiverName": "James Doe",
+      "text": "🔔 Lesson Update: The lesson on 2026-07-14 at 2:30 PM was updated to: COMPLETED by PEEYUSH ANAND.",
+      "timestamp": "2026-07-06T15:37:14.911Z"
     }
   ],
   "inquiries": [

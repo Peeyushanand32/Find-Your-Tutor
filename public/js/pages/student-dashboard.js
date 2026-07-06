@@ -33,6 +33,12 @@ async function initDashboard() {
         // Clean URL parameters to prevent multiple alerts on refresh
         window.history.replaceState({}, document.title, window.location.pathname);
         showToast(`Successfully activated your ${planName} subscription!`, 'success');
+        if (typeof setupSidebarLinks === 'function') {
+          setupSidebarLinks();
+        }
+        if (typeof updateNavbar === 'function') {
+          updateNavbar();
+        }
       }
     } catch (err) {
       console.error('Subscription activation callback failed:', err);
@@ -120,9 +126,10 @@ async function initDashboard() {
     // 5. Populate Recent Tutors
     const tutorsListContainer = document.querySelector('.space-y-unit-lg:has(.flex-1)');
     if (tutorsListContainer) {
-      // Find unique tutors
+      // Find unique tutors who have accepted requests
       const tutorMap = {};
-      bookings.forEach(b => {
+      const acceptedBookings = bookings.filter(b => b.status === 'scheduled' || b.status === 'completed');
+      acceptedBookings.forEach(b => {
         tutorMap[b.tutorId] = { id: b.tutorId, name: b.tutorName, subject: b.subject };
       });
       const uniqueTutors = Object.values(tutorMap);

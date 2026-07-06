@@ -26,11 +26,18 @@ app.get('/*.html', (req, res, next) => {
     return res.redirect('/index.html?login=true');
   }
 
-  // Restrict Basic/unsubscribed students from accessing dashboard or messages
+  // Restrict Basic/unsubscribed students from accessing dashboard, messages, or calendar
   const user = db.findOne('users', { id: userId });
   if (user && user.role === 'student' && (user.plan === 'Basic' || !user.plan)) {
-    if (page === '/student-dashboard.html' || page === '/student-messages.html') {
-      return res.redirect('/subscription.html?plan=Premium');
+    if (page === '/student-dashboard.html' || page === '/student-messages.html' || page === '/student-calendar.html') {
+      return res.redirect('/pricing.html');
+    }
+  }
+
+  // Restrict Basic/unsubscribed tutors from accessing instructor dashboard or calendar
+  if (user && user.role === 'tutor' && (user.plan === 'Basic' || !user.plan)) {
+    if (page === '/instructor-dashboard.html' || page === '/instructor-calendar.html') {
+      return res.redirect('/pricing.html');
     }
   }
   next();
@@ -75,7 +82,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 function getCurrentUser(req) {
   const userId = req.cookies.userId;
   if (!userId) return null;
-  return db.findOne('users', { id: userId });
+  const user = db.findOne('users', { id: userId });
+  if (user && !user.createdAt) {
+    user.createdAt = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    db.update('users', { id: userId }, { createdAt: user.createdAt });
+  }
+  return user;
 }
 
 function requireAuth(req, res, next) {
@@ -126,14 +138,19 @@ app.get('/api/auth/google/callback',
     // Set cookie session with the authenticated user ID
     res.cookie('userId', req.user.id, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
     
-    // Redirect user to the student dashboard
-    res.redirect('/student-dashboard.html');
+    // Redirect new Google users to profile settings, existing ones to dashboard
+    const isNew = req.user.bio === "Joined via Google." && (!req.user.phone);
+    if (isNew) {
+      res.redirect('/student-settings-profile.html');
+    } else {
+      res.redirect('/student-dashboard.html');
+    }
   }
 );
 
 app.post('/api/auth/register', (req, res) => {
-  const { email, password, name, role } = req.body;
-  if (!email || !password || !name || !role) {
+  const { email, password, name, role, phone } = req.body;
+  if (!email || !password || !name || !role || !phone) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
@@ -152,7 +169,8 @@ app.post('/api/auth/register', (req, res) => {
     plan: "Basic",
     bio: `Hello! I am ${name}.`,
     languages: ["English"],
-    phone: ""
+    phone,
+    createdAt: new Date().toISOString()
   };
 
   // If registering as tutor, seed default fields
@@ -342,14 +360,23 @@ app.put('/api/tutors/:id', requireAuth, (req, res) => {
     return res.status(403).json({ error: 'Permission denied' });
   }
 
-  const { title, rate, bio, subjects, location } = req.body;
+  const { name, title, rate, bio, subjects, location, education, targetGrades, avatar, availability } = req.body;
   const updateData = {};
+  if (name !== undefined) updateData.name = name;
   if (title !== undefined) updateData.title = title;
+  if (avatar !== undefined) updateData.avatar = avatar;
   if (rate !== undefined) updateData.rate = parseFloat(rate);
   if (bio !== undefined) updateData.bio = bio;
   if (location !== undefined) updateData.location = location;
+  if (targetGrades !== undefined) updateData.targetGrades = targetGrades;
   if (subjects !== undefined) {
     updateData.subjects = Array.isArray(subjects) ? subjects : subjects.split(',').map(s => s.trim());
+  }
+  if (education !== undefined) {
+    updateData.education = Array.isArray(education) ? education : [];
+  }
+  if (availability !== undefined) {
+    updateData.availability = Array.isArray(availability) ? availability : [];
   }
 
   const updated = db.update('users', { id: req.user.id }, updateData);
@@ -469,6 +496,7 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
     }
   }
 
+  const oldStatus = booking.status;
   let updatedFields = { status };
   if (status === 'scheduled' && !booking.meetingLink) {
     const meetingRoomName = `TutorNest-${booking.subject.replace(/[^a-zA-Z0-9]/g, '')}-${booking.id}`;
@@ -492,6 +520,58 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
     text: msgText,
     timestamp: new Date().toISOString()
   });
+
+  // If request is accepted by the teacher, send email and SMS
+  const wasAccepted = (status === 'scheduled' && oldStatus !== 'scheduled' && req.user.id === booking.tutorId);
+  if (wasAccepted) {
+    const student = db.findOne('users', { id: booking.studentId });
+    if (student) {
+      const tutor = req.user;
+      const meetingUrl = updatedFields.meetingLink || booking.meetingLink;
+      
+      // 1. Send Email via Nodemailer
+      if (student.email) {
+        const mailOptions = {
+          from: `"TutorNest Team" <${process.env.EMAIL_USER || "your-email@gmail.com"}>`,
+          to: student.email,
+          subject: 'Lesson Request Accepted | TutorNest',
+          html: `
+            <div style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #ffffff;">
+              <h2 style="color: #1A56DB; margin-bottom: 20px; font-weight: bold;">TutorNest</h2>
+              <p style="font-size: 16px; color: #1f2937; line-height: 1.5;">Hello ${student.name},</p>
+              <p style="font-size: 14px; color: #4b5563; line-height: 1.5;">Your lesson request with <b>${tutor.name}</b> has been accepted!</p>
+              
+              <div style="background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 12px; padding: 20px; margin: 25px 0;">
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #374151;"><b>Subject:</b> ${booking.subject}</p>
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #374151;"><b>Date:</b> ${booking.date}</p>
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #374151;"><b>Time:</b> ${booking.time}</p>
+                <p style="margin: 0; font-size: 14px; color: #374151;"><b>Join Link:</b> <a href="${meetingUrl}" style="color: #1A56DB; font-weight: 600; text-decoration: underline;">Join Video Session</a></p>
+              </div>
+              
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 25px 0;">
+              <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">© 2024 TutorNest. All rights reserved.</p>
+            </div>
+          `
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error('Failed to send acceptance email to student:', error);
+          } else {
+            console.log('Acceptance email sent successfully to student:', info.response);
+          }
+        });
+      }
+
+      // 2. Send SMS (Mocked via console log)
+      if (student.phone) {
+        const smsText = `Hello ${student.name}, your lesson request with ${tutor.name} for "${booking.subject}" on ${booking.date} at ${booking.time} has been accepted! Join: ${meetingUrl}`;
+        console.log(`[SMS MOCK] Sent to ${student.phone}: "${smsText}"`);
+      } else {
+        console.log(`[SMS MOCK] Student ${student.name} has no registered phone number.`);
+      }
+    }
+  }
 
   res.json({ success: true, booking: { ...booking, status } });
 });
@@ -543,9 +623,34 @@ app.post('/api/messages', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'Receiver ID and message content are required' });
   }
 
+  // Trial Expired Check
+  if (req.user.role === 'tutor' && req.user.plan !== 'Premium') {
+    const createdAtStr = req.user.createdAt || new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+    const createdTime = new Date(createdAtStr).getTime();
+    const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
+    if ((Date.now() - createdTime) > twoDaysMs) {
+      return res.status(403).json({ error: 'Your trial has expired. Please subscribe to Premium to send messages.' });
+    }
+  }
+
   const receiver = db.findOne('users', { id: receiverId });
   if (!receiver) {
     return res.status(404).json({ error: 'Recipient not found' });
+  }
+
+  // Restriction: messaging is restricted between student and tutor until a lesson request is accepted
+  const isStudent = req.user.role === 'student';
+  const isReceiverStudent = receiver.role === 'student';
+  if ((isStudent && receiver.role === 'tutor') || (req.user.role === 'tutor' && isReceiverStudent)) {
+    const studentId = isStudent ? req.user.id : receiver.id;
+    const tutorId = isStudent ? receiver.id : req.user.id;
+    
+    const bookings = db.find('bookings', { studentId, tutorId });
+    const hasAcceptedBooking = bookings.some(b => b.status === 'scheduled' || b.status === 'completed');
+    
+    if (!hasAcceptedBooking) {
+      return res.status(403).json({ error: 'Messaging is restricted until the lesson request has been accepted.' });
+    }
   }
 
   const newMsg = {
@@ -623,12 +728,18 @@ app.post('/api/wallet/payout', requireAuth, (req, res) => {
 // ----------------- Profile / Settings Endpoints -----------------
 
 app.put('/api/users/profile', requireAuth, (req, res) => {
-  const { name, bio, phone, languages, currentPassword, newPassword } = req.body;
+  const { name, bio, phone, languages, currentPassword, newPassword, grade, city, hourlyBudget, targetSubject, targetExam, avatar } = req.body;
   const updateData = {};
 
-  if (name) updateData.name = name;
-  if (bio) updateData.bio = bio;
-  if (phone) updateData.phone = phone;
+  if (name !== undefined) updateData.name = name;
+  if (avatar !== undefined) updateData.avatar = avatar;
+  if (bio !== undefined) updateData.bio = bio;
+  if (phone !== undefined) updateData.phone = phone;
+  if (grade !== undefined) updateData.grade = grade;
+  if (city !== undefined) updateData.city = city;
+  if (hourlyBudget !== undefined) updateData.hourlyBudget = parseFloat(hourlyBudget) || 0;
+  if (targetSubject !== undefined) updateData.targetSubject = targetSubject;
+  if (targetExam !== undefined) updateData.targetExam = targetExam;
   if (languages) {
     updateData.languages = Array.isArray(languages) ? languages : languages.split(',').map(l => l.trim());
   }
@@ -772,11 +883,13 @@ app.post('/api/checkout/create-session', requireAuth, async (req, res) => {
   if (planName === 'Premium') priceCents = 499900;
 
   try {
+    const dashboardUrl = req.user.role === 'tutor' ? '/instructor-dashboard.html' : '/student-dashboard.html';
+
     if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_placeholder_key') {
       // Mock session for local offline testing
       return res.json({
         id: `mock_session_${Date.now()}`,
-        url: `/student-dashboard.html?session_id=mock_session_${Date.now()}&plan=${encodeURIComponent(planName)}`
+        url: `${dashboardUrl}?session_id=mock_session_${Date.now()}&plan=${encodeURIComponent(planName)}`
       });
     }
 
@@ -794,7 +907,7 @@ app.post('/api/checkout/create-session', requireAuth, async (req, res) => {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `http://localhost:3000/student-dashboard.html?session_id={CHECKOUT_SESSION_ID}&plan=${encodeURIComponent(planName)}`,
+      success_url: `http://localhost:3000${dashboardUrl}?session_id={CHECKOUT_SESSION_ID}&plan=${encodeURIComponent(planName)}`,
       cancel_url: 'http://localhost:3000/pricing.html',
       client_reference_id: req.user.id
     });

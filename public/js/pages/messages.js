@@ -220,6 +220,11 @@ async function sendMessage(textarea) {
   const text = textarea.value.trim();
   if (!text || !activeContactId) return;
 
+  if (currentUser && currentUser.role === 'tutor' && window.isTutorTrialExpired && window.isTutorTrialExpired(currentUser)) {
+    showToast('Your trial has expired. Please subscribe to Premium to send messages.', 'error');
+    return;
+  }
+
   try {
     const res = await fetch('/api/messages', {
       method: 'POST',
@@ -234,6 +239,9 @@ async function sendMessage(textarea) {
       textarea.value = '';
       await loadChatHistory(activeContactId);
       loadChannels();
+    } else {
+      const data = await res.json();
+      showToast(data.error || 'Failed to send message', 'error');
     }
   } catch (err) {
     console.error(err);
@@ -271,3 +279,28 @@ window.deleteMessage = async function(id) {
 window.addEventListener('beforeunload', () => {
   if (chatInterval) clearInterval(chatInterval);
 });
+
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `fixed bottom-6 right-6 px-6 py-4 rounded-xl shadow-2xl z-[2000] border backdrop-blur-md transition-all duration-300 transform translate-y-10 opacity-0 ${
+    type === 'success' 
+      ? 'bg-green-500/10 border-green-500/30 text-green-700' 
+      : 'bg-error-container/80 border-error/30 text-on-error-container'
+  }`;
+  toast.innerHTML = `
+    <div class="flex items-center gap-2 font-label-md">
+      <span class="material-symbols-outlined">${type === 'success' ? 'check_circle' : 'error'}</span>
+      <span>${message}</span>
+    </div>
+  `;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.classList.remove('translate-y-10', 'opacity-0');
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.add('translate-y-10', 'opacity-0');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}

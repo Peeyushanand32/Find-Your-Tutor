@@ -14,6 +14,35 @@ async function initDashboard() {
     return;
   }
 
+  // Check URL params for Stripe checkout confirmation callback
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get('session_id');
+  const planName = urlParams.get('plan');
+  if (sessionId && planName) {
+    try {
+      const confirmRes = await fetch('/api/checkout/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, planName })
+      });
+      if (confirmRes.ok) {
+        const confirmData = await confirmRes.json();
+        currentUser = confirmData.user;
+        // Clean URL parameters to prevent multiple alerts on refresh
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showToast(`Successfully activated your ${planName} subscription!`, 'success');
+        if (typeof setupSidebarLinks === 'function') {
+          setupSidebarLinks();
+        }
+        if (typeof updateNavbar === 'function') {
+          updateNavbar();
+        }
+      }
+    } catch (err) {
+      console.error('Subscription activation callback failed:', err);
+    }
+  }
+
   // 1. Set Tutor Name
   const greeting = document.querySelector('h2.font-display-lg');
   const greetingSub = document.querySelector('h2.font-display-lg + p');
@@ -131,10 +160,18 @@ async function initDashboard() {
   }
 
   // Withdraw earnings redirection
-    const withdrawBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Withdraw Earnings'));
+  const withdrawBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Withdraw Earnings'));
   if (withdrawBtn) {
     withdrawBtn.addEventListener('click', () => {
       window.location.href = '/instructor-wallet.html';
+    });
+  }
+
+  // Handle Go Premium button click
+  const premiumBtn = document.querySelector('.mt-auto button.gradient-btn') || Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Premium') || el.textContent.includes('Go Premium'));
+  if (premiumBtn) {
+    premiumBtn.addEventListener('click', () => {
+      window.location.href = '/subscription.html?plan=Premium';
     });
   }
 }

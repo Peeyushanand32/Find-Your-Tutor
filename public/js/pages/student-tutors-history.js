@@ -13,9 +13,10 @@ async function initHistory() {
     const res = await fetch('/api/bookings');
     const bookings = await res.json();
     
-    // Find unique tutors
+    // Find unique tutors who have accepted requests
     const tutorMap = {};
-    bookings.forEach(b => {
+    const acceptedBookings = bookings.filter(b => b.status === 'scheduled' || b.status === 'completed');
+    acceptedBookings.forEach(b => {
       tutorMap[b.tutorId] = { id: b.tutorId, name: b.tutorName, subject: b.subject };
     });
     const uniqueTutors = Object.values(tutorMap);

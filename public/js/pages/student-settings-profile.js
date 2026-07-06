@@ -10,29 +10,86 @@ function initSettings() {
     return;
   }
 
-  // Pre-populate fields
-  const nameInput = document.querySelector('input[placeholder*="Name"], input[value*="Alex"]');
-  const emailInput = document.querySelector('input[type="email"]');
-  const phoneInput = document.querySelector('input[type="tel"]');
-  const bioTextarea = document.querySelector('textarea');
-  const saveBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Save') || el.textContent.includes('Update') || el.textContent.includes('Save Changes'));
+  // Header summary elements
+  const headerName = document.getElementById('headerName');
+  const headerGrade = document.getElementById('headerGrade');
+  const headerLocation = document.getElementById('headerLocation');
 
-  if (nameInput) nameInput.value = currentUser.name;
-  if (emailInput) {
-    emailInput.value = currentUser.email;
-    emailInput.disabled = true; // disable changing email for security mockup simplicity
+  function updateHeaderSummary() {
+    if (headerName) headerName.textContent = currentUser.name;
+    if (headerGrade) headerGrade.textContent = currentUser.grade || 'Not Specified';
+    if (headerLocation) headerLocation.textContent = currentUser.city || 'Online';
   }
+  updateHeaderSummary();
+
+  // Retrieve inputs
+  const nameInput = document.getElementById('nameInput');
+  const emailInput = document.getElementById('emailInput');
+  const phoneInput = document.getElementById('phoneInput');
+  const gradeSelect = document.getElementById('gradeSelect');
+  const cityInput = document.getElementById('cityInput');
+  const budgetInput = document.getElementById('budgetInput');
+  const targetSubjectInput = document.getElementById('targetSubjectInput');
+  const targetExamInput = document.getElementById('targetExamInput');
+  const bioTextarea = document.getElementById('bioTextarea');
+  const profileForm = document.getElementById('profileForm');
+  const avatarPreview = document.getElementById('avatarPreview');
+  const avatarFileInput = document.getElementById('avatarFileInput');
+  const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+
+  // Avatar Management
+  let currentAvatarData = currentUser.avatar || '';
+
+  function loadAvatar() {
+    if (!avatarPreview) return;
+    if (currentAvatarData.startsWith('http') || currentAvatarData.startsWith('data:image')) {
+      avatarPreview.src = currentAvatarData;
+    } else {
+      avatarPreview.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=0D8ABC&color=fff&size=128`;
+    }
+  }
+  loadAvatar();
+
+  if (uploadAvatarBtn && avatarFileInput) {
+    uploadAvatarBtn.addEventListener('click', () => avatarFileInput.click());
+    avatarFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          currentAvatarData = event.target.result;
+          loadAvatar();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Pre-populate
+  if (nameInput) nameInput.value = currentUser.name;
+  if (emailInput) emailInput.value = currentUser.email;
   if (phoneInput) phoneInput.value = currentUser.phone || '';
+  if (gradeSelect) gradeSelect.value = currentUser.grade || '11th Grade';
+  if (cityInput) cityInput.value = currentUser.city || '';
+  if (budgetInput) budgetInput.value = currentUser.hourlyBudget || '';
+  if (targetSubjectInput) targetSubjectInput.value = currentUser.targetSubject || '';
+  if (targetExamInput) targetExamInput.value = currentUser.targetExam || '';
   if (bioTextarea) bioTextarea.value = currentUser.bio || '';
 
-  if (saveBtn) {
-    saveBtn.addEventListener('click', async (e) => {
+  if (profileForm) {
+    profileForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const payload = {
-        name: nameInput ? nameInput.value.trim() : currentUser.name,
-        phone: phoneInput ? phoneInput.value.trim() : '',
-        bio: bioTextarea ? bioTextarea.value.trim() : ''
+        name: nameInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        grade: gradeSelect.value,
+        city: cityInput.value.trim(),
+        hourlyBudget: parseFloat(budgetInput.value) || 0,
+        targetSubject: targetSubjectInput.value.trim(),
+        targetExam: targetExamInput.value.trim(),
+        bio: bioTextarea.value.trim(),
+        avatar: currentAvatarData
       };
 
       try {
@@ -45,6 +102,12 @@ function initSettings() {
         if (res.ok) {
           showToast('Profile updated successfully!', 'success');
           currentUser = data.user; // refresh current user variable
+          currentAvatarData = currentUser.avatar || '';
+          loadAvatar();
+          updateHeaderSummary();
+          if (typeof updateNavbar === 'function') {
+            updateNavbar();
+          }
         } else {
           showToast(data.error || 'Failed to update profile', 'error');
         }

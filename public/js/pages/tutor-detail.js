@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Select key containers
   const mainContent = document.querySelector('main');
-  const bookBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Book Free Trial') || el.textContent.includes('Book Lesson') || el.parentElement.innerHTML.includes('Book Free Trial'));
+  const bookBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Book Free Trial') || el.textContent.includes('Book Lesson') || el.textContent.includes('Request Free Class') || el.textContent.includes('Request Class') || el.parentElement.innerHTML.includes('Book Free Trial') || el.parentElement.innerHTML.includes('Request Free Class'));
   const msgBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Message') || el.innerHTML.includes('mail'));
   
   let selectedDate = '2026-07-14'; // Default initial
@@ -187,9 +187,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
       if (currentUser.role === 'student' && (currentUser.plan === 'Basic' || !currentUser.plan)) {
-        showToast('Messaging teachers requires an active subscription. Redirecting to subscription page...', 'error');
+        showToast('Messaging teachers requires an active subscription. Redirecting to plans page...', 'error');
         setTimeout(() => {
-          window.location.href = '/subscription.html?plan=Premium';
+          window.location.href = '/pricing.html';
         }, 2000);
         return;
       }
@@ -207,14 +207,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       if (currentUser.role !== 'student') {
-        showToast('Only students can book lessons', 'error');
+        showToast('Only students can request classes', 'error');
         return;
       }
 
       if (currentUser.plan === 'Basic' || !currentUser.plan) {
-        showToast('Booking lessons requires an active subscription. Redirecting to subscription page...', 'error');
+        showToast('Requesting lessons requires an active subscription. Redirecting to plans page...', 'error');
         setTimeout(() => {
-          window.location.href = '/subscription.html?plan=Premium';
+          window.location.href = '/pricing.html';
         }, 2000);
         return;
       }

@@ -4,6 +4,16 @@ window.authPromise = new Promise((resolve) => {
   authResolver = resolve;
 });
 
+window.isTutorTrialExpired = function(user) {
+  if (!user || user.role !== 'tutor') return false;
+  if (user.plan === 'Premium') return false;
+  
+  const createdAtStr = user.createdAt || new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+  const createdTime = new Date(createdAtStr).getTime();
+  const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
+  return (Date.now() - createdTime) > twoDaysMs;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Fetch current authentication state
   checkAuth();
@@ -57,11 +67,35 @@ async function checkAuth() {
     if (data.loggedIn) {
       currentUser = data.user;
       
-      // Route Guard: restrict Basic plan students from dashboard and messages
+      // Route Guard: restrict Basic plan students from dashboard, messages, and calendar
       const path = window.location.pathname.toLowerCase();
-      if (currentUser.role === 'student' && (currentUser.plan === 'Basic' || !currentUser.plan)) {
-        if (path.includes('student-dashboard.html') || path.includes('student-messages.html')) {
-          window.location.href = '/subscription.html?plan=Premium';
+      const params = new URLSearchParams(window.location.search);
+      const isConfirmingSubscription = params.get('session_id') && params.get('plan');
+
+      if (!isConfirmingSubscription) {
+        if (currentUser.role === 'student' && (currentUser.plan === 'Basic' || !currentUser.plan)) {
+          if (path.includes('student-dashboard.html') || path.includes('student-messages.html') || path.includes('student-calendar.html')) {
+            window.location.href = '/pricing.html';
+            return;
+          }
+        }
+
+        // Route Guard: restrict Basic plan tutors whose trial is expired from instructor calendar, requests, and wallet
+        if (currentUser.role === 'tutor' && (currentUser.plan === 'Basic' || !currentUser.plan)) {
+          if (window.isTutorTrialExpired(currentUser)) {
+            if (path.includes('instructor-calendar.html') || path.includes('instructor-wallet.html') || path.includes('instructor-requests-history.html')) {
+              window.location.href = '/pricing.html';
+              return;
+            }
+          }
+        }
+      }
+
+      // Route Guard: restrict active Premium/Pro users from visiting pricing or subscription page
+      if (currentUser.plan === 'Premium' || currentUser.plan === 'Pro') {
+        if (path.includes('pricing.html') || path.includes('subscription.html')) {
+          const dashboardUrl = currentUser.role === 'tutor' ? '/instructor-dashboard.html' : '/student-dashboard.html';
+          window.location.href = dashboardUrl;
           return;
         }
       }
@@ -82,10 +116,20 @@ async function checkAuth() {
 function setupSidebarLinks() {
   // Select all sidebar anchor tags (usually inside nav or aside elements)
   const anchors = document.querySelectorAll('nav a, aside a, .sidebar a');
+  const isExpiredTutor = currentUser && currentUser.role === 'tutor' && window.isTutorTrialExpired(currentUser);
   
   anchors.forEach(a => {
     const text = a.textContent.trim().toLowerCase();
     const isStudent = currentUser ? currentUser.role === 'student' : true;
+
+    if (isExpiredTutor && (
+      text.includes('schedule') || text.includes('calendar') || 
+      text.includes('wallet') || text.includes('earnings') || text.includes('request history') ||
+      text.includes('requests')
+    )) {
+      a.href = '/pricing.html';
+      return;
+    }
 
     // Direct mappings
     if (text.includes('dashboard') || text.includes('overview')) {
@@ -152,7 +196,7 @@ function updateNavbar() {
   let rightNavHtml = '';
   if (currentUser) {
     const isStudent = currentUser.role === 'student';
-    const balanceText = isStudent ? `<span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-label-sm font-semibold mr-2 border border-primary/20">Balance: ₹${currentUser.balance.toFixed(2)}</span>` : '';
+    const balanceText = '';
     
     const avatarUrl = currentUser.avatar.startsWith('http') ? currentUser.avatar : '';
     const avatarInner = avatarUrl 
@@ -367,6 +411,10 @@ function renderModalContent(container, mode) {
             <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md" placeholder="e.g. John Doe">
           </div>
           <div class="space-y-1">
+            <label class="font-label-md text-label-md text-on-surface-variant">Phone Number</label>
+            <input type="tel" name="phone" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md" placeholder="e.g. +1 (555) 019-2834">
+          </div>
+          <div class="space-y-1">
             <label class="font-label-md text-label-md text-on-surface-variant">I want to...</label>
             <select name="role" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md bg-white">
               <option value="student">Learn (Student)</option>
@@ -423,6 +471,7 @@ async function handleAuthSubmit(e, mode) {
   const payload = {};
   if (form.name) payload.name = form.name.value;
   if (form.role) payload.role = form.role.value;
+  if (form.phone) payload.phone = form.phone.value;
   payload.email = form.email.value;
   payload.password = form.password.value;
 
@@ -440,15 +489,23 @@ async function handleAuthSubmit(e, mode) {
     }
     
     closeAuthModal();
-    // Reload if on subscription or tutor details to preserve context
-    if (window.location.pathname.includes('subscription.html') || window.location.pathname.includes('tutor-detail.html')) {
-      window.location.reload();
-    } else {
-      // Redirect role-based
+    // Redirect role-based
+    if (mode === 'signup') {
       if (data.user.role === 'student') {
-        window.location.href = '/student-dashboard.html';
+        window.location.href = '/student-settings-profile.html';
       } else {
-        window.location.href = '/instructor-dashboard.html';
+        window.location.href = '/instructor-settings.html';
+      }
+    } else {
+      // Reload if on subscription or tutor details to preserve context
+      if (window.location.pathname.includes('subscription.html') || window.location.pathname.includes('tutor-detail.html')) {
+        window.location.reload();
+      } else {
+        if (data.user.role === 'student') {
+          window.location.href = '/student-dashboard.html';
+        } else {
+          window.location.href = '/instructor-dashboard.html';
+        }
       }
     }
   } catch (err) {
@@ -557,3 +614,71 @@ async function handleForgotSubmit(e) {
     submitBtn.textContent = 'Send Reset Link';
   }
 }
+
+// Global UI Interactivity Handlers
+document.addEventListener('click', (e) => {
+  // 1. Handle user avatar dropdown menu toggle
+  const btnDropdown = e.target.closest('.user-dropdown-btn');
+  const menu = document.querySelector('.user-dropdown-menu');
+  if (btnDropdown && menu) {
+    e.stopPropagation();
+    menu.classList.toggle('hidden');
+  } else if (menu && !e.target.closest('.user-dropdown-container')) {
+    menu.classList.add('hidden');
+  }
+
+  // 2. Block request action buttons for expired trial tutors
+  const actionBtn = e.target.closest('button');
+  if (actionBtn && currentUser && currentUser.role === 'tutor' && window.isTutorTrialExpired(currentUser)) {
+    const text = actionBtn.textContent.trim().toLowerCase();
+    const onclickAttr = actionBtn.getAttribute('onclick') || '';
+    if (text.includes('accept') || text.includes('decline') || onclickAttr.includes('updateRequest')) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href = '/pricing.html';
+      return;
+    }
+  }
+
+  // 3. Intercept sidebar and navigation links containing javascript:void(0) or restricted paths
+  const a = e.target.closest('nav a, aside a, .sidebar a');
+  if (a) {
+    const text = a.textContent.trim().toLowerCase();
+    
+    if (currentUser && currentUser.role === 'tutor' && window.isTutorTrialExpired(currentUser)) {
+      if (text.includes('schedule') || text.includes('calendar') || 
+          text.includes('wallet') || text.includes('earnings') || text.includes('request history') ||
+          text.includes('requests')) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/pricing.html';
+        return;
+      }
+    }
+
+    const href = a.getAttribute('href');
+    if (href === 'javascript:void(0)' || !href) {
+      const isStudent = currentUser ? currentUser.role === 'student' : true;
+      
+      if (text.includes('dashboard') || text.includes('overview')) {
+        window.location.href = isStudent ? '/student-dashboard.html' : '/instructor-dashboard.html';
+      } else if (text.includes('schedule') || text.includes('calendar')) {
+        window.location.href = isStudent ? '/student-calendar.html' : '/instructor-calendar.html';
+      } else if (text.includes('tutor history') || text.includes('my tutors') || text === 'tutors') {
+        window.location.href = isStudent ? '/student-tutors-history.html' : '/students-directory.html';
+      } else if (text.includes('lesson history') || text.includes('history') || text.includes('lessons')) {
+        window.location.href = isStudent ? '/student-lessons-history.html' : '/instructor-requests-history.html';
+      } else if (text.includes('messages') || text.includes('inbox') || text.includes('hub')) {
+        window.location.href = isStudent ? '/student-messages.html' : '/instructor-messages.html';
+      } else if (text.includes('settings') || text.includes('profile')) {
+        window.location.href = isStudent ? '/student-settings-profile.html' : '/instructor-settings.html';
+      } else if (text.includes('wallet') || text.includes('earnings') || text.includes('request history')) {
+        window.location.href = '/instructor-wallet.html';
+      } else if (text.includes('directory')) {
+        window.location.href = '/students-directory.html';
+      } else if (text.includes('requests')) {
+        window.location.href = isStudent ? '/student-dashboard.html' : '/instructor-dashboard.html#requests';
+      }
+    }
+  }
+});
