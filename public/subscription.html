@@ -374,14 +374,14 @@
       const urlParams = new URLSearchParams(window.location.search);
       const planName = urlParams.get('plan') || 'Premium';
       
-      let monthlyPrice = "₹999.00";
-      let annualPriceBase = "₹9,999.00";
-      let annualPriceTotal = "₹7,999.00";
+      let monthlyPrice = "₹1.00";
+      let annualPriceBase = "₹10.00";
+      let annualPriceTotal = "₹8.00";
       
       if (planName === 'Premium') {
-        monthlyPrice = "₹4,999.00";
-        annualPriceBase = "₹49,999.00";
-        annualPriceTotal = "₹39,999.00";
+        monthlyPrice = "₹5.00";
+        annualPriceBase = "₹50.00";
+        annualPriceTotal = "₹40.00";
       }
 
       if (type === 'monthly') {
@@ -442,6 +442,7 @@
   </script>
 
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/pages/subscription.js"></script>
 </body></html>

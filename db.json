@@ -167,6 +167,21 @@
       "location": "Online",
       "walletBalance": 0,
       "totalEarnings": 0
+    },
+    {
+      "id": "use_1783321461288_461",
+      "email": "peeyushanand09@gmail.com",
+      "password": "qwert",
+      "name": "PEEYUSH ANAND",
+      "role": "student",
+      "avatar": "PA",
+      "balance": 100,
+      "plan": "Pro",
+      "bio": "Hello! I am PEEYUSH ANAND.",
+      "languages": [
+        "English"
+      ],
+      "phone": ""
     }
   ],
   "bookings": [

@@ -703,6 +703,57 @@ app.get('/api/admin/inquiries/export', (req, res) => {
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_key');
 
+// ----------------- Razorpay Payment Endpoints -----------------
+const Razorpay = require('razorpay');
+
+// Initialize Razorpay instance
+const razorpay = new Razorpay({
+  key_id: 'rzp_live_TA7tJ4AmblMiTb',
+  key_secret: 'fAzrp2zto37Mn0plMUg9KTlj',
+});
+
+app.post('/api/payments/order', async (req, res) => {
+  const { amount, currency } = req.body; // e.g., amount: 500 (INR 500)
+
+  const options = {
+    amount: amount * 100, // Razorpay expects amount in the smallest currency sub-unit (paise for INR, e.g., 50000 paise = 500 INR)
+    currency: currency || 'INR',
+    receipt: `receipt_order_${Date.now()}`,
+  };
+
+  try {
+    const order = await razorpay.orders.create(options);
+    res.status(200).json({
+      success: true,
+      order_id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/payments/verify', requireAuth, (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planName } = req.body;
+  const crypto = require('crypto');
+
+  const generatedSignature = crypto
+    .createHmac('sha256', 'fAzrp2zto37Mn0plMUg9KTlj')
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    .digest('hex');
+
+  if (generatedSignature === razorpay_signature) {
+    // Signature verified successfully
+    // Update user's subscription plan in DB
+    const updated = db.update('users', { id: req.user.id }, { plan: planName || 'Premium' });
+    const { password, ...userSafe } = updated[0];
+    res.status(200).json({ success: true, message: 'Payment verified successfully', user: userSafe });
+  } else {
+    res.status(400).json({ success: false, message: 'Invalid payment signature' });
+  }
+});
+
 app.post('/api/checkout/create-session', requireAuth, async (req, res) => {
   const { planName } = req.body;
   if (!planName) {

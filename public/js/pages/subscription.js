@@ -26,8 +26,8 @@ function initSubscription() {
   const basePrice = document.getElementById('basePrice');
   const totalPrice = document.getElementById('totalPrice');
 
-  let priceText = "₹999.00";
-  if (planName === 'Premium') priceText = "₹4,999.00";
+  let priceText = "₹1.00";
+  if (planName === 'Premium') priceText = "₹5.00";
   if (planName === 'Basic') priceText = "₹0.00";
 
   if (summaryPlanName) summaryPlanName.textContent = `${planName} Plan - Active Access`;
@@ -47,20 +47,87 @@ function initSubscription() {
       }
 
       try {
-        const res = await fetch('/api/checkout/create-session', {
+        const isAnnual = document.getElementById('annualBtn')?.classList.contains('bg-white');
+        let amount = 1;
+        if (planName === 'Premium') {
+          amount = isAnnual ? 40 : 5;
+        } else {
+          amount = isAnnual ? 8 : 1;
+        }
+
+        const res = await fetch('/api/payments/order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ planName })
+          body: JSON.stringify({ amount, currency: 'INR' })
         });
-        const data = await res.json();
+        const orderData = await res.json();
         
-        if (res.ok) {
-          showToast('Redirecting to secure checkout...', 'success');
-          setTimeout(() => {
-            window.location.href = data.url;
-          }, 1000);
+        if (res.ok && orderData.success) {
+          const options = {
+            key: 'rzp_live_TA7tJ4AmblMiTb',
+            amount: orderData.amount,
+            currency: orderData.currency,
+            name: 'TutorNest',
+            description: `${planName} Plan Subscription`,
+            order_id: orderData.order_id,
+            handler: async function (paymentRes) {
+              try {
+                showToast('Verifying payment...', 'success');
+                const verifyRes = await fetch('/api/payments/verify', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    razorpay_order_id: paymentRes.razorpay_order_id,
+                    razorpay_payment_id: paymentRes.razorpay_payment_id,
+                    razorpay_signature: paymentRes.razorpay_signature,
+                    planName: planName
+                  })
+                });
+                const verifyData = await verifyRes.json();
+                if (verifyRes.ok && verifyData.success) {
+                  showToast('Payment successful! Plan updated.', 'success');
+                  // Update current user state dynamically if needed
+                  if (window.currentUser) {
+                    window.currentUser.plan = planName;
+                  }
+                  setTimeout(() => {
+                    window.location.href = '/student-dashboard.html';
+                  }, 1500);
+                } else {
+                  showToast(verifyData.message || 'Verification failed', 'error');
+                  if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Pay Securely</span>';
+                  }
+                }
+              } catch (verifyErr) {
+                showToast('Error verifying payment.', 'error');
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Pay Securely</span>';
+                }
+              }
+            },
+            prefill: {
+              name: currentUser ? currentUser.name : '',
+              email: currentUser ? currentUser.email : '',
+            },
+            theme: {
+              color: '#004ac6'
+            },
+            modal: {
+              ondismiss: function() {
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Pay Securely</span>';
+                }
+              }
+            }
+          };
+          const rzp = new Razorpay(options);
+          rzp.open();
         } else {
-          showToast(data.error || 'Checkout failed', 'error');
+          showToast(orderData.error || 'Failed to initialize payment', 'error');
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Pay Securely</span>';
