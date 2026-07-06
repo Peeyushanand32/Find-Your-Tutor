@@ -20,20 +20,33 @@ function initSubscription() {
     header.textContent = `Checkout: ${planName} Plan`;
   }
 
+  // Update order summary pricing to Rupees dynamically
+  const summaryPlanName = document.getElementById('summaryPlanName');
+  const basePrice = document.getElementById('basePrice');
+  const totalPrice = document.getElementById('totalPrice');
+
+  let priceText = "₹999.00";
+  if (planName === 'Premium') priceText = "₹4,999.00";
+  if (planName === 'Basic') priceText = "₹0.00";
+
+  if (summaryPlanName) summaryPlanName.textContent = `${planName} Plan - Active Access`;
+  if (basePrice) basePrice.textContent = priceText;
+  if (totalPrice) totalPrice.textContent = priceText;
+
   // Find payment form
   const form = document.querySelector('form');
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const submitBtn = form.querySelector('button[type="submit"]') || form.querySelector('button');
+      const submitBtn = document.querySelector('button.gradient-btn');
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Processing Payment...';
+        submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span><span>Processing Payment...</span>';
       }
 
       try {
-        const res = await fetch('/api/subscription', {
+        const res = await fetch('/api/checkout/create-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ planName })
@@ -41,27 +54,38 @@ function initSubscription() {
         const data = await res.json();
         
         if (res.ok) {
-          showToast(`Successfully subscribed to ${planName}!`, 'success');
-          currentUser = data.user; // refresh state
-          
+          showToast('Redirecting to secure checkout...', 'success');
           setTimeout(() => {
-            window.location.href = currentUser.role === 'student' ? '/student-dashboard.html' : '/instructor-dashboard.html';
-          }, 2000);
+            window.location.href = data.url;
+          }, 1000);
         } else {
-          showToast(data.error || 'Subscription failed', 'error');
+          showToast(data.error || 'Checkout failed', 'error');
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Pay Now';
+            submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Pay Securely</span>';
           }
         }
       } catch (err) {
-        showToast('Connection error processing subscription.', 'error');
+        showToast('Connection error processing payment.', 'error');
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Pay Now';
+          submitBtn.innerHTML = '<span class="material-symbols-outlined">lock</span><span>Pay Securely</span>';
         }
       }
     });
+
+    const payBtn = document.querySelector('button.gradient-btn');
+    if (payBtn) {
+      payBtn.addEventListener('click', () => {
+        if (form.reportValidity ? form.reportValidity() : true) {
+          if (form.requestSubmit) {
+            form.requestSubmit();
+          } else {
+            form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          }
+        }
+      });
+    }
   }
 }
 

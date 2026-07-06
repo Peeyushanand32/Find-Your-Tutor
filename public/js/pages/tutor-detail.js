@@ -198,6 +198,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+      if (currentUser.plan === 'Basic' || !currentUser.plan) {
+        showToast('Booking lessons requires an active subscription. Redirecting to pricing plans...', 'error');
+        setTimeout(() => {
+          window.location.href = '/pricing.html';
+        }, 2000);
+        return;
+      }
+
       const bookingPayload = {
         tutorId: tutorId,
         subject: (tutorData && tutorData.subjects && tutorData.subjects[0]) || 'General Subject',

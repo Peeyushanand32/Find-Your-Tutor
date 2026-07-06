@@ -184,7 +184,10 @@ async function loadChatHistory(contactId) {
               <div class="bg-gradient-to-r from-primary to-secondary text-white p-unit-md rounded-2xl shadow-md rounded-br-none text-left">
                 <p class="text-body-md">${msg.text}</p>
               </div>
-              <span class="text-[10px] text-outline mt-1 mr-2">${timeStr}</span>
+              <span class="text-[10px] text-outline mt-1 mr-2 flex items-center gap-1.5 select-none">
+                <span>${timeStr}</span>
+                <span onclick="deleteMessage('${msg.id}')" class="material-symbols-outlined text-[14px] hover:text-error cursor-pointer transition-colors" style="font-size: 14px;" title="Delete Message">delete</span>
+              </span>
             </div>
           </div>
         `;
@@ -198,7 +201,10 @@ async function loadChatHistory(contactId) {
               <div class="bg-surface-container-low border border-outline-variant/30 text-on-surface p-unit-md rounded-2xl shadow-sm rounded-bl-none">
                 <p class="text-body-md">${msg.text}</p>
               </div>
-              <span class="text-[10px] text-outline mt-1 ml-2">${timeStr}</span>
+              <span class="text-[10px] text-outline mt-1 ml-2 flex items-center gap-1.5 select-none">
+                <span>${timeStr}</span>
+                <span onclick="deleteMessage('${msg.id}')" class="material-symbols-outlined text-[14px] hover:text-error cursor-pointer transition-colors" style="font-size: 14px;" title="Delete Message">delete</span>
+              </span>
             </div>
           </div>
         `;
@@ -241,6 +247,27 @@ async function pollNewMessages() {
     await loadChatHistory(activeContactId);
   }
 }
+
+// Global delete message function
+window.deleteMessage = async function(id) {
+  if (!confirm('Are you sure you want to delete this message?')) return;
+  try {
+    const res = await fetch(`/api/messages/${id}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      if (activeContactId) {
+        await loadChatHistory(activeContactId);
+        loadChannels();
+      }
+    } else {
+      const data = await res.json();
+      alert(data.error || 'Failed to delete message');
+    }
+  } catch (err) {
+    console.error('Error deleting message:', err);
+  }
+};
 
 // Clean up interval on page change
 window.addEventListener('beforeunload', () => {

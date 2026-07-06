@@ -2,6 +2,13 @@
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Fetch current authentication state
   checkAuth();
+  // 2. Convert all currency symbols to Rupees (₹)
+  convertCurrencyToRupees();
+  // 3. Auto-open login modal if redirected back from a protected page
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('login') === 'true') {
+    setTimeout(() => openAuthModal('login'), 250);
+  }
 });
 
 let currentUser = null;
@@ -261,6 +268,40 @@ function closeAuthModal() {
 }
 
 function renderModalContent(container, mode) {
+  if (mode === 'forgot') {
+    container.innerHTML = `
+      <div class="auth-modal-container w-[450px] max-w-[90%] rounded-2xl p-unit-lg space-y-unit-md text-left">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface">Reset Password</h3>
+          <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center transition-colors">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+        
+        <p class="text-body-md text-on-surface-variant mb-2">Enter your email address and we will generate a password reset link for you.</p>
+
+        <!-- Error alert -->
+        <div id="auth-error-alert" class="hidden bg-error-container text-on-error-container p-3 rounded-lg text-label-sm border border-error/20"></div>
+        <div id="auth-success-alert" class="hidden bg-green-500/10 text-green-700 p-3 rounded-lg text-label-sm border border-green-500/20"></div>
+
+        <form id="auth-form" class="space-y-4" onsubmit="handleForgotSubmit(event)">
+          <div class="space-y-1">
+            <label class="font-label-md text-label-md text-on-surface-variant">Email Address</label>
+            <input type="email" name="email" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md" placeholder="name@domain.com">
+          </div>
+          <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white font-label-md rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-200 mt-2">
+            Send Reset Link
+          </button>
+        </form>
+        
+        <div class="text-center pt-2">
+          <a href="javascript:void(0)" onclick="renderModalContent(document.getElementById('auth-modal'), 'login')" class="text-label-sm text-primary hover:underline">Back to Log In</a>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   const isLogin = mode === 'login';
   container.innerHTML = `
     <div class="auth-modal-container w-[450px] max-w-[90%] rounded-2xl p-unit-lg space-y-unit-md text-left">
@@ -288,6 +329,18 @@ function renderModalContent(container, mode) {
 
       <!-- Forms -->
       <form id="auth-form" class="space-y-4" onsubmit="handleAuthSubmit(event, '${mode}')">
+        <!-- Google Login Button -->
+        <a href="/api/auth/google" class="w-full flex items-center justify-center gap-3 border border-outline-variant hover:bg-surface-variant/40 rounded-xl py-3 text-label-md font-label-md transition-all active:scale-95">
+          <img src="https://www.google.com/favicon.ico" class="w-5 h-5" alt="Google logo">
+          <span>Sign in with Google</span>
+        </a>
+
+        <div class="flex items-center my-4">
+          <hr class="flex-grow border-outline-variant/30">
+          <span class="px-3 text-outline text-xs uppercase font-label-sm">Or with Email</span>
+          <hr class="flex-grow border-outline-variant/30">
+        </div>
+
         ${!isLogin ? `
           <div class="space-y-1">
             <label class="font-label-md text-label-md text-on-surface-variant">Full Name</label>
@@ -308,7 +361,10 @@ function renderModalContent(container, mode) {
         </div>
 
         <div class="space-y-1">
-          <label class="font-label-md text-label-md text-on-surface-variant">Password</label>
+          <div class="flex justify-between items-center">
+            <label class="font-label-md text-label-md text-on-surface-variant">Password</label>
+            <a href="javascript:void(0)" onclick="renderModalContent(document.getElementById('auth-modal'), 'forgot')" class="text-label-sm text-primary hover:underline">Forgot Password?</a>
+          </div>
           <input type="password" name="password" required class="w-full px-4 py-2.5 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md" placeholder="••••••••">
         </div>
 
@@ -364,11 +420,16 @@ async function handleAuthSubmit(e, mode) {
     }
     
     closeAuthModal();
-    // Redirect role-based
-    if (data.user.role === 'student') {
-      window.location.href = '/student-dashboard.html';
+    // Reload if on subscription or tutor details to preserve context
+    if (window.location.pathname.includes('subscription.html') || window.location.pathname.includes('tutor-detail.html')) {
+      window.location.reload();
     } else {
-      window.location.href = '/instructor-dashboard.html';
+      // Redirect role-based
+      if (data.user.role === 'student') {
+        window.location.href = '/student-dashboard.html';
+      } else {
+        window.location.href = '/instructor-dashboard.html';
+      }
     }
   } catch (err) {
     errorAlert.textContent = err.message;
@@ -385,5 +446,74 @@ async function logout() {
     }
   } catch (e) {
     console.error('Logout failed', e);
+  }
+}
+
+function convertCurrencyToRupees() {
+  const walker = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    null,
+    false
+  );
+
+  let node;
+  while (node = walker.nextNode()) {
+    if (node.nodeValue.includes('$')) {
+      node.nodeValue = node.nodeValue.replace(/\$/g, '₹');
+    }
+  }
+
+  // inputs
+  document.querySelectorAll('input[placeholder*="$"]').forEach(input => {
+    input.placeholder = input.placeholder.replace(/\$/g, '₹');
+  });
+  
+  // select options
+  document.querySelectorAll('option').forEach(option => {
+    if (option.textContent.includes('$')) {
+      option.textContent = option.textContent.replace(/\$/g, '₹');
+    }
+  });
+}
+
+async function handleForgotSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const email = form.email.value;
+  const errorAlert = document.getElementById('auth-error-alert');
+  const successAlert = document.getElementById('auth-success-alert');
+  
+  errorAlert.classList.add('hidden');
+  successAlert.classList.add('hidden');
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    
+    if (res.ok) {
+      successAlert.textContent = data.message || 'Reset link generated successfully.';
+      successAlert.classList.remove('hidden');
+      if (data.resetLink) {
+        console.log('Reset Link:', data.resetLink);
+      }
+    } else {
+      errorAlert.textContent = data.error || 'Failed to request reset link.';
+      errorAlert.classList.remove('hidden');
+    }
+  } catch (err) {
+    errorAlert.textContent = 'Connection error. Please try again.';
+    errorAlert.classList.remove('hidden');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send Reset Link';
   }
 }

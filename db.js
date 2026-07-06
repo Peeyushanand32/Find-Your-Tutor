@@ -13,7 +13,7 @@ const initialData = {
       name: "James Doe",
       role: "student",
       avatar: "JD",
-      balance: 150.00,
+      balance: 15000.00,
       plan: "Basic",
       bio: "High school senior preparing for AP Calculus and college admission.",
       languages: ["English"],
@@ -26,7 +26,7 @@ const initialData = {
       name: "Dr. Sarah Jenkins",
       role: "tutor",
       avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuAxBTj1Cg8WfDctCwZfizyEbz4G_183JwXPFlGu9CiI2fUToO_rYwm-HP1B5JvTCAHvM4eUjk_nhS3PMkDX4Zb_70hbh0-shbxC7_9JKQ4DdRWmqE3zBlMXYuza7iWXndxjUms3t13-nJltTeLIwIcOhgHNDRSl6H7YcXs1e9qgxmT8tndVqWIcrpOh_hTDk4ciwz3KvaLAvgBhzgBrgr9D1YemW5LOCGfSweqdtJiLq9qxpXLKQsZGhjWDdJmdwGleNeW2nB1RqgSl",
-      rate: 75,
+      rate: 1500,
       rating: 4.9,
       reviewsCount: 124,
       hoursTaught: 500,
@@ -39,8 +39,8 @@ const initialData = {
         { degree: "Certified Advanced Educator (NTA)", institution: "National Tutoring Association", year: "2016" }
       ],
       location: "Boston & Cambridge area",
-      walletBalance: 420.00,
-      totalEarnings: 3250.00
+      walletBalance: 4200.00,
+      totalEarnings: 32500.00
     },
     {
       id: "tutor2",
@@ -49,7 +49,7 @@ const initialData = {
       name: "Dr. Elena Rodriguez",
       role: "tutor",
       avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDEGg-u5yRLWHdkc27eeFShpa4qFiGMPumwlH9fe0TMLDQm30X-bt-eFwPABmJ_oygIrbgkAbllbaqxVstvST1XybHVYECas_jmu9UbNdoj91cxuKRktf9dBXAUaK8Ed_Lo303kTeqseMKsT5biJGrkK5cSLu72g-8efnVS7NxxWgtc2U32djhhTD-uoU4AGqMhkSlMShsB8YqPFtnyF67ZBfYo3gbi7Oj-j71UP2MCv4MUmbcmePkbjN1Rvv6SZ45sR6oQ7qywVN8z",
-      rate: 80,
+      rate: 1800,
       rating: 4.9,
       reviewsCount: 120,
       hoursTaught: 380,
@@ -61,8 +61,8 @@ const initialData = {
         { degree: "Ph.D. in Applied Mathematics", institution: "Stanford University", year: "2012" }
       ],
       location: "San Francisco, CA & Online",
-      walletBalance: 880.00,
-      totalEarnings: 8400.00
+      walletBalance: 8800.00,
+      totalEarnings: 84000.00
     },
     {
       id: "tutor3",
@@ -71,7 +71,7 @@ const initialData = {
       name: "Prof. Julian Chen",
       role: "tutor",
       avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDqacdh7BOToUcZKkUgWUxlr0kpETq5RPgUbRFD535c4tELKoLXM2JzRUYTX1Q26g2IAga0ckZLudR6sFTQZKsBWF4OO5EnZq_Rd1wmH33V14JVFYMX0P_KULrqY9lA1ttktD6H_E1zsbaU9LFz8O10M7bJ312FReUYVirCGnTAVrhHJj43tQRgwX07aZL_--qXttdnODTfB3SmJcPcBBqR08M9BohWs9lNbS-6kEhIKOAc8R_SFlIYNgDMgO526Vp7r6gGJZUa9_H8",
-      rate: 90,
+      rate: 2000,
       rating: 5.0,
       reviewsCount: 85,
       hoursTaught: 450,
@@ -83,8 +83,8 @@ const initialData = {
         { degree: "B.Sc. in Computer Science", institution: "UC Berkeley", year: "2015" }
       ],
       location: "Seattle, WA & Online",
-      walletBalance: 1200.00,
-      totalEarnings: 15400.00
+      walletBalance: 12000.00,
+      totalEarnings: 154000.00
     }
   ],
   bookings: [
@@ -98,7 +98,7 @@ const initialData = {
       date: "2026-07-10",
       time: "2:30 PM",
       status: "scheduled", // scheduled, pending, completed, cancelled
-      rate: 75.00,
+      rate: 1500.00,
       duration: 1
     },
     {
@@ -111,7 +111,7 @@ const initialData = {
       date: "2026-07-12",
       time: "10:00 AM",
       status: "pending",
-      rate: 90.00,
+      rate: 2000.00,
       duration: 1
     },
     {
@@ -124,7 +124,7 @@ const initialData = {
       date: "2026-07-02",
       time: "4:00 PM",
       status: "completed",
-      rate: 75.00,
+      rate: 1500.00,
       duration: 1
     }
   ],
@@ -153,7 +153,7 @@ const initialData = {
     {
       id: "req1",
       tutorId: "tutor1",
-      amount: 150.00,
+      amount: 15000.00,
       status: "paid", // pending, paid
       date: "2026-07-01",
       method: "Direct Deposit to Wells Fargo"

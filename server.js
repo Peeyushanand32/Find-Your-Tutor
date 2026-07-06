@@ -3,6 +3,8 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const db = require('./db');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +13,52 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Route Guard: Restrict non-logged in users from accessing any pages except home and reset password
+app.get('/*.html', (req, res, next) => {
+  const page = req.path.toLowerCase();
+  if (page === '/index.html' || page === '/reset-password.html') {
+    return next();
+  }
+  
+  const userId = req.cookies.userId;
+  if (!userId) {
+    return res.redirect('/index.html?login=true');
+  }
+  next();
+});
+
+app.use(passport.initialize());
+
+passport.use(new GoogleStrategy({
+    clientID: "YOUR_GOOGLE_CLIENT_ID",
+    clientSecret: "YOUR_GOOGLE_CLIENT_SECRET",
+    callbackURL: "/api/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // Check if user already exists in db.json by email or googleId
+    const email = profile.emails[0].value;
+    let user = db.findOne('users', { email: email.toLowerCase() });
+
+    if (!user) {
+      // Register a new student profile dynamically using Google Details
+      user = db.insert('users', {
+        email: email.toLowerCase(),
+        password: "oauth_generated_password",
+        name: profile.displayName,
+        role: "student", // default role
+        avatar: profile.photos[0].value || "JD",
+        balance: 100.00,
+        plan: "Basic",
+        bio: `Joined via Google.`,
+        languages: ["English"],
+        phone: ""
+      });
+    }
+
+    return done(null, user);
+  }
+));
 
 // Serve static frontend assets from /public
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,7 +84,7 @@ function requireAuth(req, res, next) {
 app.get('/api/auth/me', (req, res) => {
   const user = getCurrentUser(req);
   if (!user) return res.json({ loggedIn: false });
-  
+
   // Exclude password
   const { password, ...userSafe } = user;
   res.json({ loggedIn: true, user: userSafe });
@@ -57,6 +105,23 @@ app.post('/api/auth/login', (req, res) => {
   const { password: _, ...userSafe } = user;
   res.json({ success: true, user: userSafe });
 });
+
+// Trigger Google Login Screen
+app.get('/api/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+// Callback URL to log user in locally and set cookies
+app.get('/api/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/index.html', session: false }),
+  (req, res) => {
+    // Set cookie session with the authenticated user ID
+    res.cookie('userId', req.user.id, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    
+    // Redirect user to the student dashboard
+    res.redirect('/student-dashboard.html');
+  }
+);
 
 app.post('/api/auth/register', (req, res) => {
   const { email, password, name, role } = req.body;
@@ -110,6 +175,96 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ success: true });
 });
 
+// Forgot Password Token Request & Email Sender Setup
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER || "peeyushanand63@gmail.com",
+    pass: process.env.EMAIL_PASS || "jisc cuze bkdz lpjz"
+  }
+});
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ error: 'Email address is required' });
+  }
+
+  const user = db.findOne('users', { email: email.toLowerCase() });
+  if (!user) {
+    return res.status(404).json({ error: 'No account found with this email' });
+  }
+
+  const crypto = require('crypto');
+  const resetToken = crypto.randomBytes(16).toString('hex');
+  const resetExpiry = Date.now() + 3600000;
+
+  db.update('users', { id: user.id }, { resetToken, resetExpiry });
+
+  const resetLink = `http://localhost:3000/reset-password.html?token=${resetToken}`;
+
+  const mailOptions = {
+    from: `"TutorNest Team" <${process.env.EMAIL_USER || "your-email@gmail.com"}>`,
+    to: user.email,
+    subject: 'Password Reset Request | TutorNest',
+    html: `
+      <div style="font-family: 'Plus Jakarta Sans', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #ffffff;">
+        <h2 style="color: #1A56DB; margin-bottom: 20px; font-weight: bold;">TutorNest</h2>
+        <p style="font-size: 16px; color: #1f2937; line-height: 1.5;">Hello ${user.name},</p>
+        <p style="font-size: 14px; color: #4b5563; line-height: 1.5;">We received a request to reset the password for your TutorNest account. Click the button below to choose a new password:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetLink}" style="background: linear-gradient(135deg, #1A56DB 0%, #7C3AED 100%); color: #ffffff; padding: 12px 28px; text-decoration: none; border-radius: 9999px; font-weight: 600; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Reset Password</a>
+        </div>
+        <p style="font-size: 12px; color: #9ca3af; line-height: 1.5;">This link is valid for 1 hour. If you did not request a password reset, you can safely ignore this email.</p>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 25px 0;">
+        <p style="font-size: 12px; color: #9ca3af; text-align: center; margin: 0;">© 2024 TutorNest. All rights reserved.</p>
+      </div>
+    `
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Email sending failed:', error);
+      // Fallback: still log the link locally so they don't get blocked if credentials are empty
+      console.log(`[LOCAL FALLBACK] Password Reset Link: ${resetLink}`);
+      return res.json({ 
+        success: true, 
+        message: 'Email delivery failed, but reset link generated successfully! For local testing, check your console.',
+        resetLink: resetLink 
+      });
+    }
+    
+    console.log('Email sent successfully:', info.response);
+    res.json({ 
+      success: true, 
+      message: 'A password reset link has been successfully sent to your email address!'
+    });
+  });
+});
+
+// Confirm Reset Password Request
+app.post('/api/auth/reset-password', (req, res) => {
+  const { token, password } = req.body;
+  if (!token || !password) {
+    return res.status(400).json({ error: 'Token and password are required' });
+  }
+
+  const user = db.findOne('users', { resetToken: token });
+  if (!user || user.resetExpiry < Date.now()) {
+    return res.status(400).json({ error: 'Reset token is invalid or has expired.' });
+  }
+
+  db.update('users', { id: user.id }, { 
+    password, 
+    resetToken: null, 
+    resetExpiry: null 
+  });
+
+  res.json({ success: true, message: 'Password updated successfully!' });
+});
+
 // ----------------- Tutors API Endpoints -----------------
 
 app.get('/api/tutors', (req, res) => {
@@ -119,8 +274,8 @@ app.get('/api/tutors', (req, res) => {
   // Apply filters
   if (subject && subject.trim() !== '') {
     const term = subject.toLowerCase();
-    tutors = tutors.filter(t => 
-      t.name.toLowerCase().includes(term) || 
+    tutors = tutors.filter(t =>
+      t.name.toLowerCase().includes(term) ||
       (t.subjects && t.subjects.some(s => s.toLowerCase().includes(term))) ||
       (t.title && t.title.toLowerCase().includes(term))
     );
@@ -138,7 +293,7 @@ app.get('/api/tutors', (req, res) => {
   // Grade level & Availability would require matching fields. Let's simplify and filter by tag if matches
   if (gradeLevel && gradeLevel !== 'Grade Level') {
     const term = gradeLevel.toLowerCase();
-    tutors = tutors.filter(t => 
+    tutors = tutors.filter(t =>
       t.subjects && t.subjects.some(s => s.toLowerCase().includes(term))
     );
   }
@@ -201,6 +356,10 @@ app.get('/api/bookings', requireAuth, (req, res) => {
 app.post('/api/bookings', requireAuth, (req, res) => {
   if (req.user.role !== 'student') {
     return res.status(403).json({ error: 'Only students can book lessons' });
+  }
+
+  if (req.user.plan === 'Basic' || !req.user.plan) {
+    return res.status(403).json({ error: 'Booking lessons requires an active subscription. Please upgrade your plan.' });
   }
 
   const { tutorId, subject, date, time, duration } = req.body;
@@ -276,8 +435,8 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
       const newBal = parseFloat((tutor.walletBalance + earnings).toFixed(2));
       const newTotal = parseFloat((tutor.totalEarnings + earnings).toFixed(2));
       const newHours = (tutor.hoursTaught || 0) + booking.duration;
-      db.update('users', { id: tutor.id }, { 
-        walletBalance: newBal, 
+      db.update('users', { id: tutor.id }, {
+        walletBalance: newBal,
         totalEarnings: newTotal,
         hoursTaught: newHours
       });
@@ -310,7 +469,7 @@ app.put('/api/bookings/:id', requireAuth, (req, res) => {
 // ----------------- Messages API Endpoints -----------------
 
 app.get('/api/messages', requireAuth, (req, res) => {
-  const messages = db.find('messages', item => 
+  const messages = db.find('messages', item =>
     item.senderId === req.user.id || item.receiverId === req.user.id
   );
   // Sort chronologically
@@ -319,7 +478,7 @@ app.get('/api/messages', requireAuth, (req, res) => {
 });
 
 app.get('/api/messages/channels', requireAuth, (req, res) => {
-  const messages = db.find('messages', item => 
+  const messages = db.find('messages', item =>
     item.senderId === req.user.id || item.receiverId === req.user.id
   );
 
@@ -328,7 +487,7 @@ app.get('/api/messages/channels', requireAuth, (req, res) => {
     const isSender = msg.senderId === req.user.id;
     const contactId = isSender ? msg.receiverId : msg.senderId;
     const contactName = isSender ? msg.receiverName : msg.senderName;
-    
+
     if (!channels[contactId]) {
       channels[contactId] = {
         contactId,
@@ -370,6 +529,21 @@ app.post('/api/messages', requireAuth, (req, res) => {
 
   const created = db.insert('messages', newMsg);
   res.json(created);
+});
+
+app.delete('/api/messages/:id', requireAuth, (req, res) => {
+  const msg = db.findOne('messages', { id: req.params.id });
+  if (!msg) {
+    return res.status(404).json({ error: 'Message not found' });
+  }
+
+  // A user can delete a message if they sent it or if they received it
+  if (msg.senderId !== req.user.id && msg.receiverId !== req.user.id) {
+    return res.status(403).json({ error: 'Unauthorized to delete this message' });
+  }
+
+  db.delete('messages', { id: req.params.id });
+  res.json({ success: true });
 });
 
 // ----------------- Wallet API Endpoints -----------------
@@ -421,7 +595,7 @@ app.post('/api/wallet/payout', requireAuth, (req, res) => {
 app.put('/api/users/profile', requireAuth, (req, res) => {
   const { name, bio, phone, languages, currentPassword, newPassword } = req.body;
   const updateData = {};
-  
+
   if (name) updateData.name = name;
   if (bio) updateData.bio = bio;
   if (phone) updateData.phone = phone;
@@ -440,36 +614,126 @@ app.put('/api/users/profile', requireAuth, (req, res) => {
   res.json({ success: true, user: updated[0] });
 });
 
-// ----------------- Inquiry Endpoint -----------------
+// ----------------- Inquiry Endpoints & Export -----------------
 
 app.post('/api/inquiries', (req, res) => {
-  const { name, email, subject, message } = req.body;
-  if (!email || !message) {
-    return res.status(400).json({ error: 'Email and message are required' });
+  const { name, studentName, grade, subject, phone, location, email, message } = req.body;
+  if (!email && !phone) {
+    return res.status(400).json({ error: 'Email or phone number is required' });
   }
 
-  const inquiry = db.insert('inquiries', {
+  const newInquiry = {
     name: name || 'Anonymous',
-    email,
-    subject: subject || 'General Study Compass Inquiry',
-    message,
+    studentName: studentName || '',
+    grade: grade || '',
+    subject: subject || 'General Inquiry',
+    phone: phone || '',
+    location: location || '',
+    email: email || 'visitor@tutornest.com',
+    message: message || '',
     date: new Date().toISOString()
-  });
+  };
+
+  const inquiry = db.insert('inquiries', newInquiry);
+
+  // Optional: Sync to Google Sheets Webhook online in real-time
+  const googleSheetWebhook = process.env.GOOGLE_SHEET_WEBHOOK || "https://script.google.com/macros/s/AKfycbzUbbpYRq8gVXJSas2474ReotIvkINrHaVyV4ImHm9dVVteNEGa1kVZIrwvHkUXtX1mlA/exec";
+  if (googleSheetWebhook) {
+    fetch(googleSheetWebhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(inquiry)
+    }).catch(err => console.error('Failed to sync to Google Sheets:', err));
+  }
 
   res.json({ success: true, inquiry });
 });
 
-// ----------------- Subscription Endpoint -----------------
+app.get('/api/admin/inquiries/export', (req, res) => {
+  const inquiries = db.get('inquiries');
 
-app.post('/api/subscription', requireAuth, (req, res) => {
+  // UTF-8 BOM to ensure Excel opens accented characters correctly
+  let csvContent = '\uFEFF';
+  csvContent += 'Date,Parent/Guardian Name,Student Name,Grade Level,Subject,Phone,Email,Location,Message\n';
+
+  inquiries.forEach(inq => {
+    const row = [
+      inq.date ? new Date(inq.date).toLocaleString() : '',
+      inq.name || '',
+      inq.studentName || '',
+      inq.grade || '',
+      inq.subject || '',
+      inq.phone || '',
+      inq.email || '',
+      inq.location || '',
+      (inq.message || '').replace(/"/g, '""').replace(/\n/g, ' ')
+    ].map(val => `"${val}"`).join(',');
+
+    csvContent += row + '\n';
+  });
+
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', 'attachment; filename="tutornest-inquiries.csv"');
+  res.status(200).send(csvContent);
+});
+
+// ----------------- Subscription / Stripe Payment Endpoints -----------------
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_key');
+
+app.post('/api/checkout/create-session', requireAuth, async (req, res) => {
   const { planName } = req.body;
   if (!planName) {
     return res.status(400).json({ error: 'Plan name is required' });
   }
-  
-  // Set user plan status in DB
+
+  let priceCents = 99900;
+  if (planName === 'Premium') priceCents = 499900;
+
+  try {
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_placeholder_key') {
+      // Mock session for local offline testing
+      return res.json({
+        id: `mock_session_${Date.now()}`,
+        url: `/student-dashboard.html?session_id=mock_session_${Date.now()}&plan=${encodeURIComponent(planName)}`
+      });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'inr',
+          product_data: {
+            name: `TutorNest ${planName} Plan`,
+            description: `Monthly access to all premium features`,
+          },
+          unit_amount: priceCents,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: `http://localhost:3000/student-dashboard.html?session_id={CHECKOUT_SESSION_ID}&plan=${encodeURIComponent(planName)}`,
+      cancel_url: 'http://localhost:3000/pricing.html',
+      client_reference_id: req.user.id
+    });
+
+    res.json({ id: session.id, url: session.url });
+  } catch (err) {
+    console.error('Stripe session creation failed:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/checkout/confirm', requireAuth, (req, res) => {
+  const { sessionId, planName } = req.body;
+  if (!sessionId || !planName) {
+    return res.status(400).json({ error: 'Session ID and Plan Name are required' });
+  }
+
   const updated = db.update('users', { id: req.user.id }, { plan: planName });
-  res.json({ success: true, user: updated[0] });
+  const { password, ...userSafe } = updated[0];
+  res.json({ success: true, user: userSafe });
 });
 
 // Helper for routing: serve index.html for client route fallback or direct HTML routing

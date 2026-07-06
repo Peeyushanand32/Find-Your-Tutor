@@ -371,26 +371,39 @@
       const discountRow = document.getElementById('discountRow');
       const totalPrice = document.getElementById('totalPrice');
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const planName = urlParams.get('plan') || 'Premium';
+      
+      let monthlyPrice = "₹999.00";
+      let annualPriceBase = "₹9,999.00";
+      let annualPriceTotal = "₹7,999.00";
+      
+      if (planName === 'Premium') {
+        monthlyPrice = "₹4,999.00";
+        annualPriceBase = "₹49,999.00";
+        annualPriceTotal = "₹39,999.00";
+      }
+
       if (type === 'monthly') {
         monthlyBtn.classList.add('bg-white', 'shadow-sm', 'text-primary');
         monthlyBtn.classList.remove('text-on-surface-variant');
         annualBtn.classList.remove('bg-white', 'shadow-sm', 'text-primary');
         annualBtn.classList.add('text-on-surface-variant');
         
-        summaryPlanName.innerText = 'Pro Plan - Monthly';
-        basePrice.innerText = '$29.00';
+        summaryPlanName.innerText = `${planName} Plan - Monthly`;
+        basePrice.innerText = monthlyPrice;
         discountRow.style.display = 'none';
-        totalPrice.innerText = '$29.00';
+        totalPrice.innerText = monthlyPrice;
       } else {
         annualBtn.classList.add('bg-white', 'shadow-sm', 'text-primary');
         annualBtn.classList.remove('text-on-surface-variant');
         monthlyBtn.classList.remove('bg-white', 'shadow-sm', 'text-primary');
         monthlyBtn.classList.add('text-on-surface-variant');
         
-        summaryPlanName.innerText = 'Pro Plan - Annual';
-        basePrice.innerText = '$348.00';
+        summaryPlanName.innerText = `${planName} Plan - Annual`;
+        basePrice.innerText = annualPriceBase;
         discountRow.style.display = 'flex';
-        totalPrice.innerText = '$278.40';
+        totalPrice.innerText = annualPriceTotal;
       }
     }
 

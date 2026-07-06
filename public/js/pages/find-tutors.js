@@ -74,9 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (priceSelect && priceSelect.value !== 'Price Range') {
       // Extract numeric boundaries if needed, or send literal
       const val = priceSelect.value;
-      if (val.includes('$20 - $40')) { params.append('minPrice', '20'); params.append('maxPrice', '40'); }
-      else if (val.includes('$40 - $70')) { params.append('minPrice', '40'); params.append('maxPrice', '70'); }
-      else if (val.includes('$70+')) { params.append('minPrice', '70'); }
+      if (val.includes('200 - 500') || val.includes('₹200 - ₹500')) { params.append('minPrice', '200'); params.append('maxPrice', '500'); }
+      else if (val.includes('500 - 1000') || val.includes('₹500 - ₹1000')) { params.append('minPrice', '500'); params.append('maxPrice', '1000'); }
+      else if (val.includes('1000+') || val.includes('₹1000+')) { params.append('minPrice', '1000'); }
     }
     if (ratingSelect && ratingSelect.value !== 'Rating') {
       const val = ratingSelect.value;

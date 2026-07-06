@@ -15,6 +15,29 @@ async function initDashboard() {
     return;
   }
 
+  // Check URL params for Stripe checkout confirmation callback
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get('session_id');
+  const planName = urlParams.get('plan');
+  if (sessionId && planName) {
+    try {
+      const confirmRes = await fetch('/api/checkout/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, planName })
+      });
+      if (confirmRes.ok) {
+        const confirmData = await confirmRes.json();
+        currentUser = confirmData.user;
+        // Clean URL parameters to prevent multiple alerts on refresh
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showToast(`Successfully activated your ${planName} subscription!`, 'success');
+      }
+    } catch (err) {
+      console.error('Subscription activation callback failed:', err);
+    }
+  }
+
   // 1. Greet User
   const greetHeading = document.querySelector('h2.font-display-lg');
   const greetSub = document.querySelector('p.text-body-lg');
@@ -146,4 +169,25 @@ async function initDashboard() {
       window.location.href = '/find-tutors.html';
     });
   }
+}
+
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `fixed bottom-6 right-6 px-6 py-4 rounded-xl shadow-2xl z-[2000] border backdrop-blur-md transition-all duration-300 transform translate-y-10 opacity-0 ${
+    type === 'success' 
+      ? 'bg-green-500/10 border-green-500/30 text-green-700' 
+      : 'bg-error-container/80 border-error/30 text-on-error-container'
+  }`;
+  toast.innerHTML = `
+    <div class="flex items-center gap-2 font-label-md">
+      <span class="material-symbols-outlined">${type === 'success' ? 'check_circle' : 'error'}</span>
+      <span>${message}</span>
+    </div>
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
+  setTimeout(() => {
+    toast.classList.add('translate-y-10', 'opacity-0');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
 }

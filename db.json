@@ -7,7 +7,7 @@
       "name": "James Doe",
       "role": "student",
       "avatar": "JD",
-      "balance": 75,
+      "balance": 15000,
       "plan": "Basic",
       "bio": "High school senior preparing for AP Calculus and college admission.",
       "languages": [
@@ -22,7 +22,7 @@
       "name": "Dr. Sarah Jenkins",
       "role": "tutor",
       "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuAxBTj1Cg8WfDctCwZfizyEbz4G_183JwXPFlGu9CiI2fUToO_rYwm-HP1B5JvTCAHvM4eUjk_nhS3PMkDX4Zb_70hbh0-shbxC7_9JKQ4DdRWmqE3zBlMXYuza7iWXndxjUms3t13-nJltTeLIwIcOhgHNDRSl6H7YcXs1e9qgxmT8tndVqWIcrpOh_hTDk4ciwz3KvaLAvgBhzgBrgr9D1YemW5LOCGfSweqdtJiLq9qxpXLKQsZGhjWDdJmdwGleNeW2nB1RqgSl",
-      "rate": 75,
+      "rate": 1500,
       "rating": 4.9,
       "reviewsCount": 124,
       "hoursTaught": 500,
@@ -53,8 +53,8 @@
         }
       ],
       "location": "Boston & Cambridge area",
-      "walletBalance": 420,
-      "totalEarnings": 3250
+      "walletBalance": 4200,
+      "totalEarnings": 32500
     },
     {
       "id": "tutor2",
@@ -63,7 +63,7 @@
       "name": "Dr. Elena Rodriguez",
       "role": "tutor",
       "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuDEGg-u5yRLWHdkc27eeFShpa4qFiGMPumwlH9fe0TMLDQm30X-bt-eFwPABmJ_oygIrbgkAbllbaqxVstvST1XybHVYECas_jmu9UbNdoj91cxuKRktf9dBXAUaK8Ed_Lo303kTeqseMKsT5biJGrkK5cSLu72g-8efnVS7NxxWgtc2U32djhhTD-uoU4AGqMhkSlMShsB8YqPFtnyF67ZBfYo3gbi7Oj-j71UP2MCv4MUmbcmePkbjN1Rvv6SZ45sR6oQ7qywVN8z",
-      "rate": 80,
+      "rate": 1800,
       "rating": 4.9,
       "reviewsCount": 120,
       "hoursTaught": 380,
@@ -87,8 +87,8 @@
         }
       ],
       "location": "San Francisco, CA & Online",
-      "walletBalance": 880,
-      "totalEarnings": 8400
+      "walletBalance": 8800,
+      "totalEarnings": 84000
     },
     {
       "id": "tutor3",
@@ -97,7 +97,7 @@
       "name": "Prof. Julian Chen",
       "role": "tutor",
       "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuDqacdh7BOToUcZKkUgWUxlr0kpETq5RPgUbRFD535c4tELKoLXM2JzRUYTX1Q26g2IAga0ckZLudR6sFTQZKsBWF4OO5EnZq_Rd1wmH33V14JVFYMX0P_KULrqY9lA1ttktD6H_E1zsbaU9LFz8O10M7bJ312FReUYVirCGnTAVrhHJj43tQRgwX07aZL_--qXttdnODTfB3SmJcPcBBqR08M9BohWs9lNbS-6kEhIKOAc8R_SFlIYNgDMgO526Vp7r6gGJZUa9_H8",
-      "rate": 90,
+      "rate": 2000,
       "rating": 5,
       "reviewsCount": 85,
       "hoursTaught": 450,
@@ -121,50 +121,25 @@
         }
       ],
       "location": "Seattle, WA & Online",
-      "walletBalance": 1200,
-      "totalEarnings": 15400
+      "walletBalance": 12000,
+      "totalEarnings": 154000
     },
     {
-      "id": "use_1783275718175_587",
+      "id": "use_1783285551614_743",
       "email": "peeyushanand32@gmail.com",
-      "password": "xzxzxz",
+      "password": "Peeyush2123",
       "name": "PEEYUSH ANAND",
       "role": "student",
       "avatar": "PA",
-      "balance": 10,
+      "balance": 100,
       "plan": "Basic",
       "bio": "Hello! I am PEEYUSH ANAND.",
       "languages": [
         "English"
       ],
-      "phone": ""
-    },
-    {
-      "id": "use_1783276462131_457",
-      "email": "peeyushanand63@gmail.com",
-      "password": "qwert",
-      "name": "php-ravenclaw32",
-      "role": "tutor",
-      "avatar": "P",
-      "balance": 0,
-      "plan": "Basic",
-      "bio": "I am an expert tutor in various subjects. Ready to help you learn!",
-      "languages": [
-        "English"
-      ],
       "phone": "",
-      "rate": 45,
-      "rating": 5,
-      "reviewsCount": 0,
-      "hoursTaught": 0,
-      "subjects": [
-        "General Education"
-      ],
-      "title": "Expert Tutor",
-      "education": [],
-      "location": "Online",
-      "walletBalance": 0,
-      "totalEarnings": 0
+      "resetToken": "c580d00084175778ec1de5b36f9b931f",
+      "resetExpiry": 1783291519267
     }
   ],
   "bookings": [
@@ -178,7 +153,7 @@
       "date": "2026-07-10",
       "time": "2:30 PM",
       "status": "scheduled",
-      "rate": 75,
+      "rate": 1500,
       "duration": 1
     },
     {
@@ -191,7 +166,7 @@
       "date": "2026-07-12",
       "time": "10:00 AM",
       "status": "pending",
-      "rate": 90,
+      "rate": 2000,
       "duration": 1
     },
     {
@@ -204,33 +179,7 @@
       "date": "2026-07-02",
       "time": "4:00 PM",
       "status": "completed",
-      "rate": 75,
-      "duration": 1
-    },
-    {
-      "id": "boo_1783275651160_256",
-      "studentId": "student1",
-      "studentName": "James Doe",
-      "tutorId": "tutor1",
-      "tutorName": "Dr. Sarah Jenkins",
-      "subject": "Calculus BC",
-      "date": "2026-07-14",
-      "time": "2:30 PM",
-      "status": "pending",
-      "rate": 75,
-      "duration": 1
-    },
-    {
-      "id": "boo_1783275750897_466",
-      "studentId": "use_1783275718175_587",
-      "studentName": "PEEYUSH ANAND",
-      "tutorId": "tutor3",
-      "tutorName": "Prof. Julian Chen",
-      "subject": "Python",
-      "date": "2026-07-14",
-      "time": "2:30 PM",
-      "status": "pending",
-      "rate": 90,
+      "rate": 1500,
       "duration": 1
     }
   ],
@@ -252,32 +201,39 @@
       "receiverName": "James Doe",
       "text": "Hello James! I would be glad to help. Please select an available slot on my profile page.",
       "timestamp": "2026-07-04T11:20:00Z"
-    },
-    {
-      "id": "mes_1783275651173_840",
-      "senderId": "student1",
-      "senderName": "James Doe",
-      "receiverId": "tutor1",
-      "receiverName": "Dr. Sarah Jenkins",
-      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"Calculus BC\".",
-      "timestamp": "2026-07-05T18:20:51.162Z"
-    },
-    {
-      "id": "mes_1783275750899_935",
-      "senderId": "use_1783275718175_587",
-      "senderName": "PEEYUSH ANAND",
-      "receiverId": "tutor3",
-      "receiverName": "Prof. Julian Chen",
-      "text": "📅 New Booking Request: I requested a lesson on 2026-07-14 at 2:30 PM for \"Python\".",
-      "timestamp": "2026-07-05T18:22:30.899Z"
     }
   ],
-  "inquiries": [],
+  "inquiries": [
+    {
+      "id": "inq_1783288772583_576",
+      "name": "kd",
+      "studentName": " vdc ",
+      "grade": "Elementary School",
+      "subject": "c d",
+      "phone": "1234567890",
+      "location": "cs/vdsv",
+      "email": "visitor@tutornest.com",
+      "message": "Inquiry for student  vdc  in grade Elementary School for subject c d.",
+      "date": "2026-07-05T21:59:32.583Z"
+    },
+    {
+      "id": "inq_1783289196793_95",
+      "name": "fgr",
+      "studentName": "gfdsg",
+      "grade": "Graduate",
+      "subject": "fddf",
+      "phone": "435435435435",
+      "location": "cvdv/fd",
+      "email": "visitor@tutornest.com",
+      "message": "Inquiry for student gfdsg in grade Graduate for subject fddf.",
+      "date": "2026-07-05T22:06:36.793Z"
+    }
+  ],
   "walletRequests": [
     {
       "id": "req1",
       "tutorId": "tutor1",
-      "amount": 150,
+      "amount": 15000,
       "status": "paid",
       "date": "2026-07-01",
       "method": "Direct Deposit to Wells Fargo"
