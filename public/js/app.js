@@ -95,6 +95,8 @@ function setupSidebarLinks() {
       a.href = '/instructor-wallet.html';
     } else if (text.includes('directory')) {
       a.href = '/students-directory.html';
+    } else if (text.includes('requests')) {
+      a.href = isStudent ? '/student-dashboard.html' : '/instructor-dashboard.html#requests';
     }
   });
 }
