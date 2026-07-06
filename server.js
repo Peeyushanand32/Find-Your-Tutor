@@ -311,6 +311,15 @@ app.get('/api/tutors', (req, res) => {
   res.json(tutors);
 });
 
+app.get('/api/users/:id', requireAuth, (req, res) => {
+  const user = db.findOne('users', { id: req.params.id });
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  const { password, ...safeUser } = user;
+  res.json(safeUser);
+});
+
 app.get('/api/tutors/:id', (req, res) => {
   const tutor = db.findOne('users', { id: req.params.id, role: 'tutor' });
   if (!tutor) {

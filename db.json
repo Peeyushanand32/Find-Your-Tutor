@@ -140,6 +140,33 @@
       "phone": "",
       "resetToken": "c580d00084175778ec1de5b36f9b931f",
       "resetExpiry": 1783291519267
+    },
+    {
+      "id": "use_1783315154055_891",
+      "email": "peeyushanand63@gmail.com",
+      "password": "qwert",
+      "name": "PEEYUSH ANAND",
+      "role": "tutor",
+      "avatar": "PA",
+      "balance": 0,
+      "plan": "Basic",
+      "bio": "I am an expert tutor in various subjects. Ready to help you learn!",
+      "languages": [
+        "English"
+      ],
+      "phone": "",
+      "rate": 45,
+      "rating": 5,
+      "reviewsCount": 0,
+      "hoursTaught": 0,
+      "subjects": [
+        "General Education"
+      ],
+      "title": "Expert Tutor",
+      "education": [],
+      "location": "Online",
+      "walletBalance": 0,
+      "totalEarnings": 0
     }
   ],
   "bookings": [
@@ -154,8 +181,7 @@
       "time": "2:30 PM",
       "status": "scheduled",
       "rate": 1500,
-      "duration": 1,
-      "meetingLink": "https://meet.jit.si/TutorNest-CalculusBC-booking1"
+      "duration": 1
     },
     {
       "id": "booking2",

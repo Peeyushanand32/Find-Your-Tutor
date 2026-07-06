@@ -47,17 +47,14 @@ async function initMessages() {
 
 async function fetchAndSetActiveContact(id) {
   try {
-    const res = await fetch(`/api/tutors/${id}`);
+    const res = await fetch(`/api/users/${id}`);
     if (res.ok) {
       const data = await res.json();
-      activeContactName = data.tutor.name;
-      updateChatHeader(data.tutor.name, data.tutor.avatar);
+      activeContactName = data.name;
+      const avatarUrl = (data.avatar && (data.avatar.startsWith('http') || data.avatar.length > 2)) ? data.avatar : '';
+      updateChatHeader(data.name, avatarUrl);
       loadChatHistory(id);
     } else {
-      // recipient is student or another user type
-      const resUser = await fetch('/api/auth/me'); // fallback safe
-      const d = await resUser.json();
-      // Mock name
       activeContactName = "Instructor / Student";
       updateChatHeader(activeContactName, '');
       loadChatHistory(id);
