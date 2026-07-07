@@ -917,6 +917,7 @@ const razorpay = new Razorpay({
 
 app.post('/api/payments/order', async (req, res) => {
   const { amount, currency } = req.body; // e.g., amount: 500 (INR 500)
+  console.log(`[ORDER] Creating Razorpay order for amount: ${amount} ${currency || 'INR'}`);
 
   const options = {
     amount: amount * 100, // Razorpay expects amount in the smallest currency sub-unit (paise for INR, e.g., 50000 paise = 500 INR)
@@ -926,6 +927,7 @@ app.post('/api/payments/order', async (req, res) => {
 
   try {
     const order = await razorpay.orders.create(options);
+    console.log(`[ORDER] Created successfully. Order ID: ${order.id}`);
     res.status(200).json({
       success: true,
       order_id: order.id,
@@ -933,6 +935,7 @@ app.post('/api/payments/order', async (req, res) => {
       currency: order.currency,
     });
   } catch (error) {
+    console.error(`[ORDER] Failed to create order: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
@@ -959,6 +962,7 @@ app.post('/api/payments/verify', requireAuth, async (req, res) => {
 
 app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount } = req.body;
+  console.log(`[VERIFY-TOPUP] Received request: order=${razorpay_order_id}, payment=${razorpay_payment_id}, signature=${razorpay_signature}, amount=${amount}`);
   const crypto = require('crypto');
 
   const generatedSignature = crypto
@@ -966,17 +970,22 @@ app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest('hex');
 
+  console.log(`[VERIFY-TOPUP] Generated signature: ${generatedSignature}`);
+
   if (generatedSignature === razorpay_signature) {
-    // Signature verified successfully
+    console.log(`[VERIFY-TOPUP] Signature verified successfully.`);
     const topupAmount = parseFloat(amount);
     if (isNaN(topupAmount) || topupAmount <= 0) {
+      console.error(`[VERIFY-TOPUP] Invalid top-up amount value.`);
       return res.status(400).json({ error: 'Invalid top-up amount' });
     }
     const newBal = parseFloat((req.user.balance + topupAmount).toFixed(2));
+    console.log(`[VERIFY-TOPUP] Updating student ${req.user.id} balance from ${req.user.balance} to ${newBal}`);
     const updated = await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal }, { new: true });
     const { password, ...userSafe } = updated;
     res.status(200).json({ success: true, message: 'Top-up payment verified successfully', balance: newBal, user: userSafe });
   } else {
+    console.error(`[VERIFY-TOPUP] Signature mismatch! Generated: ${generatedSignature}, Received: ${razorpay_signature}`);
     res.status(400).json({ success: false, message: 'Invalid payment signature' });
   }
 });

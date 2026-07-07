@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -23,31 +24,41 @@ async function runMigration() {
 
     console.log('Migrating Users...');
     if (Array.isArray(data.users)) {
-      await User.insertMany(data.users);
+      for (const item of data.users) {
+        await User.create(item);
+      }
       console.log(`Migrated ${data.users.length} users.`);
     }
 
     console.log('Migrating Bookings...');
     if (Array.isArray(data.bookings)) {
-      await Booking.insertMany(data.bookings);
+      for (const item of data.bookings) {
+        await Booking.create(item);
+      }
       console.log(`Migrated ${data.bookings.length} bookings.`);
     }
 
     console.log('Migrating Messages...');
     if (Array.isArray(data.messages)) {
-      await Message.insertMany(data.messages);
+      for (const item of data.messages) {
+        await Message.create(item);
+      }
       console.log(`Migrated ${data.messages.length} messages.`);
     }
 
     console.log('Migrating Inquiries...');
     if (Array.isArray(data.inquiries)) {
-      await Inquiry.insertMany(data.inquiries);
+      for (const item of data.inquiries) {
+        await Inquiry.create(item);
+      }
       console.log(`Migrated ${data.inquiries.length} inquiries.`);
     }
 
     console.log('Migrating WalletRequests...');
     if (Array.isArray(data.walletRequests)) {
-      await WalletRequest.insertMany(data.walletRequests);
+      for (const item of data.walletRequests) {
+        await WalletRequest.create(item);
+      }
       console.log(`Migrated ${data.walletRequests.length} wallet requests.`);
     }
 
