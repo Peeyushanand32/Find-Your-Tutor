@@ -774,12 +774,13 @@ app.post('/api/wallet/payout', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Invalid payout amount' });
   }
 
-  if (req.user.walletBalance < amount) {
+  const currentWalletBalance = parseFloat(req.user.walletBalance) || 0;
+  if (currentWalletBalance < amount) {
     return res.status(400).json({ error: 'Insufficient wallet balance' });
   }
 
   // Deduct
-  const newBal = parseFloat((req.user.walletBalance - amount).toFixed(2));
+  const newBal = parseFloat((currentWalletBalance - amount).toFixed(2));
   await User.findOneAndUpdate({ id: req.user.id }, { walletBalance: newBal });
 
   const payoutReq = await WalletRequest.create({
@@ -803,7 +804,8 @@ app.post('/api/wallet/topup', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Invalid top-up amount' });
   }
 
-  const newBal = parseFloat((req.user.balance + amount).toFixed(2));
+  const currentBalance = parseFloat(req.user.balance) || 0;
+  const newBal = parseFloat((currentBalance + amount).toFixed(2));
   await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal });
 
   res.json({ success: true, balance: newBal });
@@ -1014,7 +1016,8 @@ app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
     if (isNaN(topupAmount) || topupAmount <= 0) {
       return res.status(400).json({ error: 'Invalid top-up amount' });
     }
-    const newBal = parseFloat((req.user.balance + topupAmount).toFixed(2));
+    const currentBalance = parseFloat(req.user.balance) || 0;
+    const newBal = parseFloat((currentBalance + topupAmount).toFixed(2));
     const updated = await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal }, { new: true });
     const { password, ...userSafe } = updated;
     return res.status(200).json({ success: true, message: 'Mock top-up payment verified successfully', amount: topupAmount, balance: newBal, user: userSafe });
@@ -1050,8 +1053,9 @@ app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
       console.error(`[VERIFY-TOPUP] Invalid top-up amount value.`);
       return res.status(400).json({ error: 'Invalid top-up amount' });
     }
-    const newBal = parseFloat((req.user.balance + topupAmount).toFixed(2));
-    console.log(`[VERIFY-TOPUP] Updating student ${req.user.id} balance from ${req.user.balance} to ${newBal}`);
+    const currentBalance = parseFloat(req.user.balance) || 0;
+    const newBal = parseFloat((currentBalance + topupAmount).toFixed(2));
+    console.log(`[VERIFY-TOPUP] Updating student ${req.user.id} balance from ${currentBalance} to ${newBal}`);
     const updated = await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal }, { new: true });
     const { password, ...userSafe } = updated;
     res.status(200).json({ success: true, message: 'Top-up payment verified successfully', amount: topupAmount, balance: newBal, user: userSafe });
