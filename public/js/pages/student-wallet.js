@@ -99,7 +99,7 @@ async function handleTopup() {
 
     if (res.ok && orderData.success) {
       const options = {
-        key: key || 'rzp_live_TAZNn7Yq33buAA',
+        key: key || '',
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'TutorNest Wallet Top-Up',
