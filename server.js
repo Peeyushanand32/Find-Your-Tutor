@@ -909,10 +909,15 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_place
 // ----------------- Razorpay Payment Endpoints -----------------
 const Razorpay = require('razorpay');
 
-// Initialize Razorpay instance
+// Initialize Razorpay instance using environment variables
 const razorpay = new Razorpay({
-  key_id: 'rzp_live_TA7tJ4AmblMiTb',
-  key_secret: 'fAzrp2zto37Mn0plMUg9KTlj',
+  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_live_TAZNn7Yq33buAA',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || 'ioY9BIlUC9r6KNf3IGAg9lqs',
+});
+
+// Endpoint to expose public Razorpay Key ID safely to the client side
+app.get('/api/payments/key', (req, res) => {
+  res.json({ key: process.env.RAZORPAY_KEY_ID || 'rzp_live_TAZNn7Yq33buAA' });
 });
 
 app.post('/api/payments/order', async (req, res) => {
@@ -945,7 +950,7 @@ app.post('/api/payments/verify', requireAuth, async (req, res) => {
   const crypto = require('crypto');
 
   const generatedSignature = crypto
-    .createHmac('sha256', 'fAzrp2zto37Mn0plMUg9KTlj')
+    .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'ioY9BIlUC9r6KNf3IGAg9lqs')
     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest('hex');
 
@@ -966,7 +971,7 @@ app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
   const crypto = require('crypto');
 
   const generatedSignature = crypto
-    .createHmac('sha256', 'fAzrp2zto37Mn0plMUg9KTlj')
+    .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'ioY9BIlUC9r6KNf3IGAg9lqs')
     .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest('hex');
 

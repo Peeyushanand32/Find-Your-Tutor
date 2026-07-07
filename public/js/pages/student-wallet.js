@@ -87,6 +87,9 @@ async function handleTopup() {
   }
 
   try {
+    const keyRes = await fetch('/api/payments/key');
+    const { key } = await keyRes.json();
+
     const res = await fetch('/api/payments/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -96,7 +99,7 @@ async function handleTopup() {
 
     if (res.ok && orderData.success) {
       const options = {
-        key: 'rzp_live_TA7tJ4AmblMiTb',
+        key: key || 'rzp_live_TAZNn7Yq33buAA',
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'TutorNest Wallet Top-Up',
