@@ -993,7 +993,21 @@ app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
 
   if (generatedSignature === razorpay_signature) {
     console.log(`[VERIFY-TOPUP] Signature verified successfully.`);
-    const topupAmount = parseFloat(amount);
+    let topupAmount = parseFloat(amount);
+
+    // Fetch actual payment amount from Razorpay to guarantee security and correctness
+    try {
+      if (razorpay) {
+        const paymentDetails = await razorpay.payments.fetch(razorpay_payment_id);
+        if (paymentDetails && paymentDetails.amount) {
+          topupAmount = paymentDetails.amount / 100;
+          console.log(`[VERIFY-TOPUP] Verified actual payment amount from Razorpay: ${topupAmount} INR`);
+        }
+      }
+    } catch (err) {
+      console.error(`[VERIFY-TOPUP] Error fetching payment details from Razorpay: ${err.message}. Falling back to request amount.`);
+    }
+
     if (isNaN(topupAmount) || topupAmount <= 0) {
       console.error(`[VERIFY-TOPUP] Invalid top-up amount value.`);
       return res.status(400).json({ error: 'Invalid top-up amount' });
@@ -1002,7 +1016,7 @@ app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
     console.log(`[VERIFY-TOPUP] Updating student ${req.user.id} balance from ${req.user.balance} to ${newBal}`);
     const updated = await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal }, { new: true });
     const { password, ...userSafe } = updated;
-    res.status(200).json({ success: true, message: 'Top-up payment verified successfully', balance: newBal, user: userSafe });
+    res.status(200).json({ success: true, message: 'Top-up payment verified successfully', amount: topupAmount, balance: newBal, user: userSafe });
   } else {
     console.error(`[VERIFY-TOPUP] Signature mismatch! Generated: ${generatedSignature}, Received: ${razorpay_signature}`);
     res.status(400).json({ success: false, message: 'Invalid payment signature' });

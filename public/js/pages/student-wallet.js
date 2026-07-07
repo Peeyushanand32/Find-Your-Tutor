@@ -121,7 +121,8 @@ async function handleTopup() {
             const verifyData = await verifyRes.json();
 
             if (verifyRes.ok && verifyData.success) {
-              showToast(`Successfully added ₹${amount} to your wallet!`, 'success');
+              const addedAmount = verifyData.amount || amount;
+              showToast(`Successfully added ₹${addedAmount} to your wallet!`, 'success');
               amountInput.value = '';
               currentUser.balance = verifyData.balance;
               updateBalanceDisplay(verifyData.balance);
