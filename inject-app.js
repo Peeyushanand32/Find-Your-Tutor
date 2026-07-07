@@ -22,7 +22,8 @@ const files = [
   'student-settings-security.html',
   'instructor-settings.html',
   'students-directory.html',
-  'instructor-wallet.html'
+  'instructor-wallet.html',
+  'student-wallet.html'
 ];
 
 files.forEach(file => {

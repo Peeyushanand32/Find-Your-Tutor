@@ -109,6 +109,21 @@ async function checkAuth() {
 }
 
 function setupSidebarLinks() {
+  // Dynamically inject student wallet link if logged in as student and not already present
+  const navContainer = document.querySelector('nav .space-y-unit-sm, nav .flex-1, .sidebar');
+  if (navContainer && currentUser && currentUser.role === 'student' && !navContainer.innerHTML.includes('account_balance_wallet')) {
+    const settingsLink = Array.from(navContainer.querySelectorAll('a')).find(a => a.textContent.includes('Settings'));
+    if (settingsLink) {
+      const walletLinkHtml = `
+        <a class="flex items-center gap-unit-md p-unit-sm rounded-lg text-on-surface-variant hover:bg-primary-container/10 hover:text-primary transition-all duration-200" href="/student-wallet.html">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+          <span class="font-label-md">Wallet</span>
+        </a>
+      `;
+      settingsLink.insertAdjacentHTML('beforebegin', walletLinkHtml);
+    }
+  }
+
   // Select all sidebar anchor tags (usually inside nav or aside elements)
   const anchors = document.querySelectorAll('nav a, aside a, .sidebar a');
   const isExpiredTutor = currentUser && currentUser.role === 'tutor' && window.isTutorTrialExpired(currentUser);
@@ -139,8 +154,8 @@ function setupSidebarLinks() {
       a.href = isStudent ? '/student-messages.html' : '/instructor-messages.html';
     } else if (text.includes('settings') || text.includes('profile')) {
       a.href = isStudent ? '/student-settings-profile.html' : '/instructor-settings.html';
-    } else if (text.includes('wallet') || text.includes('earnings') || text.includes('request history')) {
-      a.href = '/instructor-wallet.html';
+    } else if (text.includes('wallet') || text.includes('earnings') || text.includes('balance') || text.includes('request history')) {
+      a.href = isStudent ? '/student-wallet.html' : '/instructor-wallet.html';
     } else if (text.includes('directory')) {
       a.href = '/students-directory.html';
     } else if (text.includes('requests')) {
@@ -170,6 +185,7 @@ function updateNavbar() {
         <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/find-tutors.html">Find Tutors</a>
         <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/student-dashboard.html">Dashboard</a>
         <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/student-calendar.html">My Schedule</a>
+        <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/student-wallet.html">Wallet</a>
         <a class="text-on-surface-variant font-medium font-label-md text-label-md hover:text-primary transition-all" href="/student-messages.html">Messages</a>
       `;
     } else {
@@ -224,6 +240,9 @@ function updateNavbar() {
               </a>
               <a href="/student-calendar.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
                 <span class="material-symbols-outlined text-[20px]">calendar_today</span> My Schedule
+              </a>
+              <a href="/student-wallet.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span> My Wallet
               </a>
               <a href="/student-lessons-history.html" class="flex items-center gap-2 px-4 py-2 text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors">
                 <span class="material-symbols-outlined text-[20px]">history</span> Lesson History

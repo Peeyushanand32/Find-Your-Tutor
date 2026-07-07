@@ -27,10 +27,10 @@ app.get('/*.html', async (req, res, next) => {
     return res.redirect('/index.html?login=true');
   }
 
-  // Restrict Basic/unsubscribed students from accessing dashboard, messages, calendar, lessons history, or tutors history pages
+  // Restrict Basic/unsubscribed students from accessing dashboard, messages, calendar, lessons history, tutors history, or wallet pages
   const user = await User.findOne({ id: userId });
   if (user && user.role === 'student' && (user.plan === 'Basic' || !user.plan)) {
-    if (page === '/student-dashboard.html' || page === '/student-messages.html' || page === '/student-calendar.html' || page === '/student-lessons-history.html' || page === '/student-tutors-history.html') {
+    if (page === '/student-dashboard.html' || page === '/student-messages.html' || page === '/student-calendar.html' || page === '/student-lessons-history.html' || page === '/student-tutors-history.html' || page === '/student-wallet.html') {
       return res.redirect('/pricing.html');
     }
   }
@@ -791,6 +791,22 @@ app.post('/api/wallet/payout', requireAuth, async (req, res) => {
   });
 
   res.json({ success: true, payout: payoutReq, walletBalance: newBal });
+});
+
+app.post('/api/wallet/topup', requireAuth, async (req, res) => {
+  if (req.user.role !== 'student') {
+    return res.status(403).json({ error: 'Only students can top up their wallet' });
+  }
+
+  const amount = parseFloat(req.body.amount);
+  if (isNaN(amount) || amount <= 0) {
+    return res.status(400).json({ error: 'Invalid top-up amount' });
+  }
+
+  const newBal = parseFloat((req.user.balance + amount).toFixed(2));
+  await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal });
+
+  res.json({ success: true, balance: newBal });
 });
 
 // ----------------- Profile / Settings Endpoints -----------------
