@@ -6,12 +6,7 @@ window.authPromise = new Promise((resolve) => {
 
 window.isTutorTrialExpired = function(user) {
   if (!user || user.role !== 'tutor') return false;
-  if (user.plan === 'Premium') return false;
-  
-  const createdAtStr = user.createdAt || new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-  const createdTime = new Date(createdAtStr).getTime();
-  const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
-  return (Date.now() - createdTime) > twoDaysMs;
+  return user.plan === 'Basic' || !user.plan;
 };
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -35,9 +35,9 @@ app.get('/*.html', async (req, res, next) => {
     }
   }
 
-  // Restrict Basic/unsubscribed tutors from accessing instructor dashboard, calendar, messages, requests history, or wallet
+  // Restrict Basic/unsubscribed tutors from accessing instructor dashboard, calendar, requests history, or wallet (messages are allowed to read, but not to send)
   if (user && user.role === 'tutor' && (user.plan === 'Basic' || !user.plan)) {
-    if (page === '/instructor-dashboard.html' || page === '/instructor-calendar.html' || page === '/instructor-messages.html' || page === '/instructor-requests-history.html' || page === '/instructor-wallet.html') {
+    if (page === '/instructor-dashboard.html' || page === '/instructor-calendar.html' || page === '/instructor-requests-history.html' || page === '/instructor-wallet.html') {
       return res.redirect('/pricing.html');
     }
   }
