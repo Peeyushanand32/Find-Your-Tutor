@@ -27,10 +27,10 @@ app.get('/*.html', async (req, res, next) => {
     return res.redirect('/index.html?login=true');
   }
 
-  // Restrict Basic/unsubscribed students from accessing dashboard, messages, or calendar
+  // Restrict Basic/unsubscribed students from accessing dashboard, messages, calendar, lessons history, or tutors history pages
   const user = await User.findOne({ id: userId });
   if (user && user.role === 'student' && (user.plan === 'Basic' || !user.plan)) {
-    if (page === '/student-dashboard.html' || page === '/student-messages.html' || page === '/student-calendar.html') {
+    if (page === '/student-dashboard.html' || page === '/student-messages.html' || page === '/student-calendar.html' || page === '/student-lessons-history.html' || page === '/student-tutors-history.html') {
       return res.redirect('/pricing.html');
     }
   }
