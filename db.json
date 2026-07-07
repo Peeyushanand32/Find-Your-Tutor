@@ -140,7 +140,8 @@
       ],
       "phone": "",
       "resetToken": "c580d00084175778ec1de5b36f9b931f",
-      "resetExpiry": 1783291519267
+      "resetExpiry": 1783291519267,
+      "createdAt": "2026-07-04T03:12:43.471Z"
     },
     {
       "id": "use_1783315154055_891",
@@ -188,7 +189,7 @@
       "id": "use_1783355638247_104",
       "email": "peeyushanand2@gmail.com",
       "password": "qwer",
-      "name": "PEEYUSH ANAND",
+      "name": "PEEYUSH ANANDaaaaaaaa",
       "role": "tutor",
       "avatar": "PA",
       "balance": 0,
@@ -207,7 +208,7 @@
       ],
       "title": "Expert Tutor",
       "education": [],
-      "location": "Delhi",
+      "location": "Delhi ,  kasganj , etha  , jhasni",
       "walletBalance": 0,
       "totalEarnings": 0,
       "targetGrades": "",
@@ -257,6 +258,22 @@
         "Saturday"
       ],
       "createdAt": "2026-07-03T17:50:46.497Z"
+    },
+    {
+      "id": "use_1783364431290_968",
+      "email": "peeyusha@gmail.com",
+      "password": "rty",
+      "name": "PEEYUSH ANAND",
+      "role": "student",
+      "avatar": "PA",
+      "balance": 100,
+      "plan": "Pro",
+      "bio": "Hello! I am PEEYUSH ANAND.",
+      "languages": [
+        "English"
+      ],
+      "phone": "+917505635684",
+      "createdAt": "2026-07-06T19:00:31.288Z"
     }
   ],
   "bookings": [

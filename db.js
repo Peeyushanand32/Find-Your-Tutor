@@ -170,21 +170,20 @@ function makeModelWrapper(modelName, collectionName) {
     },
 
     create: async function(data) {
+      const generatedId = data.id || `${collectionName.substring(0, 3)}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+      const dataWithId = { id: generatedId, ...data };
+
       if (mongoose.connection.readyState === 1) {
-        const doc = await MongooseModel.create(data);
+        const doc = await MongooseModel.create(dataWithId);
         return doc.toObject();
       }
       localDB.load();
       if (!localDB.data[collectionName]) {
         localDB.data[collectionName] = [];
       }
-      const newRecord = {
-        id: data.id || `${collectionName.substring(0, 3)}_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-        ...data
-      };
-      localDB.data[collectionName].push(newRecord);
+      localDB.data[collectionName].push(dataWithId);
       localDB.save();
-      return newRecord;
+      return dataWithId;
     },
 
     updateOne: async function(filter, updateObj) {

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -46,8 +47,8 @@ app.get('/*.html', async (req, res, next) => {
 app.use(passport.initialize());
 
 passport.use(new GoogleStrategy({
-    clientID: "YOUR_GOOGLE_CLIENT_ID",
-    clientSecret: "YOUR_GOOGLE_CLIENT_SECRET",
+    clientID: process.env.GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID",
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || "YOUR_GOOGLE_CLIENT_SECRET",
     callbackURL: "/api/auth/google/callback"
   },
   async function(accessToken, refreshToken, profile, done) {
