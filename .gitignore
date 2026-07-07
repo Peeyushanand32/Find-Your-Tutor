@@ -19,3 +19,6 @@ Thumbs.db
 
 # Secrets
 client_secret_*.json
+
+# Tools
+.bin/
