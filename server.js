@@ -910,10 +910,19 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_place
 const Razorpay = require('razorpay');
 
 // Initialize Razorpay instance using environment variables
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
-});
+let razorpay = null;
+try {
+  if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+  } else {
+    console.warn('[WARN] Razorpay credentials are not set in environment variables. Payments will not function.');
+  }
+} catch (error) {
+  console.error('[ERROR] Failed to initialize Razorpay:', error.message);
+}
 
 // Endpoint to expose public Razorpay Key ID safely to the client side
 app.get('/api/payments/key', (req, res) => {
@@ -921,6 +930,11 @@ app.get('/api/payments/key', (req, res) => {
 });
 
 app.post('/api/payments/order', async (req, res) => {
+  if (!razorpay) {
+    console.error('[ORDER] Razorpay is not configured (missing key_id or key_secret).');
+    return res.status(500).json({ error: 'Razorpay payment gateway is not configured.' });
+  }
+
   const { amount, currency } = req.body; // e.g., amount: 500 (INR 500)
   console.log(`[ORDER] Creating Razorpay order for amount: ${amount} ${currency || 'INR'}`);
 
