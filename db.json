@@ -124,6 +124,34 @@
       "location": "Seattle",
       "walletBalance": 12000,
       "totalEarnings": 154000
+    },
+    {
+      "id": "use_1783396886426_128",
+      "email": "peeyushanand923@gmail.com",
+      "password": "oauth_generated_password",
+      "name": "Peeyush",
+      "role": "tutor",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLfX99jUQ-bQ4z7Oyl4dhLChGm_-KXoWE9FphLCmD7Axy1WZA=s96-c",
+      "balance": 0,
+      "plan": "Basic",
+      "bio": "I am an expert tutor in various subjects. Ready to help you learn!",
+      "languages": [
+        "English"
+      ],
+      "phone": "",
+      "createdAt": "2026-07-07T04:01:26.424Z",
+      "rate": 45,
+      "rating": 5,
+      "reviewsCount": 0,
+      "hoursTaught": 0,
+      "subjects": [
+        "General Education"
+      ],
+      "title": "Expert Tutor",
+      "education": [],
+      "location": "Delhi",
+      "walletBalance": 0,
+      "totalEarnings": 0
     }
   ],
   "bookings": [

@@ -986,6 +986,10 @@ app.get('*', (req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {
-  console.log(`TutorNest server running at http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`TutorNest server running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
