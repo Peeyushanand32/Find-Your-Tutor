@@ -79,7 +79,7 @@ passport.use(new GoogleStrategy({
         name: profile.displayName,
         role: role,
         avatar: (profile.photos && profile.photos.length > 0) ? profile.photos[0].value : profile.displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
-        balance: role === 'student' ? 100.00 : 0.00,
+        balance: 0.00,
         plan: "Basic",
         bio: `Joined via Google.`,
         languages: ["English"],
@@ -215,7 +215,7 @@ app.post('/api/auth/register', async (req, res) => {
     name,
     role, // student or tutor
     avatar: name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
-    balance: role === 'student' ? 100.00 : 0.00,
+    balance: 0.00,
     plan: "Basic",
     bio: `Hello! I am ${name}.`,
     languages: ["English"],
