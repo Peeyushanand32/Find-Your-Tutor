@@ -749,6 +749,9 @@ app.get('/api/wallet', requireAuth, async (req, res) => {
   if (req.user.role !== 'tutor') {
     return res.status(403).json({ error: 'Only tutors have wallets' });
   }
+  if (req.user.plan === 'Basic' || !req.user.plan) {
+    return res.status(403).json({ error: 'Wallet access requires an active subscription. Please upgrade your plan.' });
+  }
   const history = await WalletRequest.find({ tutorId: req.user.id });
   res.json({
     balance: req.user.walletBalance || 0,
@@ -760,6 +763,9 @@ app.get('/api/wallet', requireAuth, async (req, res) => {
 app.post('/api/wallet/payout', requireAuth, async (req, res) => {
   if (req.user.role !== 'tutor') {
     return res.status(403).json({ error: 'Only tutors can request payouts' });
+  }
+  if (req.user.plan === 'Basic' || !req.user.plan) {
+    return res.status(403).json({ error: 'Payout requests require an active subscription. Please upgrade your plan.' });
   }
 
   const amount = parseFloat(req.body.amount);
