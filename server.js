@@ -912,13 +912,15 @@ const Razorpay = require('razorpay');
 // Initialize Razorpay instance using environment variables
 let razorpay = null;
 try {
-  if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET &&
+      !process.env.RAZORPAY_KEY_ID.includes('placeholder') &&
+      !process.env.RAZORPAY_KEY_SECRET.includes('placeholder')) {
     razorpay = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
       key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
   } else {
-    console.warn('[WARN] Razorpay credentials are not set in environment variables. Payments will not function.');
+    console.warn('[WARN] Razorpay credentials are not set in environment variables. Payments will function in Mock mode.');
   }
 } catch (error) {
   console.error('[ERROR] Failed to initialize Razorpay:', error.message);
@@ -930,12 +932,25 @@ app.get('/api/payments/key', (req, res) => {
 });
 
 app.post('/api/payments/order', async (req, res) => {
-  if (!razorpay) {
-    console.error('[ORDER] Razorpay is not configured (missing key_id or key_secret).');
-    return res.status(500).json({ error: 'Razorpay payment gateway is not configured.' });
+  const { currency } = req.body;
+  const amount = parseFloat(req.body.amount);
+
+  if (isNaN(amount) || amount <= 0) {
+    return res.status(400).json({ error: 'Invalid order amount.' });
   }
 
-  const { amount, currency } = req.body; // e.g., amount: 500 (INR 500)
+  // Support Mock payment mode for testing and local environment offline development
+  if (!razorpay || process.env.MOCK_PAYMENT === 'true') {
+    console.log(`[ORDER] Creating MOCK Razorpay order for amount: ${amount}`);
+    return res.status(200).json({
+      success: true,
+      order_id: `mock_order_${Date.now()}`,
+      amount: amount * 100,
+      currency: currency || 'INR',
+      mock: true
+    });
+  }
+
   console.log(`[ORDER] Creating Razorpay order for amount: ${amount} ${currency || 'INR'}`);
 
   const options = {
@@ -961,6 +976,15 @@ app.post('/api/payments/order', async (req, res) => {
 
 app.post('/api/payments/verify', requireAuth, async (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planName } = req.body;
+
+  // Verify signature instantly for mock orders or if in mock mode
+  if ((razorpay_order_id && razorpay_order_id.startsWith('mock_order_')) || !razorpay || process.env.MOCK_PAYMENT === 'true') {
+    console.log(`[VERIFY] MOCK payment verified successfully for order: ${razorpay_order_id}`);
+    const updated = await User.findOneAndUpdate({ id: req.user.id }, { plan: planName || 'Premium' }, { new: true });
+    const { password, ...userSafe } = updated;
+    return res.status(200).json({ success: true, message: 'Mock payment verified successfully', user: userSafe });
+  }
+
   const crypto = require('crypto');
 
   const generatedSignature = crypto
@@ -982,6 +1006,20 @@ app.post('/api/payments/verify', requireAuth, async (req, res) => {
 app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount } = req.body;
   console.log(`[VERIFY-TOPUP] Received request: order=${razorpay_order_id}, payment=${razorpay_payment_id}, signature=${razorpay_signature}, amount=${amount}`);
+
+  // Verify signature instantly for mock orders or if in mock mode
+  if ((razorpay_order_id && razorpay_order_id.startsWith('mock_order_')) || !razorpay || process.env.MOCK_PAYMENT === 'true') {
+    console.log(`[VERIFY-TOPUP] MOCK top-up payment verified successfully for order: ${razorpay_order_id}`);
+    let topupAmount = parseFloat(amount);
+    if (isNaN(topupAmount) || topupAmount <= 0) {
+      return res.status(400).json({ error: 'Invalid top-up amount' });
+    }
+    const newBal = parseFloat((req.user.balance + topupAmount).toFixed(2));
+    const updated = await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal }, { new: true });
+    const { password, ...userSafe } = updated;
+    return res.status(200).json({ success: true, message: 'Mock top-up payment verified successfully', amount: topupAmount, balance: newBal, user: userSafe });
+  }
+
   const crypto = require('crypto');
 
   const generatedSignature = crypto

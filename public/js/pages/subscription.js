@@ -166,8 +166,19 @@ function initSubscription() {
               }
             }
           };
-          const rzp = new Razorpay(options);
-          rzp.open();
+          if (orderData.mock || typeof Razorpay === 'undefined') {
+            showToast('Simulating mock payment...', 'info');
+            setTimeout(async () => {
+              await options.handler({
+                razorpay_order_id: orderData.order_id,
+                razorpay_payment_id: `mock_pay_${Date.now()}`,
+                razorpay_signature: `mock_sig_${Date.now()}`
+              });
+            }, 1000);
+          } else {
+            const rzp = new Razorpay(options);
+            rzp.open();
+          }
         } else {
           showToast(orderData.error || 'Failed to initialize payment', 'error');
           if (submitBtn) {
