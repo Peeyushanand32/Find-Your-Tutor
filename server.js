@@ -35,9 +35,9 @@ app.get('/*.html', async (req, res, next) => {
     }
   }
 
-  // Restrict Basic/unsubscribed tutors from accessing instructor dashboard or calendar
+  // Restrict Basic/unsubscribed tutors from accessing instructor dashboard, calendar, messages, requests history, or wallet
   if (user && user.role === 'tutor' && (user.plan === 'Basic' || !user.plan)) {
-    if (page === '/instructor-dashboard.html' || page === '/instructor-calendar.html') {
+    if (page === '/instructor-dashboard.html' || page === '/instructor-calendar.html' || page === '/instructor-messages.html' || page === '/instructor-requests-history.html' || page === '/instructor-wallet.html') {
       return res.redirect('/pricing.html');
     }
   }
@@ -530,6 +530,10 @@ app.put('/api/bookings/:id', requireAuth, async (req, res) => {
     return res.status(403).json({ error: 'Permission denied' });
   }
 
+  if (req.user.role === 'tutor' && (req.user.plan === 'Basic' || !req.user.plan)) {
+    return res.status(403).json({ error: 'Managing bookings requires an active subscription. Please upgrade your plan.' });
+  }
+
   const { status } = req.body;
   if (!['scheduled', 'completed', 'cancelled', 'pending'].includes(status)) {
     return res.status(400).json({ error: 'Invalid status' });
@@ -686,14 +690,9 @@ app.post('/api/messages', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Receiver ID and message content are required' });
   }
 
-  // Trial Expired Check
-  if (req.user.role === 'tutor' && req.user.plan !== 'Premium') {
-    const createdAtStr = req.user.createdAt || new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-    const createdTime = new Date(createdAtStr).getTime();
-    const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
-    if ((Date.now() - createdTime) > twoDaysMs) {
-      return res.status(403).json({ error: 'Your trial has expired. Please subscribe to Premium to send messages.' });
-    }
+  // Restriction: Tutors must have an active subscription to send messages
+  if (req.user.role === 'tutor' && (req.user.plan === 'Basic' || !req.user.plan)) {
+    return res.status(403).json({ error: 'Messaging requires an active subscription. Please upgrade your plan.' });
   }
 
   const receiver = await User.findOne({ id: receiverId });
