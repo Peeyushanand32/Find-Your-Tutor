@@ -466,8 +466,21 @@ app.post('/api/bookings', requireAuth, async (req, res) => {
     return res.status(404).json({ error: 'Tutor not found' });
   }
 
+  // Check if it is the student's first class with this specific tutor (excluding cancelled bookings)
+  const studentTutorBookings = await Booking.find({ studentId: req.user.id, tutorId: tutor.id });
+  const activeBookings = studentTutorBookings.filter(b => b.status === 'pending' || b.status === 'scheduled' || b.status === 'completed');
+  const hasBookings = activeBookings.length > 0;
+
+  // Check if they have chatted before
+  const sentMessages = await Message.find({ senderId: req.user.id, receiverId: tutor.id });
+  const receivedMessages = await Message.find({ senderId: tutor.id, receiverId: req.user.id });
+  const hasMessages = sentMessages.length > 0 || receivedMessages.length > 0;
+
+  const isFirstClass = !hasBookings && !hasMessages;
+
   const hours = parseFloat(duration) || 1;
-  const totalCost = tutor.rate * hours;
+  const rate = isFirstClass ? 0 : tutor.rate;
+  const totalCost = rate * hours;
 
   if (req.user.balance < totalCost) {
     return res.status(400).json({ error: 'Insufficient funds. Please top up your wallet or subscribe to a plan.' });
@@ -486,7 +499,7 @@ app.post('/api/bookings', requireAuth, async (req, res) => {
     date,
     time,
     status: "pending", // starts as pending for instructor approval
-    rate: tutor.rate,
+    rate: rate,
     duration: hours,
     meetingLink: `https://meet.jit.si/${meetingRoomName}`
   };

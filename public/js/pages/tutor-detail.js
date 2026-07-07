@@ -46,9 +46,54 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
+    let isFirstClass = true;
+    if (typeof currentUser !== 'undefined' && currentUser && currentUser.role === 'student') {
+      try {
+        // Check bookings with this tutor
+        const bookingsRes = await fetch('/api/bookings');
+        if (bookingsRes.ok) {
+          const bookings = await bookingsRes.json();
+          const activeBookings = bookings.filter(b => b.tutorId === tutorId && (b.status === 'pending' || b.status === 'scheduled' || b.status === 'completed'));
+          if (activeBookings.length > 0) {
+            isFirstClass = false;
+          }
+        }
+
+        // Check messages with this tutor if bookings check didn't already disqualify
+        if (isFirstClass) {
+          const messagesRes = await fetch('/api/messages');
+          if (messagesRes.ok) {
+            const messages = await messagesRes.json();
+            const relevantMessages = messages.filter(m => 
+              (m.senderId === currentUser.id && m.receiverId === tutorId) ||
+              (m.senderId === tutorId && m.receiverId === currentUser.id)
+            );
+            if (relevantMessages.length > 0) {
+              isFirstClass = false;
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Error checking history:', e);
+      }
+    }
+
     // Update hourly rate in Sidebar Booking widget
     const rateSpan = document.querySelector('span.font-display-lg');
-    if (rateSpan) rateSpan.textContent = `₹${tutor.rate}`;
+    if (rateSpan) {
+      rateSpan.textContent = isFirstClass ? 'Free' : `₹${tutor.rate}`;
+    }
+
+    // Update "1st Session Free" text
+    const sessionFreeText = Array.from(document.querySelectorAll('aside p, aside div, aside span')).find(el => el.textContent.includes('1st Session Free'));
+    if (sessionFreeText) {
+      sessionFreeText.textContent = isFirstClass ? '1st Session Free' : '';
+    }
+
+    // Update button text
+    if (bookBtn) {
+      bookBtn.textContent = isFirstClass ? 'Request Free Class' : 'Request Class';
+    }
 
     // Update location text dynamically
     const locPara = Array.from(document.querySelectorAll('aside p.text-outline')).find(el => el.textContent.includes('Boston') || el.parentElement.innerHTML.includes('Available'));
