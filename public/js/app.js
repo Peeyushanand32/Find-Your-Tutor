@@ -393,8 +393,23 @@ function renderModalContent(container, mode) {
 
       <!-- Forms -->
       <form id="auth-form" class="space-y-4" onsubmit="handleAuthSubmit(event, '${mode}')">
+        <!-- Google Role Selector -->
+        <div class="space-y-2">
+          <label class="font-label-md text-[13px] text-on-surface-variant block">I want to sign in as:</label>
+          <div class="flex bg-surface-container-high p-1 rounded-xl border border-outline-variant/30 text-xs">
+            <button type="button" id="google-role-student" onclick="setGoogleRole('student')" 
+              class="flex-1 py-2 rounded-lg font-bold transition-all text-center bg-white text-primary shadow-sm">
+              Student (Learn)
+            </button>
+            <button type="button" id="google-role-tutor" onclick="setGoogleRole('tutor')" 
+              class="flex-1 py-2 rounded-lg font-bold transition-all text-center text-on-surface-variant hover:text-primary">
+              Tutor (Teach)
+            </button>
+          </div>
+        </div>
+
         <!-- Google Login Button -->
-        <a href="/api/auth/google" class="w-full flex items-center justify-center gap-3 border border-outline-variant hover:bg-surface-variant/40 rounded-xl py-3 text-label-md font-label-md transition-all active:scale-95">
+        <a id="google-signin-btn" href="/api/auth/google?role=student" class="w-full flex items-center justify-center gap-3 border border-outline-variant hover:bg-surface-variant/40 rounded-xl py-3 text-label-md font-label-md transition-all active:scale-95">
           <img src="https://www.google.com/favicon.ico" class="w-5 h-5" alt="Google logo">
           <span>Sign in with Google</span>
         </a>
@@ -682,3 +697,22 @@ document.addEventListener('click', (e) => {
     }
   }
 });
+
+// Google Role Selection function
+window.setGoogleRole = function(role) {
+  const btn = document.getElementById('google-signin-btn');
+  if (btn) {
+    btn.href = `/api/auth/google?role=${role}`;
+  }
+  const studentBtn = document.getElementById('google-role-student');
+  const tutorBtn = document.getElementById('google-role-tutor');
+  if (studentBtn && tutorBtn) {
+    if (role === 'student') {
+      studentBtn.className = "flex-1 py-2 rounded-lg font-bold transition-all text-center bg-white text-primary shadow-sm";
+      tutorBtn.className = "flex-1 py-2 rounded-lg font-bold transition-all text-center text-on-surface-variant hover:text-primary";
+    } else {
+      studentBtn.className = "flex-1 py-2 rounded-lg font-bold transition-all text-center text-on-surface-variant hover:text-primary";
+      tutorBtn.className = "flex-1 py-2 rounded-lg font-bold transition-all text-center bg-white text-primary shadow-sm";
+    }
+  }
+};

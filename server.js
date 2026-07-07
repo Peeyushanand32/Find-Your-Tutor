@@ -49,27 +49,61 @@ app.use(passport.initialize());
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID",
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || "YOUR_GOOGLE_CLIENT_SECRET",
-    callbackURL: "/api/auth/google/callback"
+    callbackURL: "/api/auth/google/callback",
+    passReqToCallback: true
   },
-  async function(accessToken, refreshToken, profile, done) {
+  async function(req, accessToken, refreshToken, profile, done) {
     // Check if user already exists in db.json by email or googleId
     const email = profile.emails[0].value;
     let user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
-      // Register a new student profile dynamically using Google Details
-      user = await User.create({
+      // Decode role from state parameter (passed from client)
+      let role = 'student';
+      if (req.query.state) {
+        try {
+          const decodedState = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
+          if (decodedState.role === 'tutor' || decodedState.role === 'student') {
+            role = decodedState.role;
+          }
+        } catch (e) {
+          console.error('Failed to parse OAuth state:', e);
+        }
+      }
+
+      // Register a new profile dynamically using Google Details
+      const newUser = {
         email: email.toLowerCase(),
         password: "oauth_generated_password",
         name: profile.displayName,
-        role: "student", // default role
-        avatar: profile.photos[0].value || "JD",
-        balance: 100.00,
+        role: role,
+        avatar: (profile.photos && profile.photos.length > 0) ? profile.photos[0].value : profile.displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2),
+        balance: role === 'student' ? 100.00 : 0.00,
         plan: "Basic",
         bio: `Joined via Google.`,
         languages: ["English"],
-        phone: ""
-      });
+        phone: "",
+        createdAt: new Date().toISOString()
+      };
+
+      // If registering as tutor, seed default fields
+      if (role === 'tutor') {
+        Object.assign(newUser, {
+          rate: 45,
+          rating: 5.0,
+          reviewsCount: 0,
+          hoursTaught: 0,
+          bio: `I am an expert tutor in various subjects. Ready to help you learn!`,
+          subjects: ["General Education"],
+          title: "Expert Tutor",
+          education: [],
+          location: "Delhi",
+          walletBalance: 0.00,
+          totalEarnings: 0.00
+        });
+      }
+
+      user = await User.create(newUser);
     }
 
     return done(null, user);
@@ -128,9 +162,15 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Trigger Google Login Screen
-app.get('/api/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
+app.get('/api/auth/google', (req, res, next) => {
+  const role = req.query.role === 'tutor' ? 'tutor' : 'student';
+  const state = Buffer.from(JSON.stringify({ role })).toString('base64');
+  
+  passport.authenticate('google', { 
+    scope: ['profile', 'email'],
+    state: state
+  })(req, res, next);
+});
 
 // Callback URL to log user in locally and set cookies
 app.get('/api/auth/google/callback', 
@@ -142,9 +182,17 @@ app.get('/api/auth/google/callback',
     // Redirect new Google users to profile settings, existing ones to dashboard
     const isNew = req.user.bio === "Joined via Google." && (!req.user.phone);
     if (isNew) {
-      res.redirect('/student-settings-profile.html');
+      if (req.user.role === 'tutor') {
+        res.redirect('/instructor-settings.html');
+      } else {
+        res.redirect('/student-settings-profile.html');
+      }
     } else {
-      res.redirect('/student-dashboard.html');
+      if (req.user.role === 'tutor') {
+        res.redirect('/instructor-dashboard.html');
+      } else {
+        res.redirect('/student-dashboard.html');
+      }
     }
   }
 );
