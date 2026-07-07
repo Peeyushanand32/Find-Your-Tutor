@@ -168,7 +168,8 @@
       "education": [],
       "location": "Delhi",
       "walletBalance": 270,
-      "totalEarnings": 270
+      "totalEarnings": 270,
+      "createdAt": "2026-07-04T03:36:23.088Z"
     },
     {
       "id": "use_1783321461288_461",
@@ -274,6 +275,22 @@
       ],
       "phone": "+917505635684",
       "createdAt": "2026-07-06T19:00:31.288Z"
+    },
+    {
+      "id": "use_1783395355616_385",
+      "email": "peeyushanandpri@gmail.com",
+      "password": "oauth_generated_password",
+      "name": "Peeyush Anand",
+      "role": "student",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLwTlORlkD396A5Afk6AdGxXyrfdV1_oSWtBbhhQ34MxZapcQ=s96-c",
+      "balance": 100,
+      "plan": "Basic",
+      "bio": "Joined via Google.",
+      "languages": [
+        "English"
+      ],
+      "phone": "",
+      "createdAt": "2026-07-07T03:35:55.616Z"
     }
   ],
   "bookings": [
