@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnTopup.addEventListener('click', handleTopup);
   }
 
-  // Set up auto-refresh every 10 seconds
+  // Set up auto-refresh every 3 seconds
   setInterval(async () => {
     try {
       const res = await fetch('/api/auth/me');
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
       console.error('Failed to auto-refresh wallet:', err);
     }
-  }, 10000);
+  }, 3000);
 });
 
 function populateHeaderAvatar() {
