@@ -25,8 +25,10 @@ function initSettings() {
   const avatarFileInput = document.getElementById('avatarFileInput');
   const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
   const saveBtn = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Save') || el.textContent.includes('Update') || el.textContent.includes('Save Changes'));
+  const accountIdInput = document.getElementById('accountIdInput');
 
   if (nameInput) nameInput.value = currentUser.name;
+  if (accountIdInput) accountIdInput.value = currentUser.id;
   if (titleInput) titleInput.value = currentUser.title || '';
   if (rateInput) rateInput.value = currentUser.rate || 45;
   if (locationInput) locationInput.value = currentUser.location || 'Online';

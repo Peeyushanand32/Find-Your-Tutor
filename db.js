@@ -170,7 +170,16 @@ function makeModelWrapper(modelName, collectionName) {
     },
 
     create: async function(data) {
-      const generatedId = data.id || `${collectionName.substring(0, 3)}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+      let generatedId = data.id;
+      if (!generatedId) {
+        if (collectionName === 'users') {
+          const prefix = data.role === 'student' ? 'TN-STU' : (data.role === 'tutor' ? 'TN-TUT' : 'TN-USR');
+          const randomNum = Math.floor(100000 + Math.random() * 900000); // 6-digit random number
+          generatedId = `${prefix}-${randomNum}`;
+        } else {
+          generatedId = `${collectionName.substring(0, 3)}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+        }
+      }
       const dataWithId = { id: generatedId, ...data };
 
       if (mongoose.connection.readyState === 1) {

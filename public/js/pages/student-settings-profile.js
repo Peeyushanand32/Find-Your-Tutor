@@ -14,11 +14,13 @@ function initSettings() {
   const headerName = document.getElementById('headerName');
   const headerGrade = document.getElementById('headerGrade');
   const headerLocation = document.getElementById('headerLocation');
+  const headerAccountId = document.getElementById('headerAccountId');
 
   function updateHeaderSummary() {
     if (headerName) headerName.textContent = currentUser.name;
     if (headerGrade) headerGrade.textContent = currentUser.grade || 'Not Specified';
     if (headerLocation) headerLocation.textContent = currentUser.city || 'Online';
+    if (headerAccountId) headerAccountId.textContent = `ID: ${currentUser.id}`;
   }
   updateHeaderSummary();
 
