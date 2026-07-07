@@ -57,6 +57,7 @@ function selectQuickAmount(amount) {
 
 async function handleTopup() {
   const amountInput = document.getElementById('topupAmount');
+  const btnTopup = document.getElementById('btnTopup');
   if (!amountInput) return;
 
   const amount = parseFloat(amountInput.value);
@@ -65,25 +66,91 @@ async function handleTopup() {
     return;
   }
 
+  if (btnTopup) {
+    btnTopup.disabled = true;
+    btnTopup.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">sync</span> Processing...';
+  }
+
   try {
-    const res = await fetch('/api/wallet/topup', {
+    const res = await fetch('/api/payments/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount })
+      body: JSON.stringify({ amount, currency: 'INR' })
     });
-    const data = await res.json();
+    const orderData = await res.json();
 
-    if (res.ok) {
-      showToast(`Successfully added ₹${amount} to your wallet!`, 'success');
-      amountInput.value = '';
-      currentUser.balance = data.balance;
-      updateBalanceDisplay(data.balance);
-      await loadTransactions();
+    if (res.ok && orderData.success) {
+      const options = {
+        key: 'rzp_live_TA7tJ4AmblMiTb',
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'TutorNest Wallet Top-Up',
+        description: `Add ₹${amount} to Wallet Balance`,
+        order_id: orderData.order_id,
+        handler: async function (paymentRes) {
+          try {
+            showToast('Verifying payment...', 'success');
+            const verifyRes = await fetch('/api/payments/verify-topup', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: paymentRes.razorpay_order_id,
+                razorpay_payment_id: paymentRes.razorpay_payment_id,
+                razorpay_signature: paymentRes.razorpay_signature,
+                amount: amount
+              })
+            });
+            const verifyData = await verifyRes.json();
+
+            if (verifyRes.ok && verifyData.success) {
+              showToast(`Successfully added ₹${amount} to your wallet!`, 'success');
+              amountInput.value = '';
+              currentUser.balance = verifyData.balance;
+              updateBalanceDisplay(verifyData.balance);
+              await loadTransactions();
+            } else {
+              showToast(verifyData.message || 'Payment verification failed', 'error');
+            }
+          } catch (verifyErr) {
+            showToast('Error verifying payment.', 'error');
+          } finally {
+            if (btnTopup) {
+              btnTopup.disabled = false;
+              btnTopup.innerHTML = '<span class="material-symbols-outlined text-[20px]">add_circle</span> Add Money to Wallet';
+            }
+          }
+        },
+        prefill: {
+          name: currentUser ? currentUser.name : '',
+          email: currentUser ? currentUser.email : '',
+        },
+        theme: {
+          color: '#004ac6'
+        },
+        modal: {
+          ondismiss: function() {
+            if (btnTopup) {
+              btnTopup.disabled = false;
+              btnTopup.innerHTML = '<span class="material-symbols-outlined text-[20px]">add_circle</span> Add Money to Wallet';
+            }
+          }
+        }
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
     } else {
-      showToast(data.error || 'Failed to add money to wallet', 'error');
+      showToast(orderData.error || 'Failed to initialize payment', 'error');
+      if (btnTopup) {
+        btnTopup.disabled = false;
+        btnTopup.innerHTML = '<span class="material-symbols-outlined text-[20px]">add_circle</span> Add Money to Wallet';
+      }
     }
   } catch (err) {
     showToast('Network error topping up wallet.', 'error');
+    if (btnTopup) {
+      btnTopup.disabled = false;
+      btnTopup.innerHTML = '<span class="material-symbols-outlined text-[20px]">add_circle</span> Add Money to Wallet';
+    }
   }
 }
 

@@ -957,6 +957,30 @@ app.post('/api/payments/verify', requireAuth, async (req, res) => {
   }
 });
 
+app.post('/api/payments/verify-topup', requireAuth, async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount } = req.body;
+  const crypto = require('crypto');
+
+  const generatedSignature = crypto
+    .createHmac('sha256', 'fAzrp2zto37Mn0plMUg9KTlj')
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    .digest('hex');
+
+  if (generatedSignature === razorpay_signature) {
+    // Signature verified successfully
+    const topupAmount = parseFloat(amount);
+    if (isNaN(topupAmount) || topupAmount <= 0) {
+      return res.status(400).json({ error: 'Invalid top-up amount' });
+    }
+    const newBal = parseFloat((req.user.balance + topupAmount).toFixed(2));
+    const updated = await User.findOneAndUpdate({ id: req.user.id }, { balance: newBal }, { new: true });
+    const { password, ...userSafe } = updated;
+    res.status(200).json({ success: true, message: 'Top-up payment verified successfully', balance: newBal, user: userSafe });
+  } else {
+    res.status(400).json({ success: false, message: 'Invalid payment signature' });
+  }
+});
+
 app.post('/api/checkout/create-session', requireAuth, async (req, res) => {
   const { planName } = req.body;
   if (!planName) {
