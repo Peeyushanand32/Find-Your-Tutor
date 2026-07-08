@@ -1,5 +1,6 @@
 // Tutor Detail Page (tutor-detail.html) specific logic
 document.addEventListener('DOMContentLoaded', async () => {
+  await window.authPromise;
   const urlParams = new URLSearchParams(window.location.search);
   const tutorId = urlParams.get('id') || 'tutor1'; // Fallback to tutor1 if no ID
 
@@ -57,6 +58,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (activeBookings.length > 0) {
             isFirstClass = false;
           }
+          const scheduledBooking = bookings.find(b => b.tutorId === tutorId && b.status === 'scheduled');
+          if (scheduledBooking) {
+            const videoCallBtn = document.getElementById('video-call-btn');
+            if (videoCallBtn) {
+              videoCallBtn.href = `/session.html?bookingId=${scheduledBooking.id}`;
+              videoCallBtn.classList.remove('hidden');
+            }
+          }
         }
 
         // Check messages with this tutor if bookings check didn't already disqualify
@@ -81,18 +90,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Update hourly rate in Sidebar Booking widget
     const rateSpan = document.querySelector('span.font-display-lg');
     if (rateSpan) {
-      rateSpan.textContent = isFirstClass ? 'Free' : `₹${tutor.rate}`;
+      rateSpan.textContent = `₹${tutor.rate}`;
     }
 
     // Update "1st Session Free" text
     const sessionFreeText = Array.from(document.querySelectorAll('aside p, aside div, aside span')).find(el => el.textContent.includes('1st Session Free'));
     if (sessionFreeText) {
-      sessionFreeText.textContent = isFirstClass ? '1st Session Free' : '';
+      sessionFreeText.textContent = '';
     }
 
-    // Update button text
+    // Update button text and visibility
     if (bookBtn) {
-      bookBtn.textContent = isFirstClass ? 'Request Free Class' : 'Request Class';
+      bookBtn.textContent = 'Request Class';
+      bookBtn.classList.remove('hidden');
+    }
+
+    // Toggle calendar visibility based on first class status
+    const calendarContainer = document.getElementById('calendar-container');
+    if (calendarContainer) {
+      calendarContainer.classList.remove('hidden');
     }
 
     // Update location text dynamically

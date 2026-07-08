@@ -466,20 +466,8 @@ app.post('/api/bookings', requireAuth, async (req, res) => {
     return res.status(404).json({ error: 'Tutor not found' });
   }
 
-  // Check if it is the student's first class with this specific tutor (excluding cancelled bookings)
-  const studentTutorBookings = await Booking.find({ studentId: req.user.id, tutorId: tutor.id });
-  const activeBookings = studentTutorBookings.filter(b => b.status === 'pending' || b.status === 'scheduled' || b.status === 'completed');
-  const hasBookings = activeBookings.length > 0;
-
-  // Check if they have chatted before
-  const sentMessages = await Message.find({ senderId: req.user.id, receiverId: tutor.id });
-  const receivedMessages = await Message.find({ senderId: tutor.id, receiverId: req.user.id });
-  const hasMessages = sentMessages.length > 0 || receivedMessages.length > 0;
-
-  const isFirstClass = !hasBookings && !hasMessages;
-
   const hours = parseFloat(duration) || 1;
-  const rate = isFirstClass ? 0 : tutor.rate;
+  const rate = tutor.rate;
   const totalCost = rate * hours;
 
   if (req.user.balance < totalCost) {
@@ -711,7 +699,19 @@ app.post('/api/messages', requireAuth, async (req, res) => {
     const hasAcceptedBooking = bookings.some(b => b.status === 'scheduled' || b.status === 'completed');
     
     if (!hasAcceptedBooking) {
-      return res.status(403).json({ error: 'Messaging is restricted until the lesson request has been accepted.' });
+      if (req.user.role === 'tutor') {
+        // Tutors can message if there is any booking request (even if pending)
+        const hasAnyBooking = bookings.length > 0;
+        if (!hasAnyBooking) {
+          return res.status(403).json({ error: 'Messaging is restricted until the student requests a lesson.' });
+        }
+      } else {
+        // Students can message if they have received at least one message from this tutor
+        const messagesFromTutor = await Message.find({ senderId: tutorId, receiverId: studentId });
+        if (messagesFromTutor.length === 0) {
+          return res.status(403).json({ error: 'Messaging is restricted until the tutor replies or the lesson request has been accepted.' });
+        }
+      }
     }
   }
 
